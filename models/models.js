@@ -12,7 +12,7 @@ userSchema.plugin(supergoose); // allows .findOrCreate()
 
 var cardsetSchema = mongoose.Schema({
     creator: {
-        type: mongoose.Schema.ObjectID,
+        type: mongoose.Schema.ObjectId,
         ref: 'User'
     },
     square_set: [String], // Potential squares from which we generate cards
@@ -26,24 +26,31 @@ var cardsetSchema = mongoose.Schema({
 
 var gameSchema = mongoose.Schema({
     card_set: {
-        type: mongoose.Schema.ObjectID,
+        type: mongoose.Schema.ObjectId,
         ref: 'CardSet'
     },
     start_time: Date,
     players: [{
-        type: mongoose.Schema.ObjectID,
+        type: mongoose.Schema.ObjectId,
         ref: 'User'
     }],
     closed: Boolean, // use to determine write permission to .players
     room: String,
     winner: {
-        type: mongoose.Schema.ObjectID,
+        type: mongoose.Schema.ObjectId,
         ref: 'User'
     },
 });
 
 gameSchema.methods.timeToStart = function() {
-    // return start time - current time (or 0 if game is running)
+    var start_time = this.start_time;
+    var time_now = Date.now();
+    if (time_now < start_time ){
+      // return seconds until start
+      return (start_time - time_now)/1000;
+    } else {
+      return 0;
+    }
 };
 
 cardSchema = mongoose.Schema({
@@ -54,11 +61,11 @@ cardSchema = mongoose.Schema({
         [String]
     ],
     user: {
-        type: mongoose.Schema.ObjectID,
+        type: mongoose.Schema.ObjectId,
         ref: 'User'
     },
     game: {
-        type: mongoose.Schema.ObjectID,
+        type: mongoose.Schema.ObjectId,
         ref: 'Game'
     }
 });
