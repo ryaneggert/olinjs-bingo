@@ -1,0 +1,36 @@
+{
+  "name": "olinjs-bingo",
+  "version": "1.0.0",
+  "description": "Online bingo",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.12.3",
+    "moment": "^2.9.0",
+    "mongoose": "^4.0.1",
+    "body-parser": "^1.11.0",
+    "cookie-parser": "^1.3.3",
+    "express": "^4.11.2",
+    "express-handlebars": "^1.1.0",
+    "express-session": "^1.10.2",
+    "express-sessions": "^1.0.5",
+    "morgan": "^1.5.1",
+    "passport": "^0.2.1",
+    "passport-facebook": "^1.0.3",
+    "supergoose": "^0.2.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RyanEggert/olinjs-bingo.git"
+  },
+  "author": "Ryan Eggert, Deborah Hellen, Chaz Gwennap, Yuzhong Huang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RyanEggert/olinjs-bingo/issues"
+  },
+  "homepage": "https://github.com/RyanEggert/olinjs-bingo"
+}
