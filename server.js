@@ -5,6 +5,8 @@ var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 
+var game = require("./routes/game");
+
 var app = express();
 
 
@@ -17,6 +19,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get('/', function(req, res) {
 	res.send("Hello World This is Bingo!");
 });
+
+app.post('/api/new/cardset', game.newCardSet);
 
 mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/test');
 var PORT = 3000;
