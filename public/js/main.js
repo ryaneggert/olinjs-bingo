@@ -11,7 +11,7 @@ bingo.config(function($routeProvider) {
         });
 });
 
-wikiParty.controller('addCardSetController', function($scope, $http) {
+bingo.controller('addCardSetController', function($scope, $http) {
 	$scope.formData = {};
 	$scope.msg = "";
 
