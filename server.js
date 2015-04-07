@@ -4,6 +4,7 @@ var logger = require("morgan");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
+var sockets = require("./utils/sockets");
 
 var game = require("./routes/game");
 
@@ -25,4 +26,8 @@ app.post('/api/new/cardset', game.newCardSet);
 mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/test');
 var PORT = 3000;
 
-app.listen(process.env.PORT || PORT);
+app = app.listen(process.env.PORT || PORT);
+
+// socket.io
+
+sockets(app);
