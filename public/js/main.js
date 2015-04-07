@@ -1,12 +1,10 @@
-var socket = io.connect('http://localhost:3000');
-
 var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io'])
   .factory('bingosockets', function(socketFactory) {
     var myIoSocket = io.connect('http://localhost:3000');
     var scks = socketFactory({
       ioSocket: myIoSocket
     });
-    scks.forward('error'); // makes all 'error' socket events avaliable as $scope.$on('socket:error', function(ev,data) {...};)
+    scks.forward('test'); // makes all 'error' socket events avaliable as $scope.$on('socket:error', function(ev,data) {...};)
     return scks;
   });
 
@@ -14,6 +12,7 @@ bingo.config(function($routeProvider) {
   $routeProvider
     .when('/', {
       templateUrl: '../pages/home.html',
+      controller: 'homeController'
     })
     .when('/new/cardset', {
       templateUrl: '../pages/addCardSet.html',
@@ -36,4 +35,12 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
         console.log("Error: " + data);
       });
   };
+});
+
+bingo.controller('homeController', function($scope, $http, bingosockets) {
+  $scope.$on('socket:test', function(ev, data) {
+    console.log('Test Recieved');
+    bingosockets.emit('response', 'this is a response');
+  });
+
 });
