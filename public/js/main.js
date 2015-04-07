@@ -5,6 +5,9 @@ bingo.config(function($routeProvider) {
         .when('/', {
             templateUrl : '../pages/home.html',
         })
+        .when('/login', {
+        	templateUrl : '../pages/login.html',
+        })
         .when('/new/cardset', {
         	templateUrl : '../pages/addCardSet.html',
         	controller : 'addCardSetController'

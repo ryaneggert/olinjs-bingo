@@ -20,6 +20,10 @@ app.get('/', function(req, res) {
 	res.send("Hello World This is Bingo!");
 });
 
+app.get('/login', function(req, res) {
+	res.send("Login");
+});
+
 app.post('/api/new/cardset', game.newCardSet);
 
 mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/test');
