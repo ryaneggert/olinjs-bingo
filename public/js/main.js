@@ -1,6 +1,5 @@
 var socket = io.connect('http://localhost:3000');
 
-
 var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io'])
   .factory('bingosockets', function(socketFactory) {
     var myIoSocket = io.connect('http://localhost:3000');
@@ -37,5 +36,4 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
         console.log("Error: " + data);
       });
   };
-
 });
