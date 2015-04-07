@@ -4,7 +4,7 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io'])
     var scks = socketFactory({
       ioSocket: myIoSocket
     });
-    scks.forward('test'); // makes all 'error' socket events avaliable as $scope.$on('socket:error', function(ev,data) {...};)
+    scks.forward('test'); // makes all 'test' socket events avaliable as $scope.$on('socket:test', function(ev,data) {...};)
     return scks;
   });
 
