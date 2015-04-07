@@ -8,15 +8,18 @@ var CardSet = models.cardset;
 
 var routes = {};
 
-routes.newCardSet = function (req, res) {
-/* Create and save new card set based on user input */
+routes.newCardSet = function(req, res) {
+  /* Create and save new card set based on user input */
 
   // Get data submitted by user from form
   var cardData = req.body.cards;
   var name = req.body.name;
 
   // Create new CardSet object
-  var newCardSet = new CardSet({name: name, square_set: [cardData]});
+  var newCardSet = new CardSet({
+    name: name,
+    square_set: [cardData]
+  });
 
   // Save the new card set object to the database
   newCardSet.save(function(err, cardset) {
