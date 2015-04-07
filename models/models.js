@@ -3,71 +3,71 @@ var supergoose = require("supergoose");
 var models = {};
 
 var userSchema = mongoose.Schema({
-    name: String,
-    // image:String,
+  name: String,
+  // image:String,
 });
 
 userSchema.plugin(supergoose); // allows .findOrCreate()
 // https://github.com/jamplify/supergoose
 
 var cardsetSchema = mongoose.Schema({
-    creator: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'User'
-    },
-    square_set: [String], // Potential squares from which we generate cards
-    create_date: {
-        type: Date,
-        default: Date.now
-    },
-    name: String,
+  creator: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User'
+  },
+  square_set: [String], // Potential squares from which we generate cards
+  create_date: {
+    type: Date,
+    default: Date.now
+  },
+  name: String,
 
 });
 
 var gameSchema = mongoose.Schema({
-    card_set: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'CardSet'
-    },
-    start_time: Date,
-    players: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'User'
-    }],
-    closed: Boolean, // use to determine write permission to .players
-    room: String,
-    winner: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'User'
-    },
+  card_set: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'CardSet'
+  },
+  start_time: Date,
+  players: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'User'
+  }],
+  closed: Boolean, // use to determine write permission to .players
+  room: String,
+  winner: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User'
+  },
 });
 
 gameSchema.methods.timeToStart = function() {
-    var start_time = this.start_time;
-    var time_now = Date.now();
-    if (time_now < start_time ){
-      // return seconds until start
-      return (start_time - time_now)/1000;
-    } else {
-      return 0;
-    }
+  var start_time = this.start_time;
+  var time_now = Date.now();
+  if (time_now < start_time) {
+    // return seconds until start
+    return (start_time - time_now) / 1000;
+  } else {
+    return 0;
+  }
 };
 
 cardSchema = mongoose.Schema({
-    score: [
-        [Boolean] // For keeping track of filled squares
-    ],
-    squares: [
-        [String]
-    ],
-    user: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'User'
-    },
-    game: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Game'
-    }
+  score: [
+    [Boolean] // For keeping track of filled squares
+  ],
+  squares: [
+    [String]
+  ],
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User'
+  },
+  game: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Game'
+  }
 });
 
 
