@@ -1,0 +1,10 @@
+<h2>Create a new game</h2>
+<form>
+	<input type = "text" name = "name" placeholder = "Room Name" ng-model = formData.room>
+	<div ng-repeat="cardset in formText">
+		{{cardset.name}} <input type = "radio" name = "cardset.id" value = "{{cardset._id}}" ng-model = formData.card_set_id>	
+	</div>
+	<button type = "submit" ng-click = "addGame()">Create!</button>
+
+</form>
+<p>Currently selected = {{formData.card_set | json }}</p>

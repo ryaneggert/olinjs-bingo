@@ -71,9 +71,9 @@ cardSchema = mongoose.Schema({
 });
 
 
-models.card = mongoose.model("Card", userSchema);
-models.game = mongoose.model("Game", userSchema);
-models.cardset = mongoose.model("CardSet", userSchema);
+models.card = mongoose.model("Card", cardSchema);
+models.game = mongoose.model("Game", gameSchema);
+models.cardset = mongoose.model("CardSet", cardsetSchema);
 models.user = mongoose.model("User", userSchema);
 
 module.exports = models;
