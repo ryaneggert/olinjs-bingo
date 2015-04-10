@@ -4,8 +4,11 @@
 <head>
   <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
   <link href="bootstrap-3.3.4-dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="js/socket.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
 </head>
 
@@ -35,7 +38,7 @@
           </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="/#login">Sign In</a></li>
+          <li><a href="../navbar/">Sign In</a></li>
         </ul>
       </div>
       <!--/.nav-collapse -->
@@ -45,7 +48,6 @@
     {{ message }}
     <div ng-view></div>
   </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <script src="bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
 </body>
 
