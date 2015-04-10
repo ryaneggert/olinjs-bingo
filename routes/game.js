@@ -76,7 +76,7 @@ routes.getUserCardsets = function (req, res) {
 
 	});*/ 
 	
-	// Remove this once we have user log in working
+	// Remove this once we have user login working
 	CardSet.find({}, function(err, cardsets) {
 		if (err) {
 			console.error("Couldn't find card sets", err);
