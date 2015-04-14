@@ -4,6 +4,7 @@ var logger = require("morgan");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
+var sockets = require("./utils/sockets");
 
 var game = require("./routes/game");
 
@@ -12,12 +13,14 @@ var app = express();
 
 app.use(logger("dev"));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get('/', function(req, res) {
-	res.send("Hello World This is Bingo!");
+  res.send("Hello World This is Bingo!");
 });
 
 app.post('/api/new/cardset', game.newCardSet);
@@ -29,4 +32,8 @@ app.get('/api/user/cardsets', game.getUserCardsets);
 mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/test');
 var PORT = 3000;
 
-app.listen(process.env.PORT || PORT);
+app = app.listen(process.env.PORT || PORT);
+
+// socket.io
+
+sockets(app);
