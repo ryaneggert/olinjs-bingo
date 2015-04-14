@@ -5,7 +5,7 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io'])
       ioSocket: myIoSocket
     });
     scks.forward('test'); // makes all 'test' socket events avaliable as
-                    //$scope.$on('socket:test', function(ev,data) {...};)
+    //$scope.$on('socket:test', function(ev,data) {...};)
     return scks;
   });
 
@@ -60,7 +60,8 @@ bingo.controller('guest_form', function($scope, $http) {
           console.log("Error: " + data);
         });
     }
-  }
+  };
+});
 
 bingo.controller('homeController', function($scope, $http, bingosockets) {
   $scope.$on('socket:test', function(ev, data) {

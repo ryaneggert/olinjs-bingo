@@ -15,7 +15,6 @@ route.login = function(req, res) {
       res.status(500).send("Couldn't add new guest to db");
     }
   });
-  res.redirect('/');
 }
 
 route.logout = function(req, res) {
