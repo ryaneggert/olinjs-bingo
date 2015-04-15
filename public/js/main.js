@@ -25,6 +25,10 @@ bingo.config(function($routeProvider) {
     .when('/new/cardset', {
       templateUrl: '../pages/addCardSet.html',
       controller: 'addCardSetController'
+    })
+    .when('/new/game', {
+          templateUrl : '../pages/newGame.html',
+          controller : 'addGameController'
     });
 });
 
@@ -60,7 +64,35 @@ bingo.controller('guest_form', function($scope, $http) {
           console.log("Error: " + data);
         });
     }
-  };
+  }
+});
+
+bingo.controller('addGameController', function($scope, $http) {
+	$scope.formData = {};
+	$scope.formData.card_set = "default";
+	$scope.msg = "";
+	$scope.formText = {};
+
+
+	$http.get('/api/user/cardsets')
+		.success(function(data) {
+			$scope.formText = data;
+		})
+		.error(function(data) {
+			console.log("Error: " + data); 
+		});
+
+	$scope.addGame = function () {
+		console.log($scope.formData);
+		$http.post('/api/new/game', $scope.formData)
+			.success(function(data) {
+				$scope.formData = {};
+				$scope.msg = "Congratulations! You have successfully created a game!";
+			})
+			.error(function(data) {
+				console.log("Error: " + data);
+			});
+	};
 });
 
 bingo.controller('homeController', function($scope, $http, bingosockets) {
@@ -69,3 +101,4 @@ bingo.controller('homeController', function($scope, $http, bingosockets) {
     bingosockets.emit('response', 'this is a response');
   });
 });
+

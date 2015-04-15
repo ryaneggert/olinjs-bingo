@@ -1,7 +1,13 @@
 <h2>Add a New Card Set</h2>
 <form>
-  <input type="text" name="name" placeholder="Name" ng-model=f ormData.name>
-  <input type="text" name="cards" placeholder="Card Bullshit" ng-model=f ormData.cards>
-  <button type="submit" ng-click="addCardSet()">Add!</button>
+HEAD
+	<input type = "text" name = "name" placeholder = "Name" ng-model = formData.name>
+	<!--TODO: make form inputs for 5 cards-->
+	<input type = "text" name = "card1" ng-model = formData.card1> 
+	<input type = "text" name = "card2" ng-model = formData.card2>
+	<input type = "text" name = "card3" ng-model = formData.card3>
+	<input type = "text" name = "card4" ng-model = formData.card4>
+	<input type = "text" name = "card5" ng-model = formData.card5>
+	<button type = "submit" ng-click = "addCardSet()">Add!</button>
 </form>
 <div>{{msg}}</div>

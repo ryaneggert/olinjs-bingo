@@ -33,6 +33,10 @@ app.post('/guest', guest.login);
 
 app.post('/api/new/cardset', game.newCardSet);
 
+app.post('/api/new/game', game.newGame);
+
+app.get('/api/user/cardsets', game.getUserCardsets);
+
 mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/test');
 var PORT = 3000;
 

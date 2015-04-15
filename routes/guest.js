@@ -9,12 +9,16 @@ var route = {};
 route.login = function(req, res) {
   req.session.user = req.body.user;
 
-  newCardSet.save(function(err, cardset) {
+  var new_user = new User;
+
+  new_user.save(function(err, users) {
     if (err) {
       console.error('Cant add a guest', err);
       res.status(500).send("Couldn't add new guest to db");
     }
   });
+
+  res.send("nothing");
 }
 
 route.logout = function(req, res) {
