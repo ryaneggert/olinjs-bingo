@@ -5,24 +5,31 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io'])
       ioSocket: myIoSocket
     });
     scks.forward('test'); // makes all 'test' socket events avaliable as
-                    //$scope.$on('socket:test', function(ev,data) {...};)
+    //$scope.$on('socket:test', function(ev,data) {...};)
     return scks;
   });
 
 bingo.config(function($routeProvider) {
-    $routeProvider
-        .when('/', {
-            templateUrl : '../pages/home.html',
-            controller: 'homeController'
-        })
-        .when('/new/cardset', {
-        	templateUrl : '../pages/addCardSet.html',
-        	controller : 'addCardSetController'
-        })
-        .when('/new/game', {
-        	templateUrl : '../pages/newGame.html',
-        	controller : 'addGameController'
-        });
+  $routeProvider
+    .when('/', {
+      templateUrl: '../pages/home.html',
+      controller: 'homeController'
+    })
+    .when('/login', {
+      templateUrl: '../pages/login.html',
+    })
+    .when('/guest_login', {
+      templateUrl: '../pages/guest.html',
+      controller: 'guest_form'
+    })
+    .when('/new/cardset', {
+      templateUrl: '../pages/addCardSet.html',
+      controller: 'addCardSetController'
+    })
+    .when('/new/game', {
+          templateUrl : '../pages/newGame.html',
+          controller : 'addGameController'
+    });
 });
 
 bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
@@ -42,6 +49,23 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
   };
 });
 
+bingo.controller('guest_form', function($scope, $http) {
+  $scope.formData = {};
+  $scope.msg = "";
+
+  $scope.submit = function() {
+    if ($scope.guest_name) {
+      $scope.formData.user = $scope.guest_name;
+      $http.post('/guest', $scope.formData)
+        .success(function(data) {
+          window.location = "/";
+        })
+        .error(function(data) {
+          console.log("Error: " + data);
+        });
+    }
+  }
+});
 
 bingo.controller('addGameController', function($scope, $http) {
 	$scope.formData = {};
@@ -100,4 +124,5 @@ bingo.controller('homeController', function($scope, $http, bingosockets) {
         console.log("Error: " + data);
       });
   };
+
 });
