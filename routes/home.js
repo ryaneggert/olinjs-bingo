@@ -27,8 +27,6 @@ routes.joinGame = function (req, res) {
 	console.log(req.body.game_id);
 	// Get the ID of the game the user chose
 	var gameId = req.body.game_id;
-	// Set card's initial score
-	var initScore = [[false, false, false, false, false]];
 
 	// TODO: set the user to the current user
 
@@ -55,10 +53,25 @@ routes.joinGame = function (req, res) {
 			square_set.sort(function() {
 				return .5 - Math.random();
 			});
+			console.log(square_set);
+
+			// Set card's initial score
+			var initScore = [
+				[false, false, false, false, false],
+				[false, false, false, false, false],
+				[false, false, false, false, false],
+				[false, false, false, false, false],
+				[false, false, false, false, false]
+			];
 
 			// Assign the squares for the card based on the shuffled square_set deck
+			// TODO: make this less stupid with a loop or something
 			var squares = [
-				[square_set[0], square_set[1], square_set[2], square_set[3], square_set[4]]
+				[square_set[0], square_set[1], square_set[2], square_set[3], square_set[4]],
+				[square_set[5], square_set[6], square_set[7], square_set[8], square_set[9]],
+				[square_set[10], square_set[11], square_set[12], square_set[13], square_set[14]],
+				[square_set[15], square_set[16], square_set[17], square_set[18], square_set[19]],
+				[square_set[20], square_set[21], square_set[22], square_set[23], square_set[24]],
 			];
 
 			// Create a new bingo card

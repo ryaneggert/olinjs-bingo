@@ -49,7 +49,6 @@ bingo.controller('addGameController', function($scope, $http) {
 	$scope.msg = "";
 	$scope.formText = {};
 
-
 	$http.get('/api/user/cardsets')
 		.success(function(data) {
 			$scope.formText = data;
@@ -89,10 +88,10 @@ bingo.controller('homeController', function($scope, $http, bingosockets) {
   });
 
   $scope.formData = {};
-
+  // TODO: redirect to game screen after user successfully joins game
   $scope.joinGame = function () {
     console.log($scope.formData);
-      $http.post('/api/join/game', $scope.formData)
+    $http.post('/api/join/game', $scope.formData)
       .success(function(data) {
         console.log(data);
         $scope.formData = {};
@@ -100,11 +99,5 @@ bingo.controller('homeController', function($scope, $http, bingosockets) {
       .error(function(data) {
         console.log("Error: " + data);
       });
-
   };
-
 });
-
-
-
-
