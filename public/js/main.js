@@ -58,7 +58,7 @@ bingo.controller('guest_form', function($scope, $http) {
       $scope.formData.user = $scope.guest_name;
       $http.post('/guest', $scope.formData)
         .success(function(data) {
-          console.log('lalala');
+          window.location = "/";
         })
         .error(function(data) {
           console.log("Error: " + data);
