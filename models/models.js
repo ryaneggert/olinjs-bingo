@@ -54,12 +54,8 @@ gameSchema.methods.timeToStart = function() {
 };
 
 cardSchema = mongoose.Schema({
-  score: [
-    [Boolean] // For keeping track of filled squares
-  ],
-  squares: [
-    [String]
-  ],
+  score: {}, //This needs to be a nested array of booleans
+  squares: {},  //This needs to be a nested array of strings that matches the score array
   user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User'

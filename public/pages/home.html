@@ -1,1 +1,10 @@
 <h1>This is the Home Page!</h1>
+<br>
+<h2>All Games</h2>
+<form>
+	<div ng-repeat="game in formText">
+		{{game.room}}<input type = "radio" name = "game.id" value = "{{game._id}}" ng-model = formData.game_id>
+	</div>
+	<button type = "submit" ng-click = "joinGame()">Join!</button>
+</form>
+</div>
