@@ -13,7 +13,7 @@ bingo.config(function($routeProvider) {
     $routeProvider
         .when('/', {
             templateUrl : '../pages/home.html',
-            controler: 'homeController'
+            controller: 'homeController'
         })
         .when('/new/cardset', {
         	templateUrl : '../pages/addCardSet.html',
@@ -49,7 +49,6 @@ bingo.controller('addGameController', function($scope, $http) {
 	$scope.msg = "";
 	$scope.formText = {};
 
-
 	$http.get('/api/user/cardsets')
 		.success(function(data) {
 			$scope.formText = data;
@@ -72,10 +71,33 @@ bingo.controller('addGameController', function($scope, $http) {
 });
 
 bingo.controller('homeController', function($scope, $http, bingosockets) {
+  $scope.formText = "";
+
+  $http.get('/api/home')
+  .success(function(data) {
+    console.log(data);
+    $scope.formText = data;
+  })
+  .error(function(data) {
+    console.log("Error: " + data);
+  });
+
   $scope.$on('socket:test', function(ev, data) {
     console.log('Test Recieved');
     bingosockets.emit('response', 'this is a response');
   });
 
+  $scope.formData = {};
+  // TODO: redirect to game screen after user successfully joins game
+  $scope.joinGame = function () {
+    console.log($scope.formData);
+    $http.post('/api/join/game', $scope.formData)
+      .success(function(data) {
+        console.log(data);
+        $scope.formData = {};
+      })
+      .error(function(data) {
+        console.log("Error: " + data);
+      });
+  };
 });
-
