@@ -9,6 +9,12 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io'])
     return scks;
   });
 
+bingo.directive('bsquare', function() {
+  return function(scope, element, attrs) {
+    element.height($('div.bingosquare').width());
+  };
+});
+
 bingo.config(function($routeProvider) {
   $routeProvider
     .when('/', {
@@ -29,6 +35,10 @@ bingo.config(function($routeProvider) {
     .when('/new/game', {
       templateUrl: '../pages/newGame.html',
       controller: 'addGameController'
+    })
+    .when('/game', {
+      templateUrl: '../pages/bingocard.html',
+      controller: 'bingoController'
     });
 });
 
@@ -127,4 +137,45 @@ bingo.controller('homeController', function($scope, $http, bingosockets) {
       });
   };
 
+});
+
+bingo.controller('bingoController', function($scope, $document, $http, bingosockets) {
+  // Responsive bingo card: keep squares square.
+  var resizecard = function() {
+    // I shouldn't have to use jQuery.
+    // Future work: find how to modify directive to $scope.$apply() or something
+    // like that.
+    var sqwidth = $('div.bingosquare').width();
+    $('div.bingorow').height(sqwidth);
+    $('div.bingosquare').height(sqwidth);
+    console.log('Cards have been resized');
+  };
+
+  // var toggleselect = $('div')
+
+  $scope.sqclick = function(event) {
+    console.log(event.target.id);
+    bingosockets.emit('game', {
+      'type': 'move',
+      'data': {
+        'square': event.target.id
+      }
+    });
+  };
+
+  $scope.gamecard = [
+    [1, 2, 3, 4, 5],
+    [1, 3, 2, 5, 4],
+    [5, 4, 3, 2, 1],
+    [1, 5, 2, 4, 3],
+    [4, 3, 2, 5, 1]
+  ];
+  $(window).resize(function() {
+    resizecard();
+  });
+
+  // $scope.$on('socket:test', function(ev, data) {
+  //   console.log('Test Recieved');
+  //   bingosockets.emit('response', 'this is a response');
+  // });
 });
