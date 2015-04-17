@@ -51,11 +51,12 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
 
 bingo.controller('guest_form', ['$scope', '$http', '$location', function($scope, $http, $location) {
   $scope.formData = {};
+  $scope.formData.user = {};
   $scope.msg = "";
 
   $scope.submit = function() {
     if ($scope.guest_name) {
-      $scope.formData.user = $scope.guest_name;
+      $scope.formData.user.name = $scope.guest_name;
       $http.post('/guest', $scope.formData)
         .success(function(data) {
           angular.element('#username').scope().display_username = data;
