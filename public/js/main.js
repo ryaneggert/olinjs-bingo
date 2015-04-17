@@ -59,7 +59,7 @@ bingo.controller('guest_form', ['$scope', '$http', '$location', function($scope,
       $scope.formData.user.name = $scope.guest_name;
       $http.post('/guest', $scope.formData)
         .success(function(data) {
-          angular.element('#username').scope().display_username = data;
+          angular.element('#username').scope().display_username = data.name;
           $location.path('/');
         })
         .error(function(data) {
