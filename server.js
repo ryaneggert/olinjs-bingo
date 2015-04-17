@@ -3,7 +3,7 @@ var guest = require("./routes/guest.js");
 var home = require("./routes/home");
 
 var express = require("express");
-var session = require("express-session")
+var session = require("express-session");
 var path = require("path");
 var logger = require("morgan");
 var cookieParser = require("cookie-parser");
