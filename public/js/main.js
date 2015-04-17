@@ -108,11 +108,16 @@ bingo.controller('addGameController', function($scope, $http) {
 
 bingo.controller('homeController', function($scope, $http, bingosockets) {
   $scope.formText = "";
+  $scope.isNotLoggedIn = false;
 
   $http.get('/api/home')
     .success(function(data) {
       console.log(data);
-      $scope.formText = data;
+      if (data === "Must be logged in!") {
+        $scope.isNotLoggedIn = true;
+      } else {
+        $scope.formText = data;
+      };
     })
     .error(function(data) {
       console.log("Error: " + data);

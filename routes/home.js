@@ -10,9 +10,9 @@ var routes = {};
 
 routes.home = function (req, res) {
 /* Displays all of the available games on the landing page */
-//TODO: only display available games if user is logged in
 
-	Game.find({}, function(err, games) {
+	if (req.session.user) {
+		Game.find({}, function(err, games) {
 		if (err) {
 			console.error("Couldn't find any games!", err);
 			res.status(500).send("Couldn't find any games in the db!");
@@ -20,6 +20,9 @@ routes.home = function (req, res) {
 		console.log(games);
 		res.send(games);
 	});
+	} else {
+		res.send("Must be logged in!");
+	};
 };
 
 routes.joinGame = function (req, res) {

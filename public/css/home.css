@@ -1,0 +1,36 @@
+.home .banner {
+	text-align: center;
+	background-color: #0F63C8;
+	position: absolute;
+	top:2rem;
+	width: 100%;
+	height: 100vh;
+}
+
+.home h1 {
+	color: #e1e1e1;
+	font-size: 6rem;
+}
+
+.home p {
+	color: #333;
+	font-size: 1.5rem;
+}
+
+.home .banner {
+	padding-top:6rem;
+}
+
+.home .login {
+	background-color:#333;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	padding-left:1.5rem;
+	padding-right: 1.5rem;
+	border-radius: 2px;
+	border:none;
+}
+
+.home .login a {
+	color: #e1e1e1;
+}
