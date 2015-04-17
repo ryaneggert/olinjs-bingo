@@ -1,6 +1,6 @@
 var game = require("./routes/game");
 var guest = require("./routes/guest.js");
-var home = require("./routes.home");
+var home = require("./routes/home");
 
 var express = require("express");
 var session = require("express-session")
