@@ -1,4 +1,4 @@
-var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngCookies'])
+var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io'])
   .factory('bingosockets', function(socketFactory) {
     var myIoSocket = io.connect('http://localhost:3000');
     var scks = socketFactory({
