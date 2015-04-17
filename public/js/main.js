@@ -152,9 +152,22 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
   };
 
   // var toggleselect = $('div')
-
   $scope.sqclick = function(event) {
     console.log(event.target.id);
+    console.log(typeof(event.target.id));
+    coords = event.target.id.split(/,|\[|\]/).slice(1, 3);
+    for(var i=0; i<coords.length; i++) { coords[i] = parseInt(coords[i], 10); } 
+    console.log($scope.gamescore[coords[0]][coords[1]])
+    $scope.gamescore[coords[0]][coords[1]] = !$scope.gamescore[coords[0]][coords[1]]
+    if ($scope.gamescore[coords[0]][coords[1]]) {
+      event.target.className += " squaretoggle"
+    }
+    else {
+      event.target.className = event.target.className.replace(" squaretoggle", "");
+    }
+    
+    $scope.bingo = hasBingo($scope.gamescore)
+
     bingosockets.emit('game', {
       'type': 'move',
       'data': {
@@ -170,9 +183,74 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     [1, 5, 2, 4, 3],
     [4, 3, 2, 5, 1]
   ];
+
+  $scope.gamescore = [
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false]
+  ];
+
   $(window).resize(function() {
     resizecard();
   });
+
+  //Helper functions for bingo
+  
+  function hasBingo(arr) {
+    return (check_rows(arr) ||
+            check_cols(arr) ||
+            check_diag_forw(arr) ||
+            check_diag_back(arr))
+  }
+
+  function all_true(arr) {
+    for (var elem in arr) {
+      if (arr[elem] == false) {
+        return false
+      }
+    }
+    return true
+  }
+
+  function check_rows(arr){
+    for (var row in arr) {
+      if (all_true(arr[row])) {
+        return true
+      }
+    }
+    return false
+  }
+
+  function check_cols(arr) {
+    for (var i in arr) {
+      var col = []
+      for (var j in arr) {
+        col.push(arr[j][i])
+      }
+      if (all_true(col)) {
+        return true
+      }
+    }
+    return false
+  }
+
+  function check_diag_forw(arr) {
+    var diag = []
+    for (var i in arr) {
+      diag.push(arr[i][i])
+    }
+    return all_true(diag)
+  }
+
+  function check_diag_back(arr) {
+    var diag = []
+    for (var i in arr) {
+      diag.push(arr[i][arr.length-i-1])
+    }
+    return all_true(diag)
+  }
 
   // $scope.$on('socket:test', function(ev, data) {
   //   console.log('Test Recieved');
