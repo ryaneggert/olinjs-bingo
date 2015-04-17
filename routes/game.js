@@ -8,7 +8,6 @@ var CardSet = models.cardset;
 
 var routes = {};
 
-
 routes.newCardSet = function (req, res) {
 /* Create and save new card set based on user input */
 
@@ -55,7 +54,7 @@ routes.newCardSet = function (req, res) {
 		if (err) {
 			console.error('Cant add new card set', err);
 			res.status(500).send("Couldn't add new card set to db");
-		}
+		};
 		console.log(cardset);
 		res.send(cardset);
 	});
@@ -68,6 +67,11 @@ routes.newGame = function (req, res) {
 	// Get data submitted by user from form 
 	var card_set_id = req.body.card_set_id;
 	var room = req.body.room;
+	// Default state of the game is open for play (Change later)
+	var isOpen = true; 
+
+	// Get start date from user input
+	var start_time = req.body.startDate;
 
 	// Find the specified card set
 	CardSet.findOne({_id: card_set_id}, function(err, cardset) {
@@ -76,7 +80,7 @@ routes.newGame = function (req, res) {
 			res.status(500).send("Couldn't find specified cardset");
 		};
 		console.log(cardset);
-		var newGame = new Game({room: room, card_set: cardset});
+		var newGame = new Game({room: room, card_set: cardset, start_time: start_time, isOpen: isOpen});
 
 		// Save the new game to the database
 		newGame.save(function(error, game) {
@@ -88,7 +92,6 @@ routes.newGame = function (req, res) {
 			res.send(game);
 		});
 	});
-
 };
 
 routes.getUserCardsets = function (req, res) {

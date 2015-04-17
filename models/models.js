@@ -36,6 +36,7 @@ var gameSchema = mongoose.Schema({
   }],
   closed: Boolean, // use to determine write permission to .players
   room: String,
+  isOpen: Boolean, // Use to determine if the game is open for play
   winner: {
     type: mongoose.Schema.ObjectId,
     ref: 'User'
