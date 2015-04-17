@@ -153,7 +153,6 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     var sqwidth = $('div.bingosquare').width();
     $('div.bingorow').height(sqwidth);
     $('div.bingosquare').height(sqwidth);
-    console.log('Cards have been resized');
   };
 
   // var toggleselect = $('div')
@@ -161,7 +160,7 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     console.log(event.target.id);
     console.log(typeof(event.target.id));
     coords = event.target.id.split(/,|\[|\]/).slice(1, 3);
-    for(var i=0; i<coords.length; i++) { coords[i] = parseInt(coords[i], 10); } 
+    for(var i=0; i<coords.length; i++) { coords[i] = parseInt(coords[i], 10); }
     console.log($scope.gamescore[coords[0]][coords[1]])
     $scope.gamescore[coords[0]][coords[1]] = !$scope.gamescore[coords[0]][coords[1]]
     if ($scope.gamescore[coords[0]][coords[1]]) {
@@ -170,7 +169,7 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     else {
       event.target.className = event.target.className.replace(" squaretoggle", "");
     }
-    
+
     $scope.bingo = hasBingo($scope.gamescore)
 
     bingosockets.emit('game', {
@@ -202,7 +201,7 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
   });
 
   //Helper functions for bingo
-  
+
   function hasBingo(arr) {
     return (check_rows(arr) ||
             check_cols(arr) ||
