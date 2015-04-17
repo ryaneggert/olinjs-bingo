@@ -46,8 +46,12 @@ routes.newCardSet = function (req, res) {
 				card21, card22, card23, card24, card25];
 	var name = req.body.name;
 
+	// Assign current logged in user as creator
+	var creator = req.session.user; 
+	console.log(creator._id);
+
 	// Create new CardSet object
-	var newCardSet = new CardSet({name: name, square_set: square_set});
+	var newCardSet = new CardSet({name: name, square_set: square_set, creator: creator._id});
 
 	// Save the new card set object to the database
 	newCardSet.save(function(err, cardset) {
@@ -67,6 +71,7 @@ routes.newGame = function (req, res) {
 	// Get data submitted by user from form 
 	var card_set_id = req.body.card_set_id;
 	var room = req.body.room;
+
 	// Default state of the game is open for play (Change later)
 	var isOpen = true; 
 
