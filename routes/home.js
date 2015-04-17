@@ -59,7 +59,7 @@ routes.joinGame = function (req, res) {
 			var initScore = [
 				[false, false, false, false, false],
 				[false, false, false, false, false],
-				[false, false, false, false, false],
+				[false, false,  true, false, false],
 				[false, false, false, false, false],
 				[false, false, false, false, false]
 			];
@@ -69,7 +69,7 @@ routes.joinGame = function (req, res) {
 			var squares = [
 				[square_set[0], square_set[1], square_set[2], square_set[3], square_set[4]],
 				[square_set[5], square_set[6], square_set[7], square_set[8], square_set[9]],
-				[square_set[10], square_set[11], square_set[12], square_set[13], square_set[14]],
+				[square_set[10], square_set[11],   "FREE"   , square_set[13], square_set[14]],
 				[square_set[15], square_set[16], square_set[17], square_set[18], square_set[19]],
 				[square_set[20], square_set[21], square_set[22], square_set[23], square_set[24]],
 			];
