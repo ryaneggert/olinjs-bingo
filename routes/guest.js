@@ -7,9 +7,7 @@ var User = models.user;
 var route = {};
 
 route.login = function(req, res) {
-  req.session.user = req.body.user;
-
-  var new_user = new User;
+  var new_user = new User({name: req.body.user.name});
 
   new_user.save(function(err, users) {
     if (err) {
@@ -17,6 +15,7 @@ route.login = function(req, res) {
       res.status(500).send("Couldn't add new guest to db");
     }
   });
+  req.session.user = new_user;
 
   res.send(req.session.user);
 }
