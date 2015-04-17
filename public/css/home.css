@@ -34,3 +34,8 @@
 .home .login a {
 	color: #e1e1e1;
 }
+
+.home .allGames {
+	position: absolute;
+	top:100vh;
+}
