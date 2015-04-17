@@ -1,4 +1,4 @@
-var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io'])
+var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngCookies'])
   .factory('bingosockets', function(socketFactory) {
     var myIoSocket = io.connect('http://localhost:3000');
     var scks = socketFactory({
@@ -8,6 +8,12 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io'])
     //$scope.$on('socket:test', function(ev,data) {...};)
     return scks;
   });
+
+bingo.directive('bsquare', function() {
+  return function(scope, element, attrs) {
+    element.height($('div.bingosquare').width());
+  };
+});
 
 bingo.config(function($routeProvider) {
   $routeProvider
@@ -29,6 +35,10 @@ bingo.config(function($routeProvider) {
     .when('/new/game', {
       templateUrl: '../pages/newGame.html',
       controller: 'addGameController'
+    })
+    .when('/game', {
+      templateUrl: '../pages/bingocard.html',
+      controller: 'bingoController'
     });
 });
 
