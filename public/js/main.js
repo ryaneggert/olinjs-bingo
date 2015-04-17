@@ -27,8 +27,8 @@ bingo.config(function($routeProvider) {
       controller: 'addCardSetController'
     })
     .when('/new/game', {
-          templateUrl : '../pages/newGame.html',
-          controller : 'addGameController'
+      templateUrl: '../pages/newGame.html',
+      controller: 'addGameController'
     });
 });
 
@@ -66,47 +66,47 @@ bingo.controller('guest_form', ['$scope', '$http', '$location', function($scope,
           console.log("Error: " + data);
         });
     }
-  }
+  };
 }]);
 
 bingo.controller('addGameController', function($scope, $http) {
-	$scope.formData = {};
-	$scope.formData.card_set = "default";
-	$scope.msg = "";
-	$scope.formText = {};
+  $scope.formData = {};
+  $scope.formData.card_set = "default";
+  $scope.msg = "";
+  $scope.formText = {};
 
-	$http.get('/api/user/cardsets')
-		.success(function(data) {
-			$scope.formText = data;
-		})
-		.error(function(data) {
-			console.log("Error: " + data); 
-		});
+  $http.get('/api/user/cardsets')
+    .success(function(data) {
+      $scope.formText = data;
+    })
+    .error(function(data) {
+      console.log("Error: " + data);
+    });
 
-	$scope.addGame = function () {
-		console.log($scope.formData);
-		$http.post('/api/new/game', $scope.formData)
-			.success(function(data) {
-				$scope.formData = {};
-				$scope.msg = "Congratulations! You have successfully created a game!";
-			})
-			.error(function(data) {
-				console.log("Error: " + data);
-			});
-	};
+  $scope.addGame = function() {
+    console.log($scope.formData);
+    $http.post('/api/new/game', $scope.formData)
+      .success(function(data) {
+        $scope.formData = {};
+        $scope.msg = "Congratulations! You have successfully created a game!";
+      })
+      .error(function(data) {
+        console.log("Error: " + data);
+      });
+  };
 });
 
 bingo.controller('homeController', function($scope, $http, bingosockets) {
   $scope.formText = "";
 
   $http.get('/api/home')
-  .success(function(data) {
-    console.log(data);
-    $scope.formText = data;
-  })
-  .error(function(data) {
-    console.log("Error: " + data);
-  });
+    .success(function(data) {
+      console.log(data);
+      $scope.formText = data;
+    })
+    .error(function(data) {
+      console.log("Error: " + data);
+    });
 
   $scope.$on('socket:test', function(ev, data) {
     console.log('Test Recieved');
@@ -115,7 +115,7 @@ bingo.controller('homeController', function($scope, $http, bingosockets) {
 
   $scope.formData = {};
   // TODO: redirect to game screen after user successfully joins game
-  $scope.joinGame = function () {
+  $scope.joinGame = function() {
     console.log($scope.formData);
     $http.post('/api/join/game', $scope.formData)
       .success(function(data) {
