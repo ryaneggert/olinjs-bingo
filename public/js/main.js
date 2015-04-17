@@ -49,7 +49,7 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
   };
 });
 
-bingo.controller('guest_form', function($scope, $http) {
+bingo.controller('guest_form', ['$scope', '$http', '$location', function($scope, $http, $location) {
   $scope.formData = {};
   $scope.msg = "";
 
@@ -58,14 +58,15 @@ bingo.controller('guest_form', function($scope, $http) {
       $scope.formData.user = $scope.guest_name;
       $http.post('/guest', $scope.formData)
         .success(function(data) {
-          window.location = "/";
+          angular.element('#username').scope().display_username = data;
+          $location.path('/');
         })
         .error(function(data) {
           console.log("Error: " + data);
         });
     }
   }
-});
+}]);
 
 bingo.controller('addGameController', function($scope, $http) {
 	$scope.formData = {};

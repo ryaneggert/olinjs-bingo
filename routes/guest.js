@@ -18,10 +18,11 @@ route.login = function(req, res) {
     }
   });
 
-  res.send("nothing");
+  res.send(req.session.user);
 }
 
 route.logout = function(req, res) {
+  //still need implementation
   req.session.user = null;
   res.redirect('/');
 }
