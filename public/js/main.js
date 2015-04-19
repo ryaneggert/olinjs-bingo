@@ -39,6 +39,10 @@ bingo.config(function($routeProvider) {
     .when('/game', {
       templateUrl: '../pages/bingocard.html',
       controller: 'bingoController'
+    })
+    .when('/gameroom', {
+      templateUrl: '../pages/gameroom.html',
+      controller: 'gameroomController'
     });
 });
 
@@ -59,7 +63,7 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
   };
 });
 
-bingo.controller('guest_form', ['$scope', '$http', '$location', function($scope, $http, $location) {
+bingo.controller('guest_form', function($scope, $http, $location) {
   $scope.formData = {};
   $scope.formData.user = {};
   $scope.msg = "";
@@ -77,9 +81,28 @@ bingo.controller('guest_form', ['$scope', '$http', '$location', function($scope,
         });
     }
   };
-}]);
+});
 
-bingo.controller('addGameController', function($scope, $http) {
+bingo.controller('gameroomController', function($scope, $http) {
+  $scope.formData = {};
+  $scope.msg = "";
+
+  $scope.submit = function() {
+    if ($scope.guest_name) {
+      $scope.formData.user.name = $scope.guest_name;
+      $http.post('/guest', $scope.formData)
+        .success(function(data) {
+          angular.element('#username').scope().display_username = data.name;
+          $location.path('/');
+        })
+        .error(function(data) {
+          console.log("Error: " + data);
+        });
+    }
+  };
+});
+
+bingo.controller('addGameController', function($scope, $http, $location) {
   $scope.formData = {};
   $scope.formData.card_set = "default";
   $scope.msg = "";
@@ -99,6 +122,7 @@ bingo.controller('addGameController', function($scope, $http) {
       .success(function(data) {
         $scope.formData = {};
         $scope.msg = "Congratulations! You have successfully created a game!";
+        $location.path('/gameroom');
       })
       .error(function(data) {
         console.log("Error: " + data);
