@@ -83,23 +83,13 @@ bingo.controller('guest_form', function($scope, $http, $location) {
   };
 });
 
-bingo.controller('gameroomController', function($scope, $http) {
+bingo.controller('gameroomController', function($scope, $http, $location) {
   $scope.formData = {};
   $scope.msg = "";
+  $scope.formData.host = $location.search().host;
+  $scope.host_name = $scope.formData.host.name;
 
-  $scope.submit = function() {
-    if ($scope.guest_name) {
-      $scope.formData.user.name = $scope.guest_name;
-      $http.post('/guest', $scope.formData)
-        .success(function(data) {
-          angular.element('#username').scope().display_username = data.name;
-          $location.path('/');
-        })
-        .error(function(data) {
-          console.log("Error: " + data);
-        });
-    }
-  };
+
 });
 
 bingo.controller('addGameController', function($scope, $http, $location) {
@@ -121,7 +111,9 @@ bingo.controller('addGameController', function($scope, $http, $location) {
     $http.post('/api/new/game', $scope.formData)
       .success(function(data) {
         $scope.formData = {};
-        $location.path('/gameroom');
+        $location.path('/gameroom').search({
+          host: data.host
+        });
       })
       .error(function(data) {
         console.log("Error: " + data);
@@ -184,16 +176,17 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     console.log(event.target.id);
     console.log(typeof(event.target.id));
     coords = event.target.id.split(/,|\[|\]/).slice(1, 3);
-    for(var i=0; i<coords.length; i++) { coords[i] = parseInt(coords[i], 10); } 
+    for (var i = 0; i < coords.length; i++) {
+      coords[i] = parseInt(coords[i], 10);
+    }
     console.log($scope.gamescore[coords[0]][coords[1]])
     $scope.gamescore[coords[0]][coords[1]] = !$scope.gamescore[coords[0]][coords[1]]
     if ($scope.gamescore[coords[0]][coords[1]]) {
       event.target.className += " squaretoggle"
-    }
-    else {
+    } else {
       event.target.className = event.target.className.replace(" squaretoggle", "");
     }
-    
+
     $scope.bingo = hasBingo($scope.gamescore)
 
     bingosockets.emit('game', {
@@ -225,12 +218,12 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
   });
 
   //Helper functions for bingo
-  
+
   function hasBingo(arr) {
     return (check_rows(arr) ||
-            check_cols(arr) ||
-            check_diag_forw(arr) ||
-            check_diag_back(arr))
+      check_cols(arr) ||
+      check_diag_forw(arr) ||
+      check_diag_back(arr))
   }
 
   function all_true(arr) {
@@ -242,7 +235,7 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     return true
   }
 
-  function check_rows(arr){
+  function check_rows(arr) {
     for (var row in arr) {
       if (all_true(arr[row])) {
         return true
@@ -275,7 +268,7 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
   function check_diag_back(arr) {
     var diag = []
     for (var i in arr) {
-      diag.push(arr[i][arr.length-i-1])
+      diag.push(arr[i][arr.length - i - 1])
     }
     return all_true(diag)
   }
