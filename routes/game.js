@@ -63,17 +63,16 @@ routes.newCardSet = function(req, res) {
     if (err) {
       console.error('Cant add new card set', err);
       res.status(500).send("Couldn't add new card set to db");
-    };
+    }
     console.log(cardset);
     res.send(cardset);
   });
-
 };
 
 routes.newGame = function(req, res) {
   /* Create and save a new game with set start time and pre-made card set */
 
-  // Get data submitted by user from form 
+  // Get data submitted by user from form
   var card_set_id = req.body.card_set_id;
   var room = req.body.room;
   var host_name = req.body.host;
@@ -92,7 +91,7 @@ routes.newGame = function(req, res) {
     if (err) {
       console.error("Couldn't find specified cardset", err);
       res.status(500).send("Couldn't find specified cardset");
-    };
+    }
 
     User.findOne({
       name: host_name
@@ -100,7 +99,7 @@ routes.newGame = function(req, res) {
       if (err) {
         console.error("Couldn't find host user", err);
         res.status(500).send("Couldn't find specified host user");
-      };
+      }
 
       var newGame = new Game({
         host: host,
@@ -115,15 +114,12 @@ routes.newGame = function(req, res) {
         if (error) {
           console.error("Can't add new game!", error);
           res.status(500).send("Couldn't add new game to db!");
-        };
+        }
 
         console.log(game);
         res.send(game);
       });
-
     });
-
-
   });
 };
 
@@ -131,20 +127,18 @@ routes.getUserCardsets = function(req, res) {
   /* Gets all of the card sets created by the current logged in user */
 
   /* // Uncomment this stuff once we have user log in working
-	// Get the object Id of the current logged in user to use in query
-	var currentUser = req.user._id;
+  // Get the object Id of the current logged in user to use in query
+  var currentUser = req.user._id;
 
-	// Find all of the logged in user's card sets
-	CardSet.find({creator: currentUser}, function(err, cardsets) {
-
-	});*/
+  // Find all of the logged in user's card sets
+  CardSet.find({creator: currentUser}, function(err, cardsets) {});*/
 
   // Remove this once we have user login working
   CardSet.find({}, function(err, cardsets) {
     if (err) {
       console.error("Couldn't find card sets", err);
       res.status(500).send("couldn't find any card sets!");
-    };
+    }
     console.log(cardsets);
     res.send(cardsets);
   });
@@ -152,8 +146,11 @@ routes.getUserCardsets = function(req, res) {
 
 routes.login = function(req, res) {
   // Allow users to log in as a guest or login with facebook
+};
 
-
-}
+routes.init = function(req, res) {
+  /* Send data necessary to load game page */
+  console.log(req.body.gameid);
+};
 
 module.exports = routes;

@@ -6,6 +6,7 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io'])
     });
     scks.forward('test'); // makes all 'test' socket events avaliable as
     //$scope.$on('socket:test', function(ev,data) {...};)
+    scks.forward('card');
     return scks;
   });
 
@@ -161,7 +162,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
 
 });
 
-bingo.controller('bingoController', function($scope, $document, $http, bingosockets) {
+bingo.controller('bingoController', function($scope, $document, $http, $routeParams, bingosockets) {
   // Responsive bingo card: keep squares square.
   var resizecard = function() {
     // I shouldn't have to use jQuery.
@@ -172,6 +173,19 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     $('div.bingosquare').height(sqwidth);
     console.log('Cards have been resized');
   };
+
+  var initializegame = function() {
+    // Socket to server to join room, get card/game info
+    $http.post('/api/game/initialize', {gameid: $routeParams.gameid})
+      .success(function(data) {
+        $scope.gamdcard = data.card;
+        $scope.msg = "Congratulations! You have successfully added your card set!";
+      })
+      .error(function(data) {
+        console.log("Error: " + data);
+      });
+  };
+  initializegame();
 
   // var toggleselect = $('div')
   $scope.sqclick = function(event) {
@@ -199,13 +213,13 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     });
   };
 
-  $scope.gamecard = [
-    [1, 2, 3, 4, 5],
-    [1, 3, 2, 5, 4],
-    [5, 4, 3, 2, 1],
-    [1, 5, 2, 4, 3],
-    [4, 3, 2, 5, 1]
-  ];
+  // $scope.gamecard = [
+  //   [1, 2, 3, 4, 5],
+  //   [1, 3, 2, 5, 4],
+  //   [5, 4, 3, 2, 1],
+  //   [1, 5, 2, 4, 3],
+  //   [4, 3, 2, 5, 1]
+  // ];
 
   $scope.gamescore = [
     [false, false, false, false, false],

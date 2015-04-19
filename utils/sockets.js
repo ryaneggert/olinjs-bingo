@@ -1,11 +1,6 @@
 var bingomove = function(movedata) {
   console.log(movedata);
-  // update card in db
-  // send confirmation response
-  // socket.emit('response', {'type':'response', 'data':{'error': ...}
 };
-
-
 var gamehandler = function(data, socket) {
   if (data.type === 'move') {
     bingomove(data.data);
@@ -25,6 +20,5 @@ var sockets = function(app) {
     socket.on('game', gamehandler);
   });
 };
-
 
 module.exports = sockets;
