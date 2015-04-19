@@ -47,6 +47,7 @@ div.bingosquare {
   border: 1px solid black;
   padding: 0;
   max-width: 15vh;
+  cursor: pointer;
   /*  position: relative;
   width: 20%;
   height: 0;

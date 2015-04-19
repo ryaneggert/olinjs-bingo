@@ -9,7 +9,7 @@
     </div>
     <div bsquare class="row bingorow" ng-repeat="cardrow in gamecard" ng-init="rowindex = $index">
       <div bsquare class="col-xs-5th bingosquare" ng-repeat="square in cardrow" ng-init="colindex = $index" ng-click="sqclick($event)" id="[{{rowindex}},{{colindex}}]">
-        <div class="bingosquaretext">{{square}}</div>
+        {{square}}
       </div>
     </div>
   </div>
