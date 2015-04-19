@@ -47,7 +47,7 @@ routes.newCardSet = function (req, res) {
 	var name = req.body.name;
 
 	// Assign current logged in user as creator
-	var creator = req.session.user; 
+	var creator = req.session.user;
 	console.log(creator._id);
 
 	// Create new CardSet object
@@ -62,18 +62,17 @@ routes.newCardSet = function (req, res) {
 		console.log(cardset);
 		res.send(cardset);
 	});
-
 };
 
 routes.newGame = function (req, res) {
 /* Create and save a new game with set start time and pre-made card set */
 
-	// Get data submitted by user from form 
+	// Get data submitted by user from form
 	var card_set_id = req.body.card_set_id;
 	var room = req.body.room;
 
 	// Default state of the game is open for play (Change later)
-	var isOpen = true; 
+	var isOpen = true;
 
 	// Get start date from user input
 	var start_time = req.body.startDate;
@@ -101,7 +100,7 @@ routes.newGame = function (req, res) {
 
 routes.getUserCardsets = function (req, res) {
 /* Gets all of the card sets created by the current logged in user */
-	
+
 	/* // Uncomment this stuff once we have user log in working
 	// Get the object Id of the current logged in user to use in query
 	var currentUser = req.user._id;
@@ -109,8 +108,8 @@ routes.getUserCardsets = function (req, res) {
 	// Find all of the logged in user's card sets
 	CardSet.find({creator: currentUser}, function(err, cardsets) {
 
-	});*/ 
-	
+	});*/
+
 	// Remove this once we have user login working
 	CardSet.find({}, function(err, cardsets) {
 		if (err) {
@@ -124,8 +123,11 @@ routes.getUserCardsets = function (req, res) {
 
 routes.login = function(req, res) {
   // Allow users to log in as a guest or login with facebook
+};
 
-
-}
+routes.init = function(req, res) {
+	/* Send data necessary to load game page */
+	console.log(req.body.gameid);
+};
 
 module.exports = routes;

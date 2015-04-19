@@ -15,6 +15,7 @@
     "morgan": "^1.5.1",
     "passport": "^0.2.1",
     "passport-facebook": "^1.0.3",
+    "session.socket.io": "^0.2.0",
     "socket.io": "^1.3.5",
     "supergoose": "^0.2.3"
   },
