@@ -36,7 +36,7 @@ bingo.config(function($routeProvider) {
       templateUrl: '../pages/newGame.html',
       controller: 'addGameController'
     })
-    .when('/game', {
+    .when('/game/:gameid', {
       templateUrl: '../pages/bingocard.html',
       controller: 'bingoController'
     });
@@ -99,6 +99,7 @@ bingo.controller('addGameController', function($scope, $http) {
       .success(function(data) {
         $scope.formData = {};
         $scope.msg = "Congratulations! You have successfully created a game!";
+
       })
       .error(function(data) {
         console.log("Error: " + data);
@@ -106,7 +107,7 @@ bingo.controller('addGameController', function($scope, $http) {
   };
 });
 
-bingo.controller('homeController', function($scope, $http, bingosockets) {
+bingo.controller('homeController', function($scope, $http, $location, bingosockets) {
   $scope.formText = "";
   $scope.isNotLoggedIn = false;
 
@@ -134,8 +135,10 @@ bingo.controller('homeController', function($scope, $http, bingosockets) {
     console.log($scope.formData);
     $http.post('/api/join/game', $scope.formData)
       .success(function(data) {
+        console.log('joined the following game')
         console.log(data);
         $scope.formData = {};
+        $location.path('/game/' + data._id);
       })
       .error(function(data) {
         console.log("Error: " + data);
