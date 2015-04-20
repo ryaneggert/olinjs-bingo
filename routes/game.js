@@ -148,9 +148,80 @@ routes.login = function(req, res) {
   // Allow users to log in as a guest or login with facebook
 };
 
+var generatecard = function(err, data) {
+  console.log(data);
+  if (err) {
+    console.log(err);
+  } else {
+    var square_set = data.square_set;
+    // Order the square set randomly
+    square_set.sort(function() {
+      return 0.5 - Math.random();
+    });
+    console.log(square_set);
+
+    // Set card's initial score
+    var initScore = [
+      [false, false, false, false, false],
+      [false, false, false, false, false],
+      [false, false, true, false, false],
+      [false, false, false, false, false],
+      [false, false, false, false, false]
+    ];
+
+    // Assign the squares for the card based on the shuffled square_set deck
+    // TODO: make this less stupid with a loop or something
+    var squares = [
+      [square_set[0], square_set[1], square_set[2], square_set[3], square_set[4]],
+      [square_set[5], square_set[6], square_set[7], square_set[8], square_set[9]],
+      [square_set[10], square_set[11], "FREE", square_set[13], square_set[14]],
+      [square_set[15], square_set[16], square_set[17], square_set[18], square_set[19]],
+      [square_set[20], square_set[21], square_set[22], square_set[23], square_set[24]],
+    ];
+
+    // Create a new bingo card
+    var newBingoCard = new Card({
+      game: req.body.gameid,
+      score: initScore,
+      squares: squares
+    });
+
+    // Save the new card
+    newBingoCard.save(function(err, card) {
+      if (err) {
+        console.error("Couldn't create and save the new card! ", err);
+        res.status(500).send("Couldn't create and save the new card!");
+      }
+      res.send({
+        card: card,
+      });
+    });
+  }
+};
+
+var findgamecardset = function(err, data) {
+  console.log(data)
+  // if (err) {
+  //   console.log(err);
+  // } else {
+  //   console.log(data);
+  //   CardSet
+  //     .findOne({
+  //       _id: data.card_set
+  //     })
+  //     .exec(generatecard);
+  // }
+};
+
 routes.init = function(req, res) {
   /* Send data necessary to load game page */
-  console.log(req.body.gameid);
+  Game
+    .findOne({
+      _id: req.body.gameid
+    })
+    .populate('')
+    .select('card_set')
+    .exec(findgamecardset);
 };
 
 module.exports = routes;
