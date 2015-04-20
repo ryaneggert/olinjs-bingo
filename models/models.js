@@ -30,6 +30,10 @@ var gameSchema = mongoose.Schema({
     ref: 'CardSet'
   },
   start_time: Date,
+  host: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User'
+  },
   players: [{
     type: mongoose.Schema.ObjectId,
     ref: 'User'
@@ -56,7 +60,7 @@ gameSchema.methods.timeToStart = function() {
 
 cardSchema = mongoose.Schema({
   score: {}, //This needs to be a nested array of booleans
-  squares: {},  //This needs to be a nested array of strings that matches the score array
+  squares: {}, //This needs to be a nested array of strings that matches the score array
   user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User'
