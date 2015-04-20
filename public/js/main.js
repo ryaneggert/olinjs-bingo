@@ -180,11 +180,14 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
         gameid: $routeParams.gameid
       })
       .success(function(data) {
-        $scope.gamdcard = data.card;
-        $scope.msg = "Congratulations! You have successfully added your card set!";
+        $scope.gamecard = data.card.squares;
+        // NOTE: You will recieve a ng-repeat DUPES error if your bingo card
+        // has repeated squares. There is a way to prevent this error, but I
+        // have left this behavior in place because we do not want to serve
+        // bingo cards with repetition. We must validate card sets
       })
-      .error(function(data) {
-        console.log("Error: " + data);
+      .error(function(data, status, headers, config) {
+        console.log("Error: " + status);
       });
   };
   initializegame();
