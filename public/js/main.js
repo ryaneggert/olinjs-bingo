@@ -39,6 +39,10 @@ bingo.config(function($routeProvider) {
     .when('/game', {
       templateUrl: '../pages/bingocard.html',
       controller: 'bingoController'
+    })
+    .when('/gameroom', {
+      templateUrl: '../pages/gameroom.html',
+      controller: 'gameroomController'
     });
 });
 
@@ -59,7 +63,7 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
   };
 });
 
-bingo.controller('guest_form', ['$scope', '$http', '$location', function($scope, $http, $location) {
+bingo.controller('guest_form', function($scope, $http, $location) {
   $scope.formData = {};
   $scope.formData.user = {};
   $scope.msg = "";
@@ -77,9 +81,18 @@ bingo.controller('guest_form', ['$scope', '$http', '$location', function($scope,
         });
     }
   };
-}]);
+});
 
-bingo.controller('addGameController', function($scope, $http) {
+bingo.controller('gameroomController', function($scope, $http, $location) {
+  $scope.formData = {};
+  $scope.msg = "";
+  $scope.formData.host = $location.search().host;
+  $scope.host_name = $scope.formData.host.name;
+
+
+});
+
+bingo.controller('addGameController', function($scope, $http, $location) {
   $scope.formData = {};
   $scope.formData.card_set = "default";
   $scope.msg = "";
@@ -94,11 +107,13 @@ bingo.controller('addGameController', function($scope, $http) {
     });
 
   $scope.addGame = function() {
-    console.log($scope.formData);
+    $scope.formData.host = angular.element('#username').scope().display_username;
     $http.post('/api/new/game', $scope.formData)
       .success(function(data) {
         $scope.formData = {};
-        $scope.msg = "Congratulations! You have successfully created a game!";
+        $location.path('/gameroom').search({
+          host: data.host
+        });
       })
       .error(function(data) {
         console.log("Error: " + data);
@@ -153,6 +168,7 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     var sqwidth = $('div.bingosquare').width();
     $('div.bingorow').height(sqwidth);
     $('div.bingosquare').height(sqwidth);
+    console.log('Cards have been resized');
   };
 
   //TODO: add winner detection on backend, so as to prompt sending of winner message
@@ -170,13 +186,14 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     console.log(event.target.id);
     console.log(typeof(event.target.id));
     coords = event.target.id.split(/,|\[|\]/).slice(1, 3);
-    for(var i=0; i<coords.length; i++) { coords[i] = parseInt(coords[i], 10); }
+    for (var i = 0; i < coords.length; i++) {
+      coords[i] = parseInt(coords[i], 10);
+    }
     console.log($scope.gamescore[coords[0]][coords[1]])
     $scope.gamescore[coords[0]][coords[1]] = !$scope.gamescore[coords[0]][coords[1]]
     if ($scope.gamescore[coords[0]][coords[1]]) {
       event.target.className += " squaretoggle"
-    }
-    else {
+    } else {
       event.target.className = event.target.className.replace(" squaretoggle", "");
     }
 
@@ -222,9 +239,9 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
 
   function hasBingo(arr) {
     return (check_rows(arr) ||
-            check_cols(arr) ||
-            check_diag_forw(arr) ||
-            check_diag_back(arr))
+      check_cols(arr) ||
+      check_diag_forw(arr) ||
+      check_diag_back(arr))
   }
 
   function all_true(arr) {
@@ -236,7 +253,7 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     return true
   }
 
-  function check_rows(arr){
+  function check_rows(arr) {
     for (var row in arr) {
       if (all_true(arr[row])) {
         return true
@@ -269,7 +286,7 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
   function check_diag_back(arr) {
     var diag = []
     for (var i in arr) {
-      diag.push(arr[i][arr.length-i-1])
+      diag.push(arr[i][arr.length - i - 1])
     }
     return all_true(diag)
   }
