@@ -185,6 +185,9 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
         // has repeated squares. There is a way to prevent this error, but I
         // have left this behavior in place because we do not want to serve
         // bingo cards with repetition. We must validate card sets
+
+        // To-do: ng-class to conditionally apply highlight class based on
+        // boolean array in data.card.score.
       })
       .error(function(data, status, headers, config) {
         console.log("Error: " + status);

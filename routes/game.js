@@ -204,12 +204,19 @@ routes.init = function(req, res) {
     .exec(function(err, data) {
       ncard = gamedata(err, data);
       ncard.user = req.session.user._id;
-      ncard.save(function(err, card) {
+      Card.findOrCreate({
+        game: ncard.game,
+        user: ncard.user
+      }, {
+        game: ncard.game,
+        squares: ncard.squares,
+        user: ncard.user,
+        score: ncard.score,
+      }, {}, function(err, card) {
         if (err) {
           console.error("Error saving new card", err);
           res.status(500).send("Error saving new card");
         }
-        console.log('printed');
         res.send({
           card: card
         });

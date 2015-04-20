@@ -70,6 +70,8 @@ cardSchema = mongoose.Schema({
     ref: 'Game'
   }
 });
+cardSchema.plugin(supergoose); // allows .findOrCreate()
+// https://github.com/jamplify/supergoose
 
 
 models.card = mongoose.model("Card", cardSchema);
