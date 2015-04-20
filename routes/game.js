@@ -200,7 +200,7 @@ var generatecard = function(err, data) {
 };
 
 var findgamecardset = function(err, data) {
-  console.log(data)
+  console.log(data);
   // if (err) {
   //   console.log(err);
   // } else {

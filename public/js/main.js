@@ -176,7 +176,9 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
 
   var initializegame = function() {
     // Socket to server to join room, get card/game info
-    $http.post('/api/game/initialize', {gameid: $routeParams.gameid})
+    $http.post('/api/game/initialize', {
+        gameid: $routeParams.gameid
+      })
       .success(function(data) {
         $scope.gamdcard = data.card;
         $scope.msg = "Congratulations! You have successfully added your card set!";
