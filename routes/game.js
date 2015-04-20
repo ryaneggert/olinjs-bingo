@@ -184,30 +184,6 @@ var generatecard = function(square_set, gameid) {
   return newBingoCard;
 };
 
-var savecard = function(card) {
-  // Save the new card
-  console.log('CARD PRINT');
-  console.log(card);
-  card.save(function(err, card) {
-    if (err) {
-      return function(err) {
-        console.error("Couldn't create and save the new card! ", err);
-        return {
-          error: err,
-          card: null
-        };
-      };
-    }
-    console.log('printed')
-    var asyncr = function(card) {
-      console.log('async card');
-      console.log(card)
-      return card
-    };
-    return process.nextTick(asyncr(card));
-  });
-};
-
 var gamedata = function(err, data, res) {
   if (err) {
     console.log(err);
@@ -227,6 +203,7 @@ routes.init = function(req, res) {
     .populate('card_set')
     .exec(function(err, data) {
       ncard = gamedata(err, data);
+      ncard.user = req.session.user._id;
       ncard.save(function(err, card) {
         if (err) {
           console.error("Error saving new card", err);
