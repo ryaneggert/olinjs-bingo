@@ -203,6 +203,9 @@ routes.init = function(req, res) {
     .populate('card_set')
     .exec(function(err, data) {
       ncard = gamedata(err, data);
+      if (ncard === null) {
+        res.status(500).send("Error finding game");
+      }
       ncard.user = req.session.user._id;
       Card.findOrCreate({
         game: ncard.game,
@@ -223,6 +226,5 @@ routes.init = function(req, res) {
       });
     });
 };
-
 
 module.exports = routes;
