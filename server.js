@@ -31,10 +31,6 @@ app.use(session({
   saveUninitialized: true
 }));
 
-app.get('/', function(req, res) {
-  req.session.foo = req.session.foo || 'bar';
-});
-
 app.get('/api/home', home.home);
 
 app.post('/guest', guest.login);
@@ -49,7 +45,7 @@ app.get('/api/user/cardsets', game.getUserCardsets);
 
 app.post('/api/join/game', home.joinGame);
 
-mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/test');
+mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/bingo');
 var PORT = 3000;
 
 app = app.listen(process.env.PORT || PORT);

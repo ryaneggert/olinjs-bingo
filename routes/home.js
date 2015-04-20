@@ -32,16 +32,23 @@ routes.joinGame = function(req, res) {
   var gameId = req.body.game_id;
 
   // TODO: set the user to the current user
+  var currUser = req.session.user;
+  console.log(currUser);
 
-  // Find the game the user intends to join
-  Game.findOne({
-    _id: gameId
+  // Find the game the user intends to join and add user to player list
+  Game.findOneAndUpdate({
+    _id: gameId,
+    players: {$ne: currUser._id}
+  }, {
+    $push: {
+      "players": currUser._id
+    }
   }, function(err, game) {
     if (err) {
       console.error("Couldn't find the specified game! ", err);
       res.status(500).send("Couldn't find the specified game");
     } else {
-      res.send(game);
+    	res.send(game);
     }
     console.log("Game: ");
     console.log(game);
