@@ -6,6 +6,8 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io'])
     });
     scks.forward('test'); // makes all 'test' socket events avaliable as
     //$scope.$on('socket:test', function(ev,data) {...};)
+    scks.forward('card');
+    scks.forward('winner'); // forward win event
     return scks;
   });
 
@@ -36,7 +38,7 @@ bingo.config(function($routeProvider) {
       templateUrl: '../pages/newGame.html',
       controller: 'addGameController'
     })
-    .when('/game', {
+    .when('/game/:gameid', {
       templateUrl: '../pages/bingocard.html',
       controller: 'bingoController'
     })
@@ -125,7 +127,7 @@ bingo.controller('addGameController', function($scope, $http, $location) {
   };
 });
 
-bingo.controller('homeController', function($scope, $http, bingosockets) {
+bingo.controller('homeController', function($scope, $http, $location, bingosockets) {
   $scope.formText = "";
   $scope.isNotLoggedIn = false;
 
@@ -136,7 +138,7 @@ bingo.controller('homeController', function($scope, $http, bingosockets) {
         $scope.isNotLoggedIn = true;
       } else {
         $scope.formText = data;
-      };
+      }
     })
     .error(function(data) {
       console.log("Error: " + data);
@@ -153,8 +155,10 @@ bingo.controller('homeController', function($scope, $http, bingosockets) {
     console.log($scope.formData);
     $http.post('/api/join/game', $scope.formData)
       .success(function(data) {
+        console.log('joined the following game');
         console.log(data);
         $scope.formData = {};
+        $location.path('/game/' + data._id);
       })
       .error(function(data) {
         console.log("Error: " + data);
@@ -163,7 +167,7 @@ bingo.controller('homeController', function($scope, $http, bingosockets) {
 
 });
 
-bingo.controller('bingoController', function($scope, $document, $http, bingosockets) {
+bingo.controller('bingoController', function($scope, $document, $http, $routeParams, bingosockets) {
   // Responsive bingo card: keep squares square.
   var resizecard = function() {
     // I shouldn't have to use jQuery.
@@ -175,11 +179,32 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     console.log('Cards have been resized');
   };
 
+  var initializegame = function() {
+    // Socket to server to join room, get card/game info
+    $http.post('/api/game/initialize', {
+        gameid: $routeParams.gameid
+      })
+      .success(function(data) {
+        $scope.gamecard = data.card.squares;
+        $scope.cardid = data.card._id;
+        // NOTE: You will recieve a ng-repeat DUPES error if your bingo card
+        // has repeated squares. There is a way to prevent this error, but I
+        // have left this behavior in place because we do not want to serve
+        // bingo cards with repetition. We must validate card sets
+
+        // To-do: ng-class to conditionally apply highlight class based on
+        // boolean array in data.card.score.
+      })
+      .error(function(data, status, headers, config) {
+        console.log("Error: " + status);
+      });
+  };
+  initializegame();
   //TODO: add winner detection on backend, so as to prompt sending of winner message
   //TODO: send and show winning bingo card?
   $scope.$on('socket:winner', function(ev, data) {
     if (!hasBingo($scope.gamescore)) {
-      $scope.winnertext = data.username + " has gotten a bingo!"
+      $scope.winnertext = data.username + " has gotten a bingo!";
       $scope.bingo_popup = true;
       console.log('Winner!');
     }
@@ -193,42 +218,33 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     for (var i = 0; i < coords.length; i++) {
       coords[i] = parseInt(coords[i], 10);
     }
-    console.log($scope.gamescore[coords[0]][coords[1]])
-    $scope.gamescore[coords[0]][coords[1]] = !$scope.gamescore[coords[0]][coords[1]]
+    console.log($scope.gamescore[coords[0]][coords[1]]);
+    $scope.gamescore[coords[0]][coords[1]] = !$scope.gamescore[coords[0]][coords[1]];
     if ($scope.gamescore[coords[0]][coords[1]]) {
-      event.target.className += " squaretoggle"
+      event.target.className += " squaretoggle";
     } else {
       event.target.className = event.target.className.replace(" squaretoggle", "");
     }
 
     if (hasBingo($scope.gamescore)) {
-      $scope.winnertext = "You have a bingo!"
-      $scope.bingo_popup = true
+      $scope.winnertext = "You have a bingo!";
+      $scope.bingo_popup = true;
+    } else { // Remove bingo win condition if card no longer has bingo
+      // $scope.winnertext = null;
+      $scope.bingo_popup = false;
     }
-    else {
-      $scope.bingo_popup = false
-    }
-    
 
     bingosockets.emit('game', {
       'type': 'move',
       'data': {
-        'card_id': "In the url params when Ryan syncs code",
+        'card_id': $scope.cardid,
         'square': coords,
         'selected': $scope.gamescore[coords[0]][coords[1]],
       }
     });
   };
 
-  $scope.winnertext = "Bingo!"
-
-  $scope.gamecard = [
-    [1, 2, 3, 4, 5],
-    [1, 3, 2, 5, 4],
-    [5, 4, 3, 2, 1],
-    [1, 5, 2, 4, 3],
-    [4, 3, 2, 5, 1]
-  ];
+  $scope.winnertext = "Bingo!";
 
   $scope.gamescore = [
     [false, false, false, false, false],
@@ -236,7 +252,7 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     [false, false, false, false, false],
     [false, false, false, false, false],
     [false, false, false, false, false]
-  ];
+  ]; // will connect to db soon.
 
   $(window).resize(function() {
     resizecard();
@@ -248,54 +264,54 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     return (check_rows(arr) ||
       check_cols(arr) ||
       check_diag_forw(arr) ||
-      check_diag_back(arr))
+      check_diag_back(arr));
   }
 
   function all_true(arr) {
     for (var elem in arr) {
-      if (arr[elem] == false) {
-        return false
+      if (arr[elem] === false) {
+        return false;
       }
     }
-    return true
+    return true;
   }
 
   function check_rows(arr) {
     for (var row in arr) {
       if (all_true(arr[row])) {
-        return true
+        return true;
       }
     }
-    return false
+    return false;
   }
 
   function check_cols(arr) {
     for (var i in arr) {
-      var col = []
+      var col = [];
       for (var j in arr) {
-        col.push(arr[j][i])
+        col.push(arr[j][i]);
       }
       if (all_true(col)) {
-        return true
+        return true;
       }
     }
-    return false
+    return false;
   }
 
   function check_diag_forw(arr) {
-    var diag = []
+    var diag = [];
     for (var i in arr) {
-      diag.push(arr[i][i])
+      diag.push(arr[i][i]);
     }
-    return all_true(diag)
+    return all_true(diag);
   }
 
   function check_diag_back(arr) {
-    var diag = []
+    var diag = [];
     for (var i in arr) {
-      diag.push(arr[i][arr.length - i - 1])
+      diag.push(arr[i][arr.length - i - 1]);
     }
-    return all_true(diag)
+    return all_true(diag);
   }
 
   // $scope.$on('socket:test', function(ev, data) {

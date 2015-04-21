@@ -11,6 +11,9 @@ var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var sockets = require("./utils/sockets");
 
+var CookieParser = cookieParser('secret');
+var sessionStore = new session.MemoryStore();
+
 
 var app = express();
 
@@ -19,17 +22,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
-app.use(cookieParser());
+app.use(CookieParser);
 app.use(express.static(path.join(__dirname, "public")));
 app.use(session({
   secret: 'secret',
   resave: false,
+  store: sessionStore,
   saveUninitialized: true
 }));
-
-app.get('/', function(req, res) {
-  res.send("Hello World This is Bingo!");
-});
 
 app.get('/api/home', home.home);
 
@@ -39,15 +39,17 @@ app.post('/api/new/cardset', game.newCardSet);
 
 app.post('/api/new/game', game.newGame);
 
+app.post('/api/game/initialize', game.init);
+
 app.get('/api/user/cardsets', game.getUserCardsets);
 
 app.post('/api/join/game', home.joinGame);
 
-mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/test');
+mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/bingo');
 var PORT = 3000;
 
 app = app.listen(process.env.PORT || PORT);
 
 // socket.io
 
-sockets(app);
+sockets(app, CookieParser, sessionStore);

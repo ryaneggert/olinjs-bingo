@@ -1,11 +1,8 @@
+var game = require('../routes/game.js');
+
 var bingomove = function(movedata) {
-  console.log(movedata);
-  // update card in db
-  // send confirmation response
-  // socket.emit('response', {'type':'response', 'data':{'error': ...}
+  game.updatecard(movedata);
 };
-
-
 var gamehandler = function(data, socket) {
   if (data.type === 'move') {
     bingomove(data.data);
