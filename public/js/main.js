@@ -86,9 +86,12 @@ bingo.controller('guest_form', function($scope, $http, $location) {
 bingo.controller('gameroomController', function($scope, $http, $location) {
   $scope.formData = {};
   $scope.msg = "";
-  $scope.formData.host = $location.search().host;
-  $scope.host_name = $scope.formData.host.name;
 
+  $scope.formData.host = $location.search().host;
+  $scope.formData.roomname = $location.search().roomname;
+
+  $scope.host_name = $scope.formData.host.name;
+  $scope.roomname = $scope.formData.roomname;
 
 });
 
@@ -112,7 +115,8 @@ bingo.controller('addGameController', function($scope, $http, $location) {
       .success(function(data) {
         $scope.formData = {};
         $location.path('/gameroom').search({
-          host: data.host
+          host: data.host,
+          roomname: data.room
         });
       })
       .error(function(data) {
