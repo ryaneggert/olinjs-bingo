@@ -171,6 +171,16 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     console.log('Cards have been resized');
   };
 
+  //TODO: add winner detection on backend, so as to prompt sending of winner message
+  //TODO: send and show winning bingo card?
+  $scope.$on('socket:winner', function(ev, data) {
+    if (!hasBingo($scope.gamescore)) {
+      $scope.winnertext = data.username + " has gotten a bingo!"
+      $scope.bingo_popup = true;
+      console.log('Winner!');
+    }
+  });
+
   // var toggleselect = $('div')
   $scope.sqclick = function(event) {
     console.log(event.target.id);
@@ -187,15 +197,23 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
       event.target.className = event.target.className.replace(" squaretoggle", "");
     }
 
-    $scope.bingo = hasBingo($scope.gamescore)
+    if (hasBingo($scope.gamescore)) {
+      $scope.winnertext = "You have a bingo!"
+      $scope.bingo_popup = true
+    }
+    
 
     bingosockets.emit('game', {
       'type': 'move',
       'data': {
-        'square': event.target.id
+        'card_id': "In the url params when Ryan syncs code",
+        'square': coords,
+        'selected': $scope.gamescore[coords[0]][coords[1]],
       }
     });
   };
+
+  $scope.winnertext = "Bingo!"
 
   $scope.gamecard = [
     [1, 2, 3, 4, 5],
