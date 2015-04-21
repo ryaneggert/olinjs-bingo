@@ -133,7 +133,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
         $scope.isNotLoggedIn = true;
       } else {
         $scope.formText = data;
-      };
+      }
     })
     .error(function(data) {
       console.log("Error: " + data);
@@ -150,7 +150,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
     console.log($scope.formData);
     $http.post('/api/join/game', $scope.formData)
       .success(function(data) {
-        console.log('joined the following game')
+        console.log('joined the following game');
         console.log(data);
         $scope.formData = {};
         $location.path('/game/' + data._id);
@@ -198,7 +198,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
   //TODO: send and show winning bingo card?
   $scope.$on('socket:winner', function(ev, data) {
     if (!hasBingo($scope.gamescore)) {
-      $scope.winnertext = data.username + " has gotten a bingo!"
+      $scope.winnertext = data.username + " has gotten a bingo!";
       $scope.bingo_popup = true;
       console.log('Winner!');
     }
@@ -212,17 +212,20 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     for (var i = 0; i < coords.length; i++) {
       coords[i] = parseInt(coords[i], 10);
     }
-    console.log($scope.gamescore[coords[0]][coords[1]])
-    $scope.gamescore[coords[0]][coords[1]] = !$scope.gamescore[coords[0]][coords[1]]
+    console.log($scope.gamescore[coords[0]][coords[1]]);
+    $scope.gamescore[coords[0]][coords[1]] = !$scope.gamescore[coords[0]][coords[1]];
     if ($scope.gamescore[coords[0]][coords[1]]) {
-      event.target.className += " squaretoggle"
+      event.target.className += " squaretoggle";
     } else {
       event.target.className = event.target.className.replace(" squaretoggle", "");
     }
 
     if (hasBingo($scope.gamescore)) {
-      $scope.winnertext = "You have a bingo!"
-      $scope.bingo_popup = true
+      $scope.winnertext = "You have a bingo!";
+      $scope.bingo_popup = true;
+    } else { // Remove bingo win condition if card no longer has bingo
+      $scope.winnertext = null;
+      $scope.bingo_popup = false;
     }
 
     bingosockets.emit('game', {
@@ -235,7 +238,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     });
   };
 
-  $scope.winnertext = "Bingo!"
+  $scope.winnertext = "Bingo!";
 
   $scope.gamescore = [
     [false, false, false, false, false],
@@ -255,54 +258,54 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     return (check_rows(arr) ||
       check_cols(arr) ||
       check_diag_forw(arr) ||
-      check_diag_back(arr))
+      check_diag_back(arr));
   }
 
   function all_true(arr) {
     for (var elem in arr) {
-      if (arr[elem] == false) {
-        return false
+      if (arr[elem] === false) {
+        return false;
       }
     }
-    return true
+    return true;
   }
 
   function check_rows(arr) {
     for (var row in arr) {
       if (all_true(arr[row])) {
-        return true
+        return true;
       }
     }
-    return false
+    return false;
   }
 
   function check_cols(arr) {
     for (var i in arr) {
-      var col = []
+      var col = [];
       for (var j in arr) {
-        col.push(arr[j][i])
+        col.push(arr[j][i]);
       }
       if (all_true(col)) {
-        return true
+        return true;
       }
     }
-    return false
+    return false;
   }
 
   function check_diag_forw(arr) {
-    var diag = []
+    var diag = [];
     for (var i in arr) {
-      diag.push(arr[i][i])
+      diag.push(arr[i][i]);
     }
-    return all_true(diag)
+    return all_true(diag);
   }
 
   function check_diag_back(arr) {
-    var diag = []
+    var diag = [];
     for (var i in arr) {
-      diag.push(arr[i][arr.length - i - 1])
+      diag.push(arr[i][arr.length - i - 1]);
     }
-    return all_true(diag)
+    return all_true(diag);
   }
 
   // $scope.$on('socket:test', function(ev, data) {
