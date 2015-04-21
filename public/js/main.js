@@ -182,6 +182,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
       })
       .success(function(data) {
         $scope.gamecard = data.card.squares;
+        $scope.cardid = data.card._id;
         // NOTE: You will recieve a ng-repeat DUPES error if your bingo card
         // has repeated squares. There is a way to prevent this error, but I
         // have left this behavior in place because we do not want to serve
@@ -232,7 +233,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     bingosockets.emit('game', {
       'type': 'move',
       'data': {
-        'card_id': "In the url params when Ryan syncs code",
+        'card_id': $scope.cardid,
         'square': coords,
         'selected': $scope.gamescore[coords[0]][coords[1]],
       }

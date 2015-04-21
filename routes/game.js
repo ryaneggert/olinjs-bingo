@@ -227,4 +227,30 @@ routes.init = function(req, res) {
     });
 };
 
+var updatescore_db = function(score, card_id) {
+  Card.update({
+    _id: card_id
+  }, {
+    score: score
+  }, {}, function(err, data) {
+    if (err) {
+      console.log('Error updating score', err);
+    }
+  });
+};
+
+routes.updatecard = function(movedata) {
+  Card
+    .findOne({
+      _id: movedata.card_id,
+    })
+    .exec(function(err, data) {
+      oldscore = data.score;
+      var row = movedata.square[0];
+      var col = movedata.square[1];
+      var newscore = oldscore;
+      newscore[row][col] = !oldscore[row][col];
+      updatescore_db(newscore, movedata.card_id);
+    });
+};
 module.exports = routes;
