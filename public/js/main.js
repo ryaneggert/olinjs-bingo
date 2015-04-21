@@ -7,6 +7,7 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io'])
     scks.forward('test'); // makes all 'test' socket events avaliable as
     //$scope.$on('socket:test', function(ev,data) {...};)
     scks.forward('card');
+    scks.forward('winner'); // forward win event
     return scks;
   });
 
