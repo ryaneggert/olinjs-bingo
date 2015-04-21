@@ -194,6 +194,15 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
       });
   };
   initializegame();
+  //TODO: add winner detection on backend, so as to prompt sending of winner message
+  //TODO: send and show winning bingo card?
+  $scope.$on('socket:winner', function(ev, data) {
+    if (!hasBingo($scope.gamescore)) {
+      $scope.winnertext = data.username + " has gotten a bingo!"
+      $scope.bingo_popup = true;
+      console.log('Winner!');
+    }
+  });
 
   // var toggleselect = $('div')
   $scope.sqclick = function(event) {
@@ -211,23 +220,22 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
       event.target.className = event.target.className.replace(" squaretoggle", "");
     }
 
-    $scope.bingo = hasBingo($scope.gamescore)
+    if (hasBingo($scope.gamescore)) {
+      $scope.winnertext = "You have a bingo!"
+      $scope.bingo_popup = true
+    }
 
     bingosockets.emit('game', {
       'type': 'move',
       'data': {
-        'square': event.target.id
+        'card_id': "In the url params when Ryan syncs code",
+        'square': coords,
+        'selected': $scope.gamescore[coords[0]][coords[1]],
       }
     });
   };
 
-  // $scope.gamecard = [
-  //   [1, 2, 3, 4, 5],
-  //   [1, 3, 2, 5, 4],
-  //   [5, 4, 3, 2, 1],
-  //   [1, 5, 2, 4, 3],
-  //   [4, 3, 2, 5, 1]
-  // ];
+  $scope.winnertext = "Bingo!"
 
   $scope.gamescore = [
     [false, false, false, false, false],
@@ -235,7 +243,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     [false, false, false, false, false],
     [false, false, false, false, false],
     [false, false, false, false, false]
-  ];
+  ]; // will connect to db soon.
 
   $(window).resize(function() {
     resizecard();
