@@ -205,6 +205,9 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
       $scope.winnertext = "You have a bingo!"
       $scope.bingo_popup = true
     }
+    else {
+      $scope.bingo_popup = false
+    }
     
 
     bingosockets.emit('game', {
