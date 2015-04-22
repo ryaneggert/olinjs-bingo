@@ -42,10 +42,6 @@ bingo.config(function($routeProvider) {
       templateUrl: '../pages/bingocard.html',
       controller: 'bingoController'
     })
-    .when('/gameroom', {
-      templateUrl: '../pages/gameroom.html',
-      controller: 'gameroomController'
-    });
 });
 
 bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
@@ -83,15 +79,6 @@ bingo.controller('guest_form', function($scope, $http, $location) {
         });
     }
   };
-});
-
-bingo.controller('gameroomController', function($scope, $http, $location) {
-  $scope.formData = {};
-  $scope.msg = "";
-
-  $scope.host_name = $location.search().host;
-  $scope.roomname = $location.search().roomname;
-
 });
 
 bingo.controller('addGameController', function($scope, $http, $location) {
@@ -173,9 +160,16 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
   // Responsive bingo card: keep squares square.
 
   //Initialize room information
+  $scope.players = []
+
   $scope.host_name = $location.search().host.name;
-  $scope.currUser = $location.search().currUser.name;
+  $scope.currUser = $location.search().currUser;
   $scope.roomname = $location.search().roomname;
+  $scope.players.push($scope.currUser);
+
+  console.log($scope.host_name);
+
+
 
   var resizecard = function() {
     // I shouldn't have to use jQuery.

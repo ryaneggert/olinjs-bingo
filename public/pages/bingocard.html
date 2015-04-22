@@ -2,8 +2,13 @@
   <div class="col-xs-1 col-md-2">
     <p>{{roomname}}</p>
     <div>Choices goes here</div>
-    <div>{{players}}</div>
-    <p>{{host_name}}</p>
+    <p>Players<p>
+    <ul>
+      <li ng-repeat="x in players">
+        {{x.name}}
+      </li>
+    </ul>
+    <p>Host: {{host_name}}</p>
     <button>START</button>
   </div>
   <div class="col-xs-9 col-md-8 col-lg-6">
