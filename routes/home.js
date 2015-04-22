@@ -11,30 +11,30 @@ var routes = {};
 routes.home = function(req, res) {
   /* Displays all of the available games on the landing page */
   Game
-  .find({})
-  .populate('host')
-  .exec(function(err, games) {
-    if (err) {
-      console.error("Couldn't find any games!", err);
-      res.status(500).send("Couldn't find any games in the db!");
-      // Is it really a server error if there are no games?
-      // Or is this a database error, and no games is represented by
-      // games = [] ?
-    }
-    CardSet
-      .find({})
-      .populate('creator')
-      .exec(function(err, cardsets) {
-        if (err) {
-          console.error("Error retrieving cardsets!", err);
-          res.status(500).send("Error retrieving cardsets!");
-        }
-        res.send({
-          games: games,
-          cardsets: cardsets,
-        }); // an object, to allow the easy addition of more homepage data
-      });
-  });
+    .find({})
+    .populate('host')
+    .exec(function(err, games) {
+      if (err) {
+        console.error("Couldn't find any games!", err);
+        res.status(500).send("Couldn't find any games in the db!");
+        // Is it really a server error if there are no games?
+        // Or is this a database error, and no games is represented by
+        // games = [] ?
+      }
+      CardSet
+        .find({})
+        .populate('creator')
+        .exec(function(err, cardsets) {
+          if (err) {
+            console.error("Error retrieving cardsets!", err);
+            res.status(500).send("Error retrieving cardsets!");
+          }
+          res.send({
+            games: games,
+            cardsets: cardsets,
+          }); // an object, to allow the easy addition of more homepage data
+        });
+    });
 };
 
 routes.joinGame = function(req, res) {

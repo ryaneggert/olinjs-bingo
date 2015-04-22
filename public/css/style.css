@@ -74,8 +74,7 @@ div.md-list-item-text {
 }
 
 div.md-list-item-text#gamelisttext:hover {
-  background-color: rgb(205,205,205);
-
+  background-color: rgb(205, 205, 205);
 }
 
 div.md-list-item-text h3 {
