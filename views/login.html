@@ -4,9 +4,11 @@
 <head>
   <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
   <link href="/bootstrap-3.3.4-dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/login.css" rel="stylesheet">
   <link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 </head>
+
 <body>
   <!-- Static navbar -->
   <nav class="navbar navbar-inverse navbar-static-top">
@@ -18,19 +20,11 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <!--<a class="navbar-brand" href="#">Olin Bingo</a>-->
+        <a class="navbar-brand" href="/">Olin Bingo</a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li><a href="#">Home</a></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Games <span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
-              <li><a href="#">Current</a></li>
-              <li><a href="#">Upcoming</a></li>
-              <li><a href="#">Archives</a></li>
-            </ul>
-          </li>
+          <li><a href="/">Home</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li><a href="/auth/login" id="signin">Sign In</a></li>
@@ -40,13 +34,48 @@
     </div>
   </nav>
   <div class="container">
-    <h2>Login</h2>
-    <a href="">Login as a guest</a>
-    <!-- do form submit post -->
-    <br>
-    <a href="/auth/login/olin">OlinApps Login</a>
+    <div class="col-xs-1 col-sm-2 col-lg-4"></div>
+    <div class="col-xs-10 col-sm-8 col-lg-4">
+      <div class="row">
+        <div class="panel panel-default">
+          <div role="tabpanel">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+              <li role="presentation" class="active"><a href="#olinappsauth" data-toggle="tab">Olinapps</a></li>
+              <li role="presentation"><a href="#guestuserauth" data-toggle="tab">Guest</a></li>
+            </ul>
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane fade in active" id="olinappsauth">
+                <div class="authbox">
+                  <a class="btn btn-primary btn-lg btn-block" href="/auth/login/olin">Login with OlinApps</a>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="guestuserauth">
+                <div class="authbox">
+                  <form class="form-horizontal">
+                    <div class="form-group">
+                      <label for="guestname" class="col-sm-2 control-label">Name</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" id="guestname" autofocus autocomplete="off" placeholder="Enter a name...">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary">Sign in as guest</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-1 col-sm-2 col-lg-4"></div>
   </div>
-  <script src="/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+  <script src="/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>'
+  <script src="/js/login.js"></script>
 </body>
 
 </html>
