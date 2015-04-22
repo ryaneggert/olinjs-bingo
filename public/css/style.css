@@ -65,10 +65,33 @@ div.squaretoggle {
   background-color: yellow;
 }
 
-md-list-item {
+md-list-item#gamelist {
   cursor: pointer;
 }
 
 div.md-list-item-text {
   padding-left: 15px;
+}
+
+div.md-list-item-text#gamelisttext:hover {
+  background-color: rgb(205,205,205);
+
+}
+
+div.md-list-item-text h3 {
+  padding-top: 10px;
+  margin: 0 0 6px 0;
+  line-height: 0.75em;
+}
+
+div.md-list-item-text h4 {
+  padding: 10px 0px;
+  margin: 0 0 0 0;
+  line-height: 0.75em;
+}
+
+div.md-list-item-text p {
+  padding-bottom: 10px;
+  margin: 0 0 0 0;
+  line-height: 0.75em;
 }

@@ -7,7 +7,7 @@
             <div class="md-toolbar-tools">
               <h3 class="ng-binding">Games</h3>
               <span flex=""></span>
-              <md-button class="md-icon-button" aria-label="New Game">
+              <md-button href='/#/new/game' class="md-icon-button" aria-label="New Game">
                 <md-tooltip md-direction="left" md-delay=1000>
                   Create New Game
                 </md-tooltip>
@@ -16,11 +16,10 @@
             </div>
           </md-toolbar>
           <md-list>
-            <md-list-item class="md-3-line" ng-repeat="game in currentgames" ng-click="joinGame(game._id)">
-              <div class="md-list-item-text">
+            <md-list-item id="gamelist" class="md-3-line" ng-repeat="game in currentgames" ng-click="joinGame(game._id)">
+              <div class="md-list-item-text" id="gamelisttext">
                 <h3>{{ game.room }}</h3>
-                <h4>Hosted by {{ game._id }}</h4>
-                <!-- populate this -->
+                <h4>Hosted by {{ game.host.name }}</h4>
                 <p>Starts at {{ game.start_time }}</p>
                 <!-- format this -->
               </div>
@@ -35,7 +34,7 @@
             <div class="md-toolbar-tools">
               <h3 class="ng-binding">Card Sets</h3>
               <span flex=""></span>
-              <md-button class="md-icon-button" aria-label="New Card Set">
+              <md-button href='/#/new/cardset' class="md-icon-button" aria-label="New Card Set">
                 <md-tooltip md-direction="left" md-delay=1000>
                   Create New Card Set
                 </md-tooltip>
@@ -45,10 +44,27 @@
           </md-toolbar>
           <md-list>
             <md-list-item class="md-2-line" ng-repeat="cardset in cardsets">
-              <div class="md-list-item-text">
-                <h3>{{ cardset.name }}</h3>
-                <p> {{ cardset.description }}</p>
-                <!-- format this -->
+              <div layout="row" layout-align="end center">
+                <div flex class="md-list-item-text">
+                  <h3>{{ cardset.name }}</h3>
+                  <p> Created by {{ cardset.creator.name }}</p>
+                </div>
+                <div flex=10>
+                  <md-button class="md-icon-button" ng-click="editCardSet(cardset._id)" aria-label="Edit card set">
+                    <md-icon md-font-icon="fa-pencil-square-o" class=""></md-icon>
+                    <md-tooltip md-direction="left" md-delay=1000>
+                      Edit this card set
+                    </md-tooltip>
+                  </md-button>
+                </div>
+                <div flex=10>
+                  <md-button class="md-icon-button" ng-click="deleteCardSet(cardset._id)" aria-label="Delete card set">
+                    <md-icon md-font-icon="fa-minus-square" class=""></md-icon>
+                    <md-tooltip md-direction="left" md-delay=1000>
+                      Delete this card set
+                    </md-tooltip>
+                  </md-button>
+                </div>
               </div>
               <md-divider></md-divider>
             </md-list-item>
@@ -58,7 +74,3 @@
     </div>
   </div>
 </div>
-<br>
-<button><a href="/#/new/cardset">New Card Set</a></button>
-<br>
-<button><a href="/#/new/game">New Game</a></button>
