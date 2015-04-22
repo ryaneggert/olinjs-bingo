@@ -2,24 +2,27 @@ var express = require('express');
 var request = require('request');
 var mongoose = require('mongoose');
 var models = require('../models/models');
+var tools = require('../utils/utils');
 
 var router = express.Router();
 var User = models.user;
 // inspired by https://github.com/EvanDorsky/riot-woko/blob/master/routes/olinauth.js
 
-router.get('/olin', function(req, res) {
-  res.redirect('http://www.olinapps.com/external?callback=' + 'http://localhost:3000/olinauth/auth');
+router.get('/login', function(req, res) {
+  res.sendfile('./views/login.html');
+});
+
+router.get('/login/olin', function(req, res) {
+  res.redirect('http://www.olinapps.com/external?callback=' + 'http://localhost:3000/auth/login/olin/cb');
 });
 
 router.get('/logout', function(req, res) {
   req.session.user = null;
-
   res.redirect('/');
 });
 
-router.post('/auth', function(req, res) {
-  req.session.olinuser = {};
-
+router.post('/login/olin/cb', function(req, res) {
+  req.session.user = {};
   request('http://www.olinapps.com/api/me?sessionid=' + req.body.sessionid, function(err, response, body) {
     body = JSON.parse(body);
     var userid = body.user.id;
@@ -49,7 +52,7 @@ module.exports.isAuth_pg = function(req, res, next) {
   if (req.session.user) {
     return next();
   } else {
-    res.redirect('/login'); // If not authenticated, redirect to /login.
+    res.redirect('/auth/login'); // If not authenticated, redirect to /login.
     // This could potentially be /home, if we want one.
   }
 };
