@@ -89,11 +89,8 @@ bingo.controller('gameroomController', function($scope, $http, $location) {
   $scope.formData = {};
   $scope.msg = "";
 
-  $scope.formData.host = $location.search().host;
-  $scope.formData.roomname = $location.search().roomname;
-
-  $scope.host_name = $scope.formData.host.name;
-  $scope.roomname = $scope.formData.roomname;
+  $scope.host_name = $location.search().host;
+  $scope.roomname = $location.search().roomname;
 
 });
 
@@ -116,9 +113,10 @@ bingo.controller('addGameController', function($scope, $http, $location) {
     $http.post('/api/new/game', $scope.formData)
       .success(function(data) {
         $scope.formData = {};
-        $location.path('/gameroom').search({
+        $location.path('/game/' + data.game._id).search({
           host: data.host,
-          roomname: data.room
+          currUser: data.host,
+          roomname: data.game.room
         });
       })
       .error(function(data) {
@@ -159,7 +157,9 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
         console.log(data);
         $scope.formData = {};
         $location.path('/game/' + data.game._id).search({
-          currUser: data.currUser
+          host: data.host,
+          currUser: data.currUser,
+          roomname: data.game.room
         });
       })
       .error(function(data) {
@@ -169,8 +169,14 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
 
 });
 
-bingo.controller('bingoController', function($scope, $document, $http, $routeParams, bingosockets) {
+bingo.controller('bingoController', function($scope, $document, $http, $location, $routeParams, bingosockets) {
   // Responsive bingo card: keep squares square.
+
+  //Initialize room information
+  $scope.host_name = $location.search().host.name;
+  $scope.currUser = $location.search().currUser.name;
+  $scope.roomname = $location.search().roomname;
+
   var resizecard = function() {
     // I shouldn't have to use jQuery.
     // Future work: find how to modify directive to $scope.$apply() or something
