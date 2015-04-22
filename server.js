@@ -33,8 +33,6 @@ app.use(session({
   saveUninitialized: true
 }));
 
-app.get('/', auths.isAuth_pg, mainr.main);
-
 app.use('/auth', auths);
 
 app.get('/api/home', home.home);
@@ -50,6 +48,8 @@ app.post('/api/game/initialize', game.init);
 app.get('/api/user/cardsets', game.getUserCardsets);
 
 app.post('/api/join/game', home.joinGame);
+
+app.get('/*', auths.isAuth_pg, mainr.main);
 
 mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/bingo');
 var PORT = 3000;

@@ -2,6 +2,7 @@ html,
 body {
   font-family: 'Lato', sans-serif;
 }
+
 .col-xs-5th,
 .col-sm-5th,
 .col-md-5th,
@@ -62,4 +63,12 @@ div.bingosquaretext {
 
 div.squaretoggle {
   background-color: yellow;
+}
+
+md-list-item {
+  cursor: pointer;
+}
+
+div.md-list-item-text {
+  padding-left: 15px;
 }

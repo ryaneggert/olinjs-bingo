@@ -27,29 +27,35 @@ routes.home = function(req, res) {
 routes.joinGame = function(req, res) {
   /* Create a new card and joins game when user clicks "Join" */
   // Get the ID of the game the user chose
-  var gameId = req.body.game_id;
+  console.log(req.body.game_id);
+  var gameID = req.body.game_id;
   var currUser = req.session.user;
+  console.log('USER', currUser);
 
   // Find the game the user intends to join and add user to player list
-  Game.findOneAndUpdate({
-    _id: gameId,
-    players: {
-      $ne: currUser._id
-    }
-  }, {
-    $push: {
-      "players": currUser._id
-    }
-  }, function(err, game) {
-    if (err) {
-      console.error("Couldn't find the specified game! ", err);
-      res.status(500).send("Couldn't find the specified game");
-    } else {
-      res.send(game);
-    }
-    console.log("Game: ");
-    console.log(game);
-  });
+
+  Game
+    .findOne({
+      _id: gameID
+    })
+    .exec(function(err, game) {
+      var players = game.players;
+      if (players.indexOf(currUser._id) > -1) {
+        // Player not on roster. Add.
+        players.push(currUser._id);
+        game.players = players;
+        game.save(function(err2, updgame) {
+          if (err || err2) {
+            console.log('Error adding user to game.', err, err2);
+            res.status(500).send('Error adding user to game');
+          }
+          res.send(updgame);
+        });
+      } else {
+        // Player already on roster. Send game.
+        res.send(game);
+      }
+    });
 };
 
 module.exports = routes;

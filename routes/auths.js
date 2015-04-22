@@ -9,7 +9,7 @@ var User = models.user;
 // inspired by https://github.com/EvanDorsky/riot-woko/blob/master/routes/olinauth.js
 
 router.get('/login', function(req, res) {
-  req.session.user = null; // For clarity, the login page logs out current user.
+  // req.session.user = null; // For clarity, the login page logs out current user.
   res.sendfile('./views/login.html');
 });
 
@@ -32,18 +32,17 @@ router.post('/login/olin/cb', function(req, res) {
     User.findOrCreate({
       name: username,
       guest: false
-    }, {}, {}, function(err, data) {
+    }, {}, 'name guest', function(err, data) {
       if (err) {
         console.log('authentication error');
         req.session.user = null; // Auth has gone wrong, clear user.
         res.redirect('/login'); // Back to the login poge.
       } else {
-        req.session.user.sessionid = olinsesid;
-        req.session.user.name = userid.replace(".", " ");
-        req.session.user.guest = false;
+        console.log('AUTHDATA', data);
+        req.session.user = data;
+        res.redirect('/');
       }
     });
-    res.redirect('/');
   });
 });
 
@@ -59,6 +58,7 @@ router.post('/login/guest', function(req, res) {
     }
   });
   req.session.user = new_user;
+
   res.send({
     redirect: '/'
   });
