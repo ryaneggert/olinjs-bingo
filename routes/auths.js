@@ -26,7 +26,7 @@ router.post('/login/olin/cb', function(req, res) {
   request('http://www.olinapps.com/api/me?sessionid=' + req.body.sessionid, function(err, response, body) {
     body = JSON.parse(body);
     var userid = body.user.id;
-    var username = userid.replace(".", " ");
+    var username = tools.capitalizeName(userid.replace(".", " "));
     var olinsesid = req.body.sessionid; //olinapps session id
     User.findOrCreate({
       name: username,
@@ -59,7 +59,7 @@ module.exports.isAuth_pg = function(req, res, next) {
 
 module.exports.isAuth_api = function(req, res, next) {
   if (req.session.user) {
-    return next()
+    return next();
   } else {
     res.json(null); // send blank JSON (or add your behavior here)
   }

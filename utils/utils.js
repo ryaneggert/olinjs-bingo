@@ -1,6 +1,6 @@
 // Miscellaneous functions
 tools = {};
-tools.capitalizename = function(str) {
+tools.capitalizeName = function(str) {
   return str.replace(/\w\S*/g, function(txt) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
