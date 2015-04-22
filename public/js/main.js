@@ -158,7 +158,9 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
         console.log('joined the following game');
         console.log(data);
         $scope.formData = {};
-        $location.path('/game/' + data._id);
+        $location.path('/game/' + data.game._id).search({
+          currUser: data.currUser
+        });
       })
       .error(function(data) {
         console.log("Error: " + data);
