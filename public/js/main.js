@@ -128,17 +128,12 @@ bingo.controller('addGameController', function($scope, $http, $location) {
 });
 
 bingo.controller('homeController', function($scope, $http, $location, bingosockets) {
-  $scope.formText = "";
-  $scope.isNotLoggedIn = false;
+  $scope.currentgames = []; // variable to hold list of current bingo games
 
   $http.get('/api/home')
     .success(function(data) {
       console.log(data);
-      if (data === "Must be logged in!") {
-        $scope.isNotLoggedIn = true;
-      } else {
-        $scope.formText = data;
-      }
+      $scope.currentgames = data.games;
     })
     .error(function(data) {
       console.log("Error: " + data);

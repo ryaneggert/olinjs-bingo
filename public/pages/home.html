@@ -1,22 +1,18 @@
-<div class = "home">
-	<div class = "banner">
-		<h1>Olin Bingo</h1>
-		<br>
-		<p><em>Olin's source for real-time user-created bingo games</em></p><br>
-		<button class = "login"><a href = "/#/login/">Log In</a></button>
-	</div>
-	<br>
-	<div class="allGames" ng-hide = "isNotLoggedIn">
-		<h2>All Games</h2>
-		<form>
-			<div ng-repeat="game in formText">
-				{{game.room}}<input type = "radio" name = "game.id" value = "{{game._id}}" ng-model = formData.game_id>
-			</div>
-			<button type = "submit" ng-click = "joinGame()">Join!</button>
-		</form>
-		<br>
-		<button><a href = "/#/new/cardset">New Card Set</a></button>
-		<br>
-		<button><a href = "/#/new/game">New Game</a></button>
-	</div>
+<div class="home">
+  <div class="container">
+    <div class="allGames">
+      <h2>All Games</h2>
+      <form>
+        <div ng-repeat="game in currentgames">
+          {{game.room}}
+          <input type="radio" name="game.id" value="{{game._id}}" ng-model=formData.game_id>
+        </div>
+        <button type="submit" ng-click="joinGame()">Join!</button>
+      </form>
+      <br>
+      <button><a href="/#/new/cardset">New Card Set</a></button>
+      <br>
+      <button><a href="/#/new/game">New Game</a></button>
+    </div>
+  </div>
 </div>
