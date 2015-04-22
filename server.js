@@ -1,6 +1,7 @@
 var game = require("./routes/game");
 var guest = require("./routes/guest.js");
 var home = require("./routes/home");
+var auths = require("./routes/auths");
 
 var express = require("express");
 var session = require("express-session");
@@ -30,6 +31,10 @@ app.use(session({
   store: sessionStore,
   saveUninitialized: true
 }));
+
+// app.get('/')
+
+app.use('/login', auths);
 
 app.get('/api/home', home.home);
 

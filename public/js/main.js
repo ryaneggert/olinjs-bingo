@@ -23,9 +23,9 @@ bingo.config(function($routeProvider) {
       templateUrl: '../pages/home.html',
       controller: 'homeController'
     })
-    .when('/login', {
-      templateUrl: '../pages/login.html',
-    })
+    // .when('/login', {
+    //   templateUrl: '../pages/login.html',
+    // })
     .when('/guest_login', {
       templateUrl: '../pages/guest.html',
       controller: 'guest_form'

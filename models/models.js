@@ -4,6 +4,7 @@ var models = {};
 
 var userSchema = mongoose.Schema({
   name: String,
+  guest: Boolean,
   // image:String,
 });
 
