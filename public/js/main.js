@@ -42,10 +42,6 @@ bingo.config(function($routeProvider) {
       templateUrl: '../pages/bingocard.html',
       controller: 'bingoController'
     })
-    .when('/gameroom', {
-      templateUrl: '../pages/gameroom.html',
-      controller: 'gameroomController'
-    });
 });
 
 bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
@@ -85,18 +81,6 @@ bingo.controller('guest_form', function($scope, $http, $location) {
   };
 });
 
-bingo.controller('gameroomController', function($scope, $http, $location) {
-  $scope.formData = {};
-  $scope.msg = "";
-
-  $scope.formData.host = $location.search().host;
-  $scope.formData.roomname = $location.search().roomname;
-
-  $scope.host_name = $scope.formData.host.name;
-  $scope.roomname = $scope.formData.roomname;
-
-});
-
 bingo.controller('addGameController', function($scope, $http, $location) {
   $scope.formData = {};
   $scope.formData.card_set = "default";
@@ -116,9 +100,10 @@ bingo.controller('addGameController', function($scope, $http, $location) {
     $http.post('/api/new/game', $scope.formData)
       .success(function(data) {
         $scope.formData = {};
-        $location.path('/gameroom').search({
+        $location.path('/game/' + data.game._id).search({
           host: data.host,
-          roomname: data.room
+          currUser: data.host,
+          roomname: data.game.room
         });
       })
       .error(function(data) {
@@ -158,7 +143,11 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
         console.log('joined the following game');
         console.log(data);
         $scope.formData = {};
-        $location.path('/game/' + data._id);
+        $location.path('/game/' + data.game._id).search({
+          host: data.host,
+          currUser: data.currUser,
+          roomname: data.game.room
+        });
       })
       .error(function(data) {
         console.log("Error: " + data);
@@ -167,8 +156,21 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
 
 });
 
-bingo.controller('bingoController', function($scope, $document, $http, $routeParams, bingosockets) {
+bingo.controller('bingoController', function($scope, $document, $http, $location, $routeParams, bingosockets) {
   // Responsive bingo card: keep squares square.
+
+  //Initialize room information
+  $scope.players = []
+
+  $scope.host_name = $location.search().host.name;
+  $scope.currUser = $location.search().currUser;
+  $scope.roomname = $location.search().roomname;
+  $scope.players.push($scope.currUser);
+
+  console.log($scope.host_name);
+
+
+
   var resizecard = function() {
     // I shouldn't have to use jQuery.
     // Future work: find how to modify directive to $scope.$apply() or something

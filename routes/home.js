@@ -48,7 +48,13 @@ routes.joinGame = function(req, res) {
       console.error("Couldn't find the specified game! ", err);
       res.status(500).send("Couldn't find the specified game");
     } else {
-    	res.send(game);
+    	User.find({_id: game.host}, function(err, host) {
+        res.send({
+          game: game,
+          currUser: currUser,
+          host: host[0]
+        });
+      });
     }
     console.log("Game: ");
     console.log(game);
