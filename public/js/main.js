@@ -151,6 +151,17 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
 bingo.controller('bingoController', function($scope, $document, $http, $routeParams, bingosockets) {
   // Responsive bingo card: keep squares square.
 
+  // Make sure that we warn the user before they leave the gameroom
+  $scope.$on('$locationChangeStart', function(event, next, current) {
+    if (1) {
+      var answer = confirm('Are you sure you want to leave the game room');
+      if (!answer) {
+        event.preventDefault();
+      }
+    }
+  });
+
+
   //Initialize room information
   var resizecard = function() {
     // I shouldn't have to use jQuery.
