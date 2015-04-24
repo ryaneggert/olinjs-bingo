@@ -221,6 +221,8 @@ routes.init = function(req, res) {
           res.status(500).send("Error saving new card");
         }
         res.send({
+          user: req.session.user,
+          game: data,
           card: card
         });
       });

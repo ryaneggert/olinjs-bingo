@@ -3,12 +3,23 @@ var game = require('../routes/game.js');
 var bingomove = function(movedata) {
   game.updatecard(movedata);
 };
-var gamehandler = function(data, socket) {
-  if (data.type === 'move') {
-    bingomove(data.data);
-  } else {
-    console.log('Undefined game type');
-  }
+
+var bingojoin = function(data, socket, io) {
+  // Get user's game & name
+  console.log('bingojoin fxn')
+  var gameid = data.game;
+  var userid = data.user._id;
+  var username = data.user.name;
+  console.log(data)
+  // Join this socket to the game's room
+  socket.join(gameid);
+  // Send a connection event with user name to room.
+  io.to(gameid).emit('joinroom', {
+    user: {
+      'name': username,
+      '_id': userid,
+    }
+  });
 };
 
 var sockets = function(app) {
@@ -19,7 +30,15 @@ var sockets = function(app) {
     socket.on('response', function(data) {
       console.log(data);
     });
-    socket.on('game', gamehandler);
+    socket.on('game', function(data) {
+      if (data.type === 'join') {
+        bingojoin(data.data, socket, io);
+      } else if (data.type === 'move') {
+        bingomove(data.data);
+      } else {
+        console.log('Undefined game type');
+      }
+    });
   });
 };
 

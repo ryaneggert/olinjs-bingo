@@ -6,7 +6,8 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngMaterial'
     });
     scks.forward('test'); // makes all 'test' socket events avaliable as
     //$scope.$on('socket:test', function(ev,data) {...};)
-    scks.forward('card');
+    scks.forward('card'); // I don't think we use this.
+    scks.forward('joinroom');
     scks.forward('winner'); // forward win event
     return scks;
   });
@@ -182,13 +183,21 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
   };
 
   var initializegame = function() {
-    // Socket to server to join room, get card/game info
+    // POST to server to join room, get card/game info
     $http.post('/api/game/initialize', {
         gameid: $routeParams.gameid
       })
       .success(function(data) {
         $scope.gamecard = data.card.squares;
         $scope.cardid = data.card._id;
+
+        bingosockets.emit('game', {
+          'type': 'join',
+          'data': {
+            'game': data.game._id,
+            'user': data.user,
+          }
+        });
         // NOTE: You will recieve a ng-repeat DUPES error if your bingo card
         // has repeated squares. There is a way to prevent this error, but I
         // have left this behavior in place because we do not want to serve
@@ -211,6 +220,11 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
       console.log('Winner!');
     }
   });
+
+  $scope.$on('socket:joinroom', function(ev, data) {
+    console.log(data);
+  });
+
 
   // var toggleselect = $('div')
   $scope.sqclick = function(event) {
