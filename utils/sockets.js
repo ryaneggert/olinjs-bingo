@@ -56,6 +56,15 @@ var sockets = function(app) {
         console.log('Undefined game type');
       }
     });
+    socket.on('leave', function(data) {
+      console.log(socket.rooms)
+      socket.leave(data.game);
+      console.log(socket.rooms)
+      users = getroomusers(io, data.game);
+      io.to(data.game).emit('leaveroom', {
+        players: users
+      });
+    });
     socket.on('disconnect', function(data) {
       console.log('Disconnect');
       var formerrooms = socket.olinjsdata.roomlist;

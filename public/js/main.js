@@ -178,6 +178,10 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
       var answer = confirm('Are you sure you want to leave the game room');
       if (!answer) {
         event.preventDefault();
+      } else {
+        bingosockets.emit('leave', {
+          game: $routeParams.gameid
+        });
       }
     }
   });
