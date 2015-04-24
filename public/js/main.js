@@ -6,7 +6,8 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngMaterial'
     });
     scks.forward('test'); // makes all 'test' socket events avaliable as
     //$scope.$on('socket:test', function(ev,data) {...};)
-    scks.forward('card');
+    scks.forward('joinroom');
+    scks.forward('leaveroom');
     scks.forward('winner'); // forward win event
     return scks;
   });
@@ -52,17 +53,42 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
   $scope.formData = {};
   $scope.msg = "";
 
-  // Submit new page
-  $scope.addCardSet = function() {
-    $http.post('/api/new/cardset', $scope.formData)
-      .success(function(data) {
-        $scope.formData = {};
-        $scope.msg = "Congratulations! You have successfully added your card set!";
-      })
-      .error(function(data) {
-        console.log("Error: " + data);
-      });
+  $scope.choices = [{id: 'choice1'}, {id: 'choice2'}, {id: 'choice3'}];
+
+  $scope.addNewChoice = function() {
+    var newItemNo = $scope.choices.length+1;
+    $scope.choices.push({'id':'choice'+newItemNo});
   };
+
+  $scope.showAddChoice = function(choice) {
+    return choice.id === $scope.choices[$scope.choices.length-1].id;
+  };
+  
+  $scope.addCardSet = function() {
+    cards = []
+    // quadratic performance, ok for small cardset, optimize if necessary 
+    for (var i in $scope.choices) {
+      if (cards.indexOf($scope.choices[i].name) === -1) {
+        if ($scope.choices[i].name != null) {
+          cards.push($scope.choices[i].name)
+        }
+      }
+    }
+    if (cards.length < 25) {
+      $scope.msg = "not enough unique cards (25), please add more"
+    }
+    else {
+      postdata = {"name": $scope.formData.name, "cards": cards}
+      $http.post('/api/new/cardset', postdata)
+        .success(function(data) {
+          // $scope.formData = {};
+          $scope.msg = "Congratulations! You have successfully added your card set!";
+        })
+        .error(function(data) {
+          console.log("Error: " + data);
+        });
+    }
+  }
 });
 
 bingo.controller('guest_form', function($scope, $http, $location) {
@@ -193,11 +219,12 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
   };
 
   var initializegame = function() {
-    // Socket to server to join room, get card/game info
+    // POST to server to join room, get card/game info
     $http.post('/api/game/initialize', {
         gameid: $routeParams.gameid
       })
       .success(function(data) {
+        console.log(data);
         $scope.gamecard = data.card.squares;
         $scope.cardid = data.card._id;
 
@@ -216,6 +243,14 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
         }
 
         $scope.start_var = false;
+
+        bingosockets.emit('game', {
+          'type': 'join',
+          'data': {
+            'game': data.game._id,
+            'user': data.user,
+          }
+        });
 
         // NOTE: You will recieve a ng-repeat DUPES error if your bingo card
         // has repeated squares. There is a way to prevent this error, but I
@@ -247,6 +282,17 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     $scope.hide_var = false;
   }
 
+  $scope.$on('socket:joinroom', function(ev, data) {
+    console.log(data);
+    $scope.players = data.players;
+    console.log('PLAYERS', $scope.players);
+  });
+
+  $scope.$on('socket:leaveroom', function(ev, data) {
+    console.log(data);
+    $scope.players = data.players;
+    console.log('PLAYERS', $scope.players);
+  });
 
   // var toggleselect = $('div')
   $scope.sqclick = function(event) {

@@ -13,38 +13,10 @@ routes.newCardSet = function(req, res) {
 
   // Get data submitted by user from form
   // TODO: DEFINITELY make this less stupid
-  var card1 = req.body.card1;
-  var card2 = req.body.card2;
-  var card3 = req.body.card3;
-  var card4 = req.body.card4;
-  var card5 = req.body.card5;
-  var card6 = req.body.card6;
-  var card7 = req.body.card7;
-  var card8 = req.body.card8;
-  var card9 = req.body.card9;
-  var card10 = req.body.card10;
-  var card11 = req.body.card11;
-  var card12 = req.body.card12;
-  var card13 = req.body.card13;
-  var card14 = req.body.card14;
-  var card15 = req.body.card15;
-  var card16 = req.body.card16;
-  var card17 = req.body.card17;
-  var card18 = req.body.card18;
-  var card19 = req.body.card19;
-  var card20 = req.body.card20;
-  var card21 = req.body.card21;
-  var card22 = req.body.card22;
-  var card23 = req.body.card23;
-  var card24 = req.body.card24;
-  var card25 = req.body.card25;
 
-  var square_set = [card1, card2, card3, card4, card5,
-    card6, card7, card8, card9, card10,
-    card11, card12, card13, card14, card15,
-    card16, card17, card18, card19, card20,
-    card21, card22, card23, card24, card25
-  ];
+  console.log(req.body)
+
+  var square_set = req.body.cards
   var name = req.body.name;
 
   // Assign current logged in user as creator
@@ -224,10 +196,11 @@ routes.init = function(req, res) {
         console.log("lalallalalallalllll" + data.host);
 
         res.send({
-          card: card,
+          user: req.session.user,
+          game: data,
           currentUser: req.session.user,
           host: data.host,
-          roomname: data.room
+          card: card
         });
       });
     });
