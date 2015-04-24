@@ -20,7 +20,6 @@ var bingojoin = function(data, socket, io) {
   var gameid = data.game;
   var userid = data.user._id;
   var username = data.user.name;
-  console.log(data);
   // Join this socket to the game's room
   socket.join(gameid);
   socket.olinjsdata.user = data.user;
@@ -36,9 +35,11 @@ var sockets = function(app) {
 
   io.on('connection', function(socket) {
     socket.onclose = function(reason) {
+      // Modify standard .onclose method to save roomdata on disconnect
       var allrooms = socket.adapter.sids[socket.id];
-      socket.olinjsdata.roomlist = allrooms;
+      socket.olinjsdata.roomlist = allrooms; // Save list of rooms user was in
       Object.getPrototypeOf(this).onclose.call(this, reason);
+      // call default .onclose method ^
     };
     socket.olinjsdata = {};
     console.log('socket connection established');
@@ -60,9 +61,7 @@ var sockets = function(app) {
       var formerrooms = socket.olinjsdata.roomlist;
       var userinfo = socket.olinjsdata.user;
       //clear our room storage object
-
       delete socket.olinjsdata;
-
       for (var room in formerrooms) {
         var users = getroomusers(io, room);
         io.to(room).emit('leaveroom', {
@@ -73,6 +72,5 @@ var sockets = function(app) {
     });
   });
 };
-
 
 module.exports = sockets;
