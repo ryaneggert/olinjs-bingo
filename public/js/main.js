@@ -215,6 +215,8 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
           $scope.hide_var = false;
         }
 
+        $scope.start_var = false;
+
         // NOTE: You will recieve a ng-repeat DUPES error if your bingo card
         // has repeated squares. There is a way to prevent this error, but I
         // have left this behavior in place because we do not want to serve
@@ -240,10 +242,19 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
   });
 
   //Start button
+  $scope.start_func = function(event) {
+    $scope.start_var = true;
+    $scope.hide_var = false;
+  }
 
 
   // var toggleselect = $('div')
   $scope.sqclick = function(event) {
+
+    if (!$scope.start_var) {
+      return;
+    }
+
     console.log(event.target.id);
     console.log(typeof(event.target.id));
     coords = event.target.id.split(/,|\[|\]/).slice(1, 3);
