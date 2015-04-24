@@ -6,7 +6,8 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngMaterial'
     });
     scks.forward('test'); // makes all 'test' socket events avaliable as
     //$scope.$on('socket:test', function(ev,data) {...};)
-    scks.forward('card');
+    scks.forward('joinroom');
+    scks.forward('leaveroom');
     scks.forward('winner'); // forward win event
     return scks;
   });
@@ -219,22 +220,26 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
   };
 
   var initializegame = function() {
-    // Socket to server to join room, get card/game info
+    // POST to server to join room, get card/game info
     $http.post('/api/game/initialize', {
         gameid: $routeParams.gameid
       })
       .success(function(data) {
+        console.log(data);
         $scope.gamecard = data.card.squares;
         $scope.cardid = data.card._id;
+        $scope.roomname = data.game.room;
+        $scope.currentUser = data.user;
+        // $scope.host_name = data.game.host.name;
+        $scope.players = [];
 
-        $scope.roomname = data.roomname;
-        $scope.currentUser = data.currentUser;
-        $scope.host_name = data.host.name;
-
-        $scope.players = []
-        $scope.players.push($scope.currentUser);
-
-        console.log($scope.currentUser);
+        bingosockets.emit('game', {
+          'type': 'join',
+          'data': {
+            'game': data.game._id,
+            'user': data.user,
+          }
+        });
 
         // NOTE: You will recieve a ng-repeat DUPES error if your bingo card
         // has repeated squares. There is a way to prevent this error, but I
@@ -259,6 +264,19 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
       console.log('Winner!');
     }
   });
+
+  $scope.$on('socket:joinroom', function(ev, data) {
+    console.log(data);
+    $scope.players = data.players;
+    console.log('PLAYERS', $scope.players);
+  });
+
+  $scope.$on('socket:leaveroom', function(ev, data) {
+    console.log(data);
+    $scope.players = data.players;
+    console.log('PLAYERS', $scope.players);
+  });
+
 
   // var toggleselect = $('div')
   $scope.sqclick = function(event) {
