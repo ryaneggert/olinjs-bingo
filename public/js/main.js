@@ -116,7 +116,7 @@ bingo.controller('addGameController', function($scope, $http, $location) {
     $http.post('/api/new/game', $scope.formData)
       .success(function(data) {
         $scope.formData = {};
-        $location.path('/game/' + data.game._id);
+        $location.path('/game/' + data._id);
       })
       .error(function(data) {
         console.log("Error: " + data);
@@ -151,7 +151,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
         console.log(data);
 
         $scope.formData = {};
-        $location.path('/game/' + data.game._id);
+        $location.path('/game/' + data._id);
       })
       .error(function(data) {
         console.log("Error: " + data);
