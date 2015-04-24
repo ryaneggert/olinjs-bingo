@@ -112,7 +112,6 @@ bingo.controller('addGameController', function($scope, $http, $location) {
     });
 
   $scope.addGame = function() {
-    $scope.formData.host = angular.element('#username').scope().display_username;
     $http.post('/api/new/game', $scope.formData)
       .success(function(data) {
         $scope.formData = {};
@@ -204,12 +203,17 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
 
         $scope.roomname = data.roomname;
         $scope.currentUser = data.currentUser;
+        $scope.host = data.host;
         $scope.host_name = data.host.name;
 
         $scope.players = []
         $scope.players.push($scope.currentUser);
 
-        console.log($scope.currentUser);
+        if ($scope.currentUser._id == $scope.host._id) {
+          $scope.hide_var = true;
+        } else {
+          $scope.hide_var = false;
+        }
 
         // NOTE: You will recieve a ng-repeat DUPES error if your bingo card
         // has repeated squares. There is a way to prevent this error, but I
@@ -234,6 +238,9 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
       console.log('Winner!');
     }
   });
+
+  //Start button
+
 
   // var toggleselect = $('div')
   $scope.sqclick = function(event) {
