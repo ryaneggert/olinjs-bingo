@@ -52,17 +52,42 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
   $scope.formData = {};
   $scope.msg = "";
 
-  // Submit new page
-  $scope.addCardSet = function() {
-    $http.post('/api/new/cardset', $scope.formData)
-      .success(function(data) {
-        $scope.formData = {};
-        $scope.msg = "Congratulations! You have successfully added your card set!";
-      })
-      .error(function(data) {
-        console.log("Error: " + data);
-      });
+  $scope.choices = [{id: 'choice1'}, {id: 'choice2'}, {id: 'choice3'}];
+
+  $scope.addNewChoice = function() {
+    var newItemNo = $scope.choices.length+1;
+    $scope.choices.push({'id':'choice'+newItemNo});
   };
+
+  $scope.showAddChoice = function(choice) {
+    return choice.id === $scope.choices[$scope.choices.length-1].id;
+  };
+  
+  $scope.addCardSet = function() {
+    cards = []
+    // quadratic performance, ok for small cardset, optimize if necessary 
+    for (var i in $scope.choices) {
+      if (cards.indexOf($scope.choices[i].name) === -1) {
+        if ($scope.choices[i].name != null) {
+          cards.push($scope.choices[i].name)
+        }
+      }
+    }
+    if (cards.length < 25) {
+      $scope.msg = "not enough unique cards (25), please add more"
+    }
+    else {
+      postdata = {"name": $scope.formData.name, "cards": cards}
+      $http.post('/api/new/cardset', postdata)
+        .success(function(data) {
+          // $scope.formData = {};
+          $scope.msg = "Congratulations! You have successfully added your card set!";
+        })
+        .error(function(data) {
+          console.log("Error: " + data);
+        });
+    }
+  }
 });
 
 bingo.controller('guest_form', function($scope, $http, $location) {
