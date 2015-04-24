@@ -242,6 +242,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
           $scope.hide_var = false;
         }
 
+        //later, when the start game also changed in the server side, we can change to $scope.start_var = data.game.isopen;
         $scope.start_var = false;
 
         bingosockets.emit('game', {
@@ -280,6 +281,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
   $scope.start_func = function(event) {
     $scope.start_var = true;
     $scope.hide_var = false;
+    //need to use socket to tell everyone that game has started and change the "isopen" value to true
   }
 
   $scope.$on('socket:joinroom', function(ev, data) {

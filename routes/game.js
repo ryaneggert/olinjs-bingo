@@ -50,7 +50,7 @@ routes.newGame = function(req, res) {
   var host_name = req.session.user.name;
 
   // Default state of the game is open for play (Change later)
-  var isOpen = true;
+  var isOpen = false;
 
   // Get start date from user input
   var start_time = req.body.startDate;
@@ -192,8 +192,6 @@ routes.init = function(req, res) {
           console.error("Error saving new card", err);
           res.status(500).send("Error saving new card");
         }
-
-        console.log("lalallalalallalllll" + data.host);
 
         res.send({
           user: req.session.user,
