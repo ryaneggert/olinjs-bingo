@@ -1,6 +1,8 @@
 var game = require("./routes/game");
 var guest = require("./routes/guest.js");
 var home = require("./routes/home");
+var mainr = require("./routes/index");
+var auths = require("./routes/auths");
 
 var express = require("express");
 var session = require("express-session");
@@ -31,6 +33,8 @@ app.use(session({
   saveUninitialized: true
 }));
 
+app.use('/auth', auths);
+
 app.get('/api/home', home.home);
 
 app.post('/guest', guest.login);
@@ -44,6 +48,8 @@ app.post('/api/game/initialize', game.init);
 app.get('/api/user/cardsets', game.getUserCardsets);
 
 app.post('/api/join/game', home.joinGame);
+
+app.get('/*', auths.isAuth_pg, mainr.main);
 
 mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/bingo');
 var PORT = 3000;

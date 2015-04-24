@@ -1,22 +1,76 @@
-<div class = "home">
-	<div class = "banner">
-		<h1>Olin Bingo</h1>
-		<br>
-		<p><em>Olin's source for real-time user-created bingo games</em></p><br>
-		<button class = "login"><a href = "/#/login/">Log In</a></button>
-	</div>
-	<br>
-	<div class="allGames" ng-hide = "isNotLoggedIn">
-		<h2>All Games</h2>
-		<form>
-			<div ng-repeat="game in formText">
-				{{game.room}}<input type = "radio" name = "game.id" value = "{{game._id}}" ng-model = formData.game_id>
-			</div>
-			<button type = "submit" ng-click = "joinGame()">Join!</button>
-		</form>
-		<br>
-		<button><a href = "/#/new/cardset">New Card Set</a></button>
-		<br>
-		<button><a href = "/#/new/game">New Game</a></button>
-	</div>
+<div class="home">
+  <div class="container">
+    <div layout-sm="column" layout-gt-md="row" layout-margin>
+      <div flex flex-order="1">
+        <section class="md-whiteframe-z1">
+          <md-toolbar class="">
+            <div class="md-toolbar-tools">
+              <h3 class="ng-binding">Games</h3>
+              <span flex=""></span>
+              <md-button href='/#/new/game' class="md-icon-button" aria-label="New Game">
+                <md-tooltip md-direction="left" md-delay=1000>
+                  Create New Game
+                </md-tooltip>
+                <md-icon md-font-icon="fa-plus" style="color: white;"></md-icon>
+              </md-button>
+            </div>
+          </md-toolbar>
+          <md-list>
+            <md-list-item id="gamelist" class="md-3-line" ng-repeat="game in currentgames" ng-click="joinGame(game._id)">
+              <div class="md-list-item-text" id="gamelisttext">
+                <h3>{{ game.room }}</h3>
+                <h4>Hosted by {{ game.host.name }}</h4>
+                <p>Starts at {{ game.start_time }}</p>
+                <!-- format this -->
+              </div>
+              <md-divider></md-divider>
+            </md-list-item>
+          </md-list>
+        </section>
+      </div>
+      <div flex flex-order="2">
+        <section class="md-whiteframe-z1">
+          <md-toolbar class="">
+            <div class="md-toolbar-tools">
+              <h3 class="ng-binding">Card Sets</h3>
+              <span flex=""></span>
+              <md-button href='/#/new/cardset' class="md-icon-button" aria-label="New Card Set">
+                <md-tooltip md-direction="left" md-delay=1000>
+                  Create New Card Set
+                </md-tooltip>
+                <md-icon md-font-icon="fa-plus" style="color: white;"></md-icon>
+              </md-button>
+            </div>
+          </md-toolbar>
+          <md-list>
+            <md-list-item class="md-2-line" ng-repeat="cardset in cardsets">
+              <div layout="row" layout-align="end center">
+                <div flex class="md-list-item-text">
+                  <h3>{{ cardset.name }}</h3>
+                  <p> Created by {{ cardset.creator.name }}</p>
+                </div>
+                <div flex=10>
+                  <md-button class="md-icon-button" ng-click="editCardSet(cardset._id)" aria-label="Edit card set">
+                    <md-icon md-font-icon="fa-pencil-square-o" class=""></md-icon>
+                    <md-tooltip md-direction="left" md-delay=1000>
+                      Edit this card set
+                    </md-tooltip>
+                  </md-button>
+                </div>
+                <div flex=10>
+                  <md-button class="md-icon-button" ng-click="deleteCardSet(cardset._id)" aria-label="Delete card set">
+                    <md-icon md-font-icon="fa-minus-square" class=""></md-icon>
+                    <md-tooltip md-direction="left" md-delay=1000>
+                      Delete this card set
+                    </md-tooltip>
+                  </md-button>
+                </div>
+              </div>
+              <md-divider></md-divider>
+            </md-list-item>
+          </md-list>
+        </section>
+      </div>
+    </div>
+  </div>
 </div>
