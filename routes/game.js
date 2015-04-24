@@ -200,7 +200,7 @@ routes.init = function(req, res) {
     .findOne({
       _id: req.body.gameid
     })
-    .populate('card_set')
+    .populate('card_set host')
     .exec(function(err, data) {
       ncard = gamedata(err, data);
       if (ncard === null) {

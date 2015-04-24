@@ -116,10 +116,7 @@ bingo.controller('addGameController', function($scope, $http, $location) {
     $http.post('/api/new/game', $scope.formData)
       .success(function(data) {
         $scope.formData = {};
-        $location.path('/gameroom').search({
-          host: data.host,
-          roomname: data.room
-        });
+        $location.path('/game/' + data._id);
       })
       .error(function(data) {
         console.log("Error: " + data);
@@ -152,6 +149,8 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
       .success(function(data) {
         console.log('joined the following game');
         console.log(data);
+
+        $scope.formData = {};
         $location.path('/game/' + data._id);
       })
       .error(function(data) {
@@ -171,6 +170,19 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
 
 bingo.controller('bingoController', function($scope, $document, $http, $routeParams, bingosockets) {
   // Responsive bingo card: keep squares square.
+
+  // Make sure that we warn the user before they leave the gameroom
+  $scope.$on('$locationChangeStart', function(event, next, current) {
+    if (1) {
+      var answer = confirm('Are you sure you want to leave the game room');
+      if (!answer) {
+        event.preventDefault();
+      }
+    }
+  });
+
+
+  //Initialize room information
   var resizecard = function() {
     // I shouldn't have to use jQuery.
     // Future work: find how to modify directive to $scope.$apply() or something
@@ -187,8 +199,13 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
         gameid: $routeParams.gameid
       })
       .success(function(data) {
+        console.log(data);
         $scope.gamecard = data.card.squares;
         $scope.cardid = data.card._id;
+        $scope.roomname = data.game.room;
+        $scope.currentUser = data.user;
+        // $scope.host_name = data.game.host.name;
+        $scope.players = [];
 
         bingosockets.emit('game', {
           'type': 'join',
@@ -197,6 +214,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
             'user': data.user,
           }
         });
+
         // NOTE: You will recieve a ng-repeat DUPES error if your bingo card
         // has repeated squares. There is a way to prevent this error, but I
         // have left this behavior in place because we do not want to serve
@@ -210,6 +228,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
       });
   };
   initializegame();
+
   //TODO: add winner detection on backend, so as to prompt sending of winner message
   //TODO: send and show winning bingo card?
   $scope.$on('socket:winner', function(ev, data) {
@@ -222,6 +241,8 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
 
   $scope.$on('socket:joinroom', function(ev, data) {
     console.log(data);
+    $scope.players.push(data.user);
+    console.log('PLAYERS', $scope.players);
   });
 
 
