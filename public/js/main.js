@@ -153,6 +153,7 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
     var sqwidth = $('div.bingosquare').width();
     $('div.bingorow').height(sqwidth);
     $('div.bingosquare').height(sqwidth);
+    $('.bingosquare').css({"margin": ".25rem"});
     console.log('Cards have been resized');
   };
 
@@ -168,7 +169,7 @@ bingo.controller('bingoController', function($scope, $document, $http, bingosock
       event.target.className += " squaretoggle"
     }
     else {
-      event.target.className = event.target.className.replace(" squaretoggle", "");
+      event.target.className = event.target.className.replace(" squaretoggle", "#5596F7");
     }
     
     $scope.bingo = hasBingo($scope.gamescore)
