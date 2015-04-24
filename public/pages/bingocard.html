@@ -1,10 +1,10 @@
 
 <div class = "game">
 <div class = "gameContainer">
-  <div class = "bingoheader">
+    <div class = "col-md-7 col-lg-6">
+      <div class = "bingoheader">
     <h2>State of the Union Address</h2>
   </div>
-    <div class = "col-md-7 col-lg-6">
       <div class = "bingoCard">
       <div bsquare class="bingorow" ng-repeat="cardrow in gamecard" ng-init="rowindex = $index">
         <div bsquare class="bingosquare" ng-repeat="square in cardrow" ng-init="colindex = $index" ng-click="sqclick($event)" id="[{{rowindex}},{{colindex}}]">
@@ -18,8 +18,8 @@
     </span>
   </div>
   </div>
-  <div class = "col-md-5 col-lg-6">
-    <h2>Squares</h2>
+  <div class = "col-md-3 col-lg-3">
+    <div class = "squaresTitle"> <h2>Squares</h2></div>
     <div class = "squares">
     <ol>
       <li>THing one</li>
@@ -49,6 +49,36 @@
     </ol>
   </div>
 </div>
+  <div class = "col-md-2 col-lg-3">
+    <div class = "squaresTitle"><h2>Players</h2></div>
+    <div class = "squares">
+    <ol>
+      <li>THing one</li>
+      <li>Thing 2 </li>
+      <li>Thing three</li>
+      <li>Thing 4</li>
+      <li>THing one</li>
+      <li>Thing 2 </li>
+      <li>Thing three</li>
+      <li>Thing 4</li>
+      <li>THing one</li>
+      <li>Thing 2 </li>
+      <li>Thing three</li>
+      <li>Thing 4</li>
+      <li>THing one</li>
+      <li>Thing 2 </li>
+      <li>Thing three</li>
+      <li>Thing 4</li>
+      <li>THing one</li>
+      <li>Thing 2 </li>
+      <li>Thing three</li>
+      <li>Thing 4</li>
+      <li>THing one</li>
+      <li>Thing 2 </li>
+      <li>Thing three</li>
+      <li>Thing 4</li>
+    </ol>
+  </div>
 </div>
 </div>
 
