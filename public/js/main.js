@@ -7,6 +7,7 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngMaterial'
     scks.forward('test'); // makes all 'test' socket events avaliable as
     //$scope.$on('socket:test', function(ev,data) {...};)
     scks.forward('joinroom');
+    scks.forward('leaveroom');
     scks.forward('winner'); // forward win event
     return scks;
   });
@@ -241,20 +242,13 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
 
   $scope.$on('socket:joinroom', function(ev, data) {
     console.log(data);
-    $scope.players.push(data.user);
+    $scope.players = data.players;
     console.log('PLAYERS', $scope.players);
   });
 
   $scope.$on('socket:leaveroom', function(ev, data) {
     console.log(data);
-    var index = $scope.players.indexOf(data.user);
-    console.log('INDEX', index);
-    if (index > -1) {
-        $scope.players.splice(index, 1);
-    } else {
-      console.log('SOMETHING HORRIBLE HAS HAPPENED')
-    }
-    $scope.players.push(data.user);
+    $scope.players = data.players;
     console.log('PLAYERS', $scope.players);
   });
 

@@ -14,12 +14,17 @@ var bingojoin = function(data, socket, io) {
   // Join this socket to the game's room
   socket.join(gameid);
   socket.olinjsdata.user = data.user;
+  var roompop = io.nsps['/'].adapter.rooms[gameid];
+  // get user data for each socket
+  var users = [];
+  for (var usersocketid in roompop) {
+    this_socket = io.sockets.connected[usersocketid];
+    users.push(this_socket.olinjsdata.user);
+  }
   // Send a connection event with user name to room.
+
   io.to(gameid).emit('joinroom', {
-    user: {
-      'name': username,
-      '_id': userid,
-    }
+    players: users
   });
 };
 
@@ -52,13 +57,19 @@ var sockets = function(app) {
       var formerrooms = socket.olinjsdata.roomlist;
       var userinfo = socket.olinjsdata.user;
       //clear our room storage object
+
       delete socket.olinjsdata;
+
       for (var room in formerrooms) {
+        var roompop = io.nsps['/'].adapter.rooms[room];
+        // get user data for each socket
+        var users = [];
+        for (var usersocketid in roompop) {
+          this_socket = io.sockets.connected[usersocketid];
+          users.push(this_socket.olinjsdata.user);
+        }
         io.to(room).emit('leaveroom', {
-          players: {
-            'name': userinfo.name,
-            '_id': userinfo._id,
-          }
+          players: users
         });
       }
       io.emit('user disconnected');
