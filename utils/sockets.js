@@ -4,9 +4,19 @@ var bingomove = function(movedata) {
   game.updatecard(movedata);
 };
 
+var getroomusers = function(io, roomid) {
+  var roompop = io.nsps['/'].adapter.rooms[roomid];
+  // get user data for each socket
+  var users = [];
+  for (var usersocketid in roompop) {
+    this_socket = io.sockets.connected[usersocketid];
+    users.push(this_socket.olinjsdata.user);
+  }
+  return users;
+};
+
 var bingojoin = function(data, socket, io) {
   // Get user's game & name
-  console.log('bingojoin fxn')
   var gameid = data.game;
   var userid = data.user._id;
   var username = data.user.name;
@@ -14,15 +24,8 @@ var bingojoin = function(data, socket, io) {
   // Join this socket to the game's room
   socket.join(gameid);
   socket.olinjsdata.user = data.user;
-  var roompop = io.nsps['/'].adapter.rooms[gameid];
-  // get user data for each socket
-  var users = [];
-  for (var usersocketid in roompop) {
-    this_socket = io.sockets.connected[usersocketid];
-    users.push(this_socket.olinjsdata.user);
-  }
-  // Send a connection event with user name to room.
-
+  var users = getroomusers(io, gameid);
+  // Send a connection event with current players to room.
   io.to(gameid).emit('joinroom', {
     players: users
   });
@@ -61,13 +64,7 @@ var sockets = function(app) {
       delete socket.olinjsdata;
 
       for (var room in formerrooms) {
-        var roompop = io.nsps['/'].adapter.rooms[room];
-        // get user data for each socket
-        var users = [];
-        for (var usersocketid in roompop) {
-          this_socket = io.sockets.connected[usersocketid];
-          users.push(this_socket.olinjsdata.user);
-        }
+        var users = getroomusers(io, room);
         io.to(room).emit('leaveroom', {
           players: users
         });
