@@ -10,9 +10,10 @@ var bingojoin = function(data, socket, io) {
   var gameid = data.game;
   var userid = data.user._id;
   var username = data.user.name;
-  console.log(data)
+  console.log(data);
   // Join this socket to the game's room
   socket.join(gameid);
+  socket.olinjsdata.user = data.user;
   // Send a connection event with user name to room.
   io.to(gameid).emit('joinroom', {
     user: {
@@ -24,7 +25,14 @@ var bingojoin = function(data, socket, io) {
 
 var sockets = function(app) {
   var io = require('socket.io')(app);
+
   io.on('connection', function(socket) {
+    socket.onclose = function(reason) {
+      var allrooms = socket.adapter.sids[socket.id];
+      socket.olinjsdata.roomlist = allrooms;
+      Object.getPrototypeOf(this).onclose.call(this, reason);
+    };
+    socket.olinjsdata = {};
     console.log('socket connection established');
     socket.emit('test', 'This is a test');
     socket.on('response', function(data) {
@@ -38,6 +46,22 @@ var sockets = function(app) {
       } else {
         console.log('Undefined game type');
       }
+    });
+    socket.on('disconnect', function(data) {
+      console.log('Disconnect');
+      var formerrooms = socket.olinjsdata.roomlist;
+      var userinfo = socket.olinjsdata.user;
+      //clear our room storage object
+      delete socket.olinjsdata;
+      for (var room in formerrooms) {
+        io.to(room).emit('leaveroom', {
+          players: {
+            'name': userinfo.name,
+            '_id': userinfo._id,
+          }
+        });
+      }
+      io.emit('user disconnected');
     });
   });
 };

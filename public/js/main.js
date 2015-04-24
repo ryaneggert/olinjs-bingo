@@ -245,6 +245,19 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     console.log('PLAYERS', $scope.players);
   });
 
+  $scope.$on('socket:leaveroom', function(ev, data) {
+    console.log(data);
+    var index = $scope.players.indexOf(data.user);
+    console.log('INDEX', index);
+    if (index > -1) {
+        $scope.players.splice(index, 1);
+    } else {
+      console.log('SOMETHING HORRIBLE HAS HAPPENED')
+    }
+    $scope.players.push(data.user);
+    console.log('PLAYERS', $scope.players);
+  });
+
 
   // var toggleselect = $('div')
   $scope.sqclick = function(event) {
