@@ -10,55 +10,65 @@ var routes = {};
 
 routes.home = function(req, res) {
   /* Displays all of the available games on the landing page */
-
-  if (req.session.user) {
-    Game.find({}, function(err, games) {
+  Game
+    .find({})
+    .populate('host')
+    .exec(function(err, games) {
       if (err) {
         console.error("Couldn't find any games!", err);
         res.status(500).send("Couldn't find any games in the db!");
+        // Is it really a server error if there are no games?
+        // Or is this a database error, and no games is represented by
+        // games = [] ?
       }
-      console.log(games);
-      res.send(games);
+      CardSet
+        .find({})
+        .populate('creator')
+        .exec(function(err, cardsets) {
+          if (err) {
+            console.error("Error retrieving cardsets!", err);
+            res.status(500).send("Error retrieving cardsets!");
+          }
+          res.send({
+            games: games,
+            cardsets: cardsets,
+          }); // an object, to allow the easy addition of more homepage data
+        });
     });
-  } else {
-    res.send("Must be logged in!");
-  }
 };
 
 routes.joinGame = function(req, res) {
   /* Create a new card and joins game when user clicks "Join" */
-  console.log(req.body.game_id);
   // Get the ID of the game the user chose
-  var gameId = req.body.game_id;
-
-  // TODO: set the user to the current user
+  console.log(req.body.game_id);
+  var gameID = req.body.game_id;
   var currUser = req.session.user;
-  console.log(currUser);
+  console.log('USER', currUser);
 
   // Find the game the user intends to join and add user to player list
-  Game.findOneAndUpdate({
-    _id: gameId,
-    players: {$ne: currUser._id}
-  }, {
-    $push: {
-      "players": currUser._id
-    }
-  }, function(err, game) {
-    if (err) {
-      console.error("Couldn't find the specified game! ", err);
-      res.status(500).send("Couldn't find the specified game");
-    } else {
-    	User.find({_id: game.host}, function(err, host) {
-        res.send({
-          game: game,
-          currUser: currUser,
-          host: host[0]
+
+  Game
+    .findOne({
+      _id: gameID
+    })
+    .exec(function(err, game) {
+      var players = game.players;
+      if (players.indexOf(currUser._id) > -1) {
+        // Player not on roster. Add.
+        players.push(currUser._id);
+        game.players = players;
+        game.save(function(err2, updgame) {
+          if (err || err2) {
+            console.log('Error adding user to game.', err, err2);
+            res.status(500).send('Error adding user to game');
+          }
+          res.send(updgame);
         });
-      });
-    }
-    console.log("Game: ");
-    console.log(game);
-  });
+      } else {
+        // Player already on roster. Send game.
+        res.send(game);
+      }
+    });
 };
 
 module.exports = routes;

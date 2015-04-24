@@ -1,4 +1,4 @@
-var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io'])
+var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngMaterial'])
   .factory('bingosockets', function(socketFactory) {
     var myIoSocket = io.connect('http://localhost:3000');
     var scks = socketFactory({
@@ -23,9 +23,9 @@ bingo.config(function($routeProvider) {
       templateUrl: '../pages/home.html',
       controller: 'homeController'
     })
-    .when('/login', {
-      templateUrl: '../pages/login.html',
-    })
+    // .when('/login', {
+    //   templateUrl: '../pages/login.html',
+    // })
     .when('/guest_login', {
       templateUrl: '../pages/guest.html',
       controller: 'guest_form'
@@ -42,6 +42,10 @@ bingo.config(function($routeProvider) {
       templateUrl: '../pages/bingocard.html',
       controller: 'bingoController'
     })
+    .when('/gameroom', {
+      templateUrl: '../pages/gameroom.html',
+      controller: 'gameroomController'
+    });
 });
 
 bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
@@ -81,6 +85,18 @@ bingo.controller('guest_form', function($scope, $http, $location) {
   };
 });
 
+bingo.controller('gameroomController', function($scope, $http, $location) {
+  $scope.formData = {};
+  $scope.msg = "";
+
+  $scope.formData.host = $location.search().host;
+  $scope.formData.roomname = $location.search().roomname;
+
+  $scope.host_name = $scope.formData.host.name;
+  $scope.roomname = $scope.formData.roomname;
+
+});
+
 bingo.controller('addGameController', function($scope, $http, $location) {
   $scope.formData = {};
   $scope.formData.card_set = "default";
@@ -109,17 +125,12 @@ bingo.controller('addGameController', function($scope, $http, $location) {
 });
 
 bingo.controller('homeController', function($scope, $http, $location, bingosockets) {
-  $scope.formText = "";
-  $scope.isNotLoggedIn = false;
-
+  $scope.currentgames = []; // variable to hold list of current bingo games
   $http.get('/api/home')
     .success(function(data) {
       console.log(data);
-      if (data === "Must be logged in!") {
-        $scope.isNotLoggedIn = true;
-      } else {
-        $scope.formText = data;
-      }
+      $scope.currentgames = data.games;
+      $scope.cardsets = data.cardsets;
     })
     .error(function(data) {
       console.log("Error: " + data);
@@ -129,15 +140,16 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
     console.log('Test Recieved');
     bingosockets.emit('response', 'this is a response');
   });
-
-  $scope.formData = {};
   // TODO: redirect to game screen after user successfully joins game
-  $scope.joinGame = function() {
-    console.log($scope.formData);
-    $http.post('/api/join/game', $scope.formData)
+  $scope.joinGame = function(bgameid) {
+    console.log('bgameid =', bgameid);
+    $http.post('/api/join/game', {
+        game_id: bgameid
+      })
       .success(function(data) {
         console.log('joined the following game');
         console.log(data);
+
         $scope.formData = {};
         $location.path('/game/' + data.game._id);
       })
@@ -145,7 +157,15 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
         console.log("Error: " + data);
       });
   };
+  $scope.editCardSet = function(cardsetid) {
+    //$location.path('/cardset/edit') //Make API more "RESTful" (e.g. /<object>/<action>)
+    console.log('Go write an "edit card set" controller');
+  };
 
+  $scope.deleteCardSet = function(cardsetid) {
+    //$http.post(...)
+    console.log('Go write a "delete card set" controller');
+  };
 });
 
 bingo.controller('bingoController', function($scope, $document, $http, $routeParams, bingosockets) {

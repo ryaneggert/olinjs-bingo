@@ -117,10 +117,7 @@ routes.newGame = function(req, res) {
         }
 
         console.log(game);
-        res.send({
-          game: game,
-          host: host
-        });
+        res.send(game);
       });
     });
   });
