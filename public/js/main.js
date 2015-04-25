@@ -24,9 +24,6 @@ bingo.config(function($routeProvider) {
       templateUrl: '../pages/home.html',
       controller: 'homeController'
     })
-    // .when('/login', {
-    //   templateUrl: '../pages/login.html',
-    // })
     .when('/guest_login', {
       templateUrl: '../pages/guest.html',
       controller: 'guest_form'
@@ -53,32 +50,42 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
   $scope.formData = {};
   $scope.msg = "";
 
-  $scope.choices = [{id: 'choice1'}, {id: 'choice2'}, {id: 'choice3'}];
+  $scope.choices = [{
+    id: 'choice1'
+  }, {
+    id: 'choice2'
+  }, {
+    id: 'choice3'
+  }];
 
   $scope.addNewChoice = function() {
-    var newItemNo = $scope.choices.length+1;
-    $scope.choices.push({'id':'choice'+newItemNo});
+    var newItemNo = $scope.choices.length + 1;
+    $scope.choices.push({
+      'id': 'choice' + newItemNo
+    });
   };
 
   $scope.showAddChoice = function(choice) {
-    return choice.id === $scope.choices[$scope.choices.length-1].id;
+    return choice.id === $scope.choices[$scope.choices.length - 1].id;
   };
-  
+
   $scope.addCardSet = function() {
-    cards = []
-    // quadratic performance, ok for small cardset, optimize if necessary 
+    cards = [];
+    // quadratic performance, ok for small cardset, optimize if necessary
     for (var i in $scope.choices) {
       if (cards.indexOf($scope.choices[i].name) === -1) {
         if ($scope.choices[i].name != null) {
-          cards.push($scope.choices[i].name)
+          cards.push($scope.choices[i].name);
         }
       }
     }
     if (cards.length < 25) {
-      $scope.msg = "not enough unique cards (25), please add more"
-    }
-    else {
-      postdata = {"name": $scope.formData.name, "cards": cards}
+      $scope.msg = "not enough unique cards (25), please add more";
+    } else {
+      postdata = {
+        "name": $scope.formData.name,
+        "cards": cards
+      };
       $http.post('/api/new/cardset', postdata)
         .success(function(data) {
           // $scope.formData = {};
@@ -88,7 +95,7 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
           console.log("Error: " + data);
         });
     }
-  }
+  };
 });
 
 bingo.controller('guest_form', function($scope, $http, $location) {
@@ -120,7 +127,6 @@ bingo.controller('gameroomController', function($scope, $http, $location) {
 
   $scope.host_name = $scope.formData.host.name;
   $scope.roomname = $scope.formData.roomname;
-
 });
 
 bingo.controller('addGameController', function($scope, $http, $location) {
@@ -193,8 +199,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   };
 });
 
-bingo.controller('bingoController', function($scope, $document, $http, $routeParams, bingosockets) {
-  // Responsive bingo card: keep squares square.
+bingo.controller('bingoController', function($scope, $document, $http, $routeParams, $mdDialog, bingosockets) {
 
   // Make sure that we warn the user before they leave the gameroom
   $scope.$on('$locationChangeStart', function(event, next, current) {
@@ -211,7 +216,6 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
   });
 
 
-  //Initialize room information
   var resizecard = function() {
     // I shouldn't have to use jQuery.
     // Future work: find how to modify directive to $scope.$apply() or something
@@ -222,6 +226,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     console.log('Cards have been resized');
   };
 
+  //Initialize room information
   var initializegame = function() {
     // POST to server to join room, get card/game info
     $http.post('/api/game/initialize', {
@@ -232,13 +237,12 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
         $scope.gamecard = data.card.squares;
         $scope.cardid = data.card._id;
 
-        $scope.roomname = data.roomname;
-        $scope.currentUser = data.currentUser;
-        $scope.host = data.host;
-        $scope.host_name = data.host.name;
+        $scope.roomname = data.game.room;
+        $scope.currentUser = data.user;
+        $scope.host = data.game.host;
+        $scope.host_name = data.game.host.name;
 
-        $scope.players = []
-        $scope.players.push($scope.currentUser);
+        $scope.players = []; // This value is populated using sockets.
 
         if ($scope.currentUser._id == $scope.host._id) {
           $scope.hide_var = true;
@@ -246,7 +250,8 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
           $scope.hide_var = false;
         }
 
-        //later, when the start game also changed in the server side, we can change to $scope.start_var = data.game.isopen;
+        // Later, when the start game also changed in the server side,
+        // we can change to $scope.start_var = data.game.isopen;
         $scope.start_var = false;
 
         bingosockets.emit('game', {
@@ -269,6 +274,8 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
         console.log("Error: " + status);
       });
   };
+
+
   initializegame();
 
   //TODO: add winner detection on backend, so as to prompt sending of winner message
@@ -286,7 +293,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     $scope.start_var = true;
     $scope.hide_var = false;
     //need to use socket to tell everyone that game has started and change the "isopen" value to true
-  }
+  };
 
   $scope.$on('socket:joinroom', function(ev, data) {
     console.log(data);

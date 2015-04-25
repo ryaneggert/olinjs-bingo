@@ -14,9 +14,7 @@ routes.newCardSet = function(req, res) {
   // Get data submitted by user from form
   // TODO: DEFINITELY make this less stupid
 
-  console.log(req.body)
-
-  var square_set = req.body.cards
+  var square_set = req.body.cards;
   var name = req.body.name;
 
   // Assign current logged in user as creator
@@ -196,8 +194,6 @@ routes.init = function(req, res) {
         res.send({
           user: req.session.user,
           game: data,
-          currentUser: req.session.user,
-          host: data.host,
           card: card
         });
       });
