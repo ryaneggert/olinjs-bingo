@@ -138,6 +138,12 @@ bingo.controller('addGameController', function($scope, $http, $location) {
     });
 
   $scope.addGame = function() {
+
+    if (!$scope.formData.room || !$scope.formData.card_set_id) {
+      confirm("Not enough information to create a new game.");
+      return;
+    }
+
     $http.post('/api/new/game', $scope.formData)
       .success(function(data) {
         $scope.formData = {};
@@ -198,12 +204,10 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
 
   // Make sure that we warn the user before they leave the gameroom
   $scope.$on('$locationChangeStart', function(event, next, current) {
-    if (1) {
       var answer = confirm('Are you sure you want to leave the game room');
       if (!answer) {
         event.preventDefault();
       }
-    }
   });
 
 
