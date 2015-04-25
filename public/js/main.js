@@ -232,7 +232,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
         $scope.gamecard = data.card.squares;
         $scope.cardid = data.card._id;
 
-        $scope.roomname = data.roomname;
+        $scope.roomname = data.game.room;
         $scope.currentUser = data.currentUser;
         $scope.host = data.host;
         $scope.host_name = data.host.name;
