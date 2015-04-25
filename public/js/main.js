@@ -53,17 +53,42 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
   $scope.formData = {};
   $scope.msg = "";
 
-  // Submit new page
-  $scope.addCardSet = function() {
-    $http.post('/api/new/cardset', $scope.formData)
-      .success(function(data) {
-        $scope.formData = {};
-        $scope.msg = "Congratulations! You have successfully added your card set!";
-      })
-      .error(function(data) {
-        console.log("Error: " + data);
-      });
+  $scope.choices = [{id: 'choice1'}, {id: 'choice2'}, {id: 'choice3'}];
+
+  $scope.addNewChoice = function() {
+    var newItemNo = $scope.choices.length+1;
+    $scope.choices.push({'id':'choice'+newItemNo});
   };
+
+  $scope.showAddChoice = function(choice) {
+    return choice.id === $scope.choices[$scope.choices.length-1].id;
+  };
+  
+  $scope.addCardSet = function() {
+    cards = []
+    // quadratic performance, ok for small cardset, optimize if necessary 
+    for (var i in $scope.choices) {
+      if (cards.indexOf($scope.choices[i].name) === -1) {
+        if ($scope.choices[i].name != null) {
+          cards.push($scope.choices[i].name)
+        }
+      }
+    }
+    if (cards.length < 25) {
+      $scope.msg = "not enough unique cards (25), please add more"
+    }
+    else {
+      postdata = {"name": $scope.formData.name, "cards": cards}
+      $http.post('/api/new/cardset', postdata)
+        .success(function(data) {
+          // $scope.formData = {};
+          $scope.msg = "Congratulations! You have successfully added your card set!";
+        })
+        .error(function(data) {
+          console.log("Error: " + data);
+        });
+    }
+  }
 });
 
 bingo.controller('guest_form', function($scope, $http, $location) {
@@ -113,7 +138,6 @@ bingo.controller('addGameController', function($scope, $http, $location) {
     });
 
   $scope.addGame = function() {
-    $scope.formData.host = angular.element('#username').scope().display_username;
     $http.post('/api/new/game', $scope.formData)
       .success(function(data) {
         $scope.formData = {};
@@ -207,10 +231,23 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
         console.log(data);
         $scope.gamecard = data.card.squares;
         $scope.cardid = data.card._id;
-        $scope.roomname = data.game.room;
-        $scope.currentUser = data.user;
-        // $scope.host_name = data.game.host.name;
-        $scope.players = [];
+
+        $scope.roomname = data.roomname;
+        $scope.currentUser = data.currentUser;
+        $scope.host = data.host;
+        $scope.host_name = data.host.name;
+
+        $scope.players = []
+        $scope.players.push($scope.currentUser);
+
+        if ($scope.currentUser._id == $scope.host._id) {
+          $scope.hide_var = true;
+        } else {
+          $scope.hide_var = false;
+        }
+
+        //later, when the start game also changed in the server side, we can change to $scope.start_var = data.game.isopen;
+        $scope.start_var = false;
 
         bingosockets.emit('game', {
           'type': 'join',
@@ -244,6 +281,13 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     }
   });
 
+  //Start button
+  $scope.start_func = function(event) {
+    $scope.start_var = true;
+    $scope.hide_var = false;
+    //need to use socket to tell everyone that game has started and change the "isopen" value to true
+  }
+
   $scope.$on('socket:joinroom', function(ev, data) {
     console.log(data);
     $scope.players = data.players;
@@ -256,9 +300,13 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     console.log('PLAYERS', $scope.players);
   });
 
-
   // var toggleselect = $('div')
   $scope.sqclick = function(event) {
+
+    if (!$scope.start_var) {
+      return;
+    }
+
     console.log(event.target.id);
     console.log(typeof(event.target.id));
     coords = event.target.id.split(/,|\[|\]/).slice(1, 3);
