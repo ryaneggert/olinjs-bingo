@@ -138,7 +138,6 @@ bingo.controller('addGameController', function($scope, $http, $location) {
     });
 
   $scope.addGame = function() {
-    $scope.formData.host = angular.element('#username').scope().display_username;
     $http.post('/api/new/game', $scope.formData)
       .success(function(data) {
         $scope.formData = {};
@@ -228,10 +227,23 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
         console.log(data);
         $scope.gamecard = data.card.squares;
         $scope.cardid = data.card._id;
-        $scope.roomname = data.game.room;
-        $scope.currentUser = data.user;
-        // $scope.host_name = data.game.host.name;
-        $scope.players = [];
+
+        $scope.roomname = data.roomname;
+        $scope.currentUser = data.currentUser;
+        $scope.host = data.host;
+        $scope.host_name = data.host.name;
+
+        $scope.players = []
+        $scope.players.push($scope.currentUser);
+
+        if ($scope.currentUser._id == $scope.host._id) {
+          $scope.hide_var = true;
+        } else {
+          $scope.hide_var = false;
+        }
+
+        //later, when the start game also changed in the server side, we can change to $scope.start_var = data.game.isopen;
+        $scope.start_var = false;
 
         bingosockets.emit('game', {
           'type': 'join',
@@ -265,6 +277,13 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     }
   });
 
+  //Start button
+  $scope.start_func = function(event) {
+    $scope.start_var = true;
+    $scope.hide_var = false;
+    //need to use socket to tell everyone that game has started and change the "isopen" value to true
+  }
+
   $scope.$on('socket:joinroom', function(ev, data) {
     console.log(data);
     $scope.players = data.players;
@@ -277,9 +296,13 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     console.log('PLAYERS', $scope.players);
   });
 
-
   // var toggleselect = $('div')
   $scope.sqclick = function(event) {
+
+    if (!$scope.start_var) {
+      return;
+    }
+
     console.log(event.target.id);
     console.log(typeof(event.target.id));
     coords = event.target.id.split(/,|\[|\]/).slice(1, 3);
