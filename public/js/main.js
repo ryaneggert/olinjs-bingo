@@ -249,15 +249,12 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
 
         $scope.players = []; // This value is populated using sockets.
 
-        if ($scope.currentUser._id == $scope.host._id) {
-          $scope.hide_var = true;
-        } else {
-          $scope.hide_var = false;
-        }
+        var ishost = $scope.currentUser._id == $scope.host._id;
 
-        // Later, when the start game also changed in the server side,
-        // we can change to $scope.start_var = data.game.isopen;
-        $scope.start_var = false;
+        $scope.start_var = data.game.isOpen;
+        $scope.showstartbutton = !data.game.isOpen && ishost;
+
+
 
         bingosockets.emit('game', {
           'type': 'join',
@@ -296,7 +293,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
   //Start button
   $scope.start_func = function(event) {
     $scope.start_var = true;
-    $scope.hide_var = false;
+    $scope.showstartbutton = false;
 
     bingosockets.emit('game', {
       'type': 'start',
@@ -308,7 +305,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
 
   $scope.$on('socket:gamestart', function(ev, data) {
     $scope.start_var = true;
-    $scope.hide_var = false;
+    $scope.showstartbutton = false;
     // Consider a notification dialog
   });
 
