@@ -62,6 +62,7 @@ var bingostart = function(data, socket, io) {
   io.to(data.game).emit('gamestart', {
     message: 'Play bingo!'
   });
+  game.startdb(data.game);
 };
 
 var sockets = function(app) {

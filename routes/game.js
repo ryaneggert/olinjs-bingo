@@ -226,4 +226,18 @@ routes.updatecard = function(movedata) {
       updatescore_db(newscore, movedata.card_id);
     });
 };
+
+routes.startdb = function(gameid) {
+  Game
+    .findOneAndUpdate({
+      _id: gameid
+    }, {
+      isOpen: true
+    })
+    .exec(function(err, data) {
+      if (err) {
+        console.log('Error starting game in db', err);
+      }
+    });
+};
 module.exports = routes;
