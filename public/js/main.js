@@ -42,10 +42,6 @@ bingo.config(function($routeProvider) {
     .when('/game/:gameid', {
       templateUrl: '../pages/bingocard.html',
       controller: 'bingoController'
-    })
-    .when('/gameroom', {
-      templateUrl: '../pages/gameroom.html',
-      controller: 'gameroomController'
     });
 });
 
@@ -53,20 +49,28 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
   $scope.formData = {};
   $scope.msg = "";
 
-  $scope.choices = [{id: 'choice1'}, {id: 'choice2'}, {id: 'choice3'}];
+  $scope.choices = [{
+    id: 'choice1'
+  }, {
+    id: 'choice2'
+  }, {
+    id: 'choice3'
+  }];
 
   $scope.addNewChoice = function() {
-    var newItemNo = $scope.choices.length+1;
-    $scope.choices.push({'id':'choice'+newItemNo});
+    var newItemNo = $scope.choices.length + 1;
+    $scope.choices.push({
+      'id': 'choice' + newItemNo
+    });
   };
 
   $scope.showAddChoice = function(choice) {
-    return choice.id === $scope.choices[$scope.choices.length-1].id;
+    return choice.id === $scope.choices[$scope.choices.length - 1].id;
   };
-  
+
   $scope.addCardSet = function() {
     cards = []
-    // quadratic performance, ok for small cardset, optimize if necessary 
+      // quadratic performance, ok for small cardset, optimize if necessary 
     for (var i in $scope.choices) {
       if (cards.indexOf($scope.choices[i].name) === -1) {
         if ($scope.choices[i].name != null) {
@@ -76,9 +80,11 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
     }
     if (cards.length < 25) {
       $scope.msg = "not enough unique cards (25), please add more"
-    }
-    else {
-      postdata = {"name": $scope.formData.name, "cards": cards}
+    } else {
+      postdata = {
+        "name": $scope.formData.name,
+        "cards": cards
+      }
       $http.post('/api/new/cardset', postdata)
         .success(function(data) {
           // $scope.formData = {};
@@ -109,18 +115,6 @@ bingo.controller('guest_form', function($scope, $http, $location) {
         });
     }
   };
-});
-
-bingo.controller('gameroomController', function($scope, $http, $location) {
-  $scope.formData = {};
-  $scope.msg = "";
-
-  $scope.formData.host = $location.search().host;
-  $scope.formData.roomname = $location.search().roomname;
-
-  $scope.host_name = $scope.formData.host.name;
-  $scope.roomname = $scope.formData.roomname;
-
 });
 
 bingo.controller('addGameController', function($scope, $http, $location) {
@@ -162,6 +156,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
       console.log(data);
       $scope.currentgames = data.games;
       $scope.cardsets = data.cardsets;
+      $scope.currentUser = data.currUser;
     })
     .error(function(data) {
       console.log("Error: " + data);
@@ -171,6 +166,26 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
     console.log('Test Recieved');
     bingosockets.emit('response', 'this is a response');
   });
+
+  $scope.new_game = function() {
+    if ($scope.currentUser.guest){
+      confirm("Only registered user can create a new game");
+      return;
+    }
+
+    $location.path('/new/game');
+  };
+
+  $scope.new_card_set = function() {
+    console.log('lalalalalalllll');
+    if ($scope.currentUser.guest){
+      confirm("Only registered user can create a new card set");
+      return;
+    }
+
+    $location.path('/new/cardset');
+  };
+
   // TODO: redirect to game screen after user successfully joins game
   $scope.joinGame = function(bgameid) {
     console.log('bgameid =', bgameid);
@@ -204,10 +219,10 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
 
   // Make sure that we warn the user before they leave the gameroom
   $scope.$on('$locationChangeStart', function(event, next, current) {
-      var answer = confirm('Are you sure you want to leave the game room');
-      if (!answer) {
-        event.preventDefault();
-      }
+    var answer = confirm('Are you sure you want to leave the game room');
+    if (!answer) {
+      event.preventDefault();
+    }
   });
 
 
