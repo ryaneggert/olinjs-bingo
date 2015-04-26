@@ -159,8 +159,12 @@ var gamedata = function(err, data, res) {
     console.log(err);
     return null;
   } else {
-    ncard = generatecard(data.card_set.square_set, data._id);
-    return ncard;
+    if (data != null) {
+      ncard = generatecard(data.card_set.square_set, data._id);
+      return ncard;
+    } else {
+      return null;
+    }
   }
 };
 
@@ -173,8 +177,9 @@ routes.init = function(req, res) {
     .populate('card_set host')
     .exec(function(err, data) {
       ncard = gamedata(err, data);
-      if (ncard === null) {
-        res.status(500).send("Error finding game");
+      if (ncard == null) {
+        res.status(404).send("Game not found!");
+        return;
       }
       ncard.user = req.session.user._id;
       Card.findOrCreate({
