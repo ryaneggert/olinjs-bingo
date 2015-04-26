@@ -27,15 +27,19 @@ var getroomusers = function(io, roomid) {
   users.sort(comparefxn); // Sort to avoid looping through all values
   var outusers = [];
   for (var i = users.length - 1; i >= 0; i--) {
-    if (i-1 > -1 && users[i]._id !== users[i-1]._id ){
+    if (i - 1 > -1 && users[i]._id !== users[i - 1]._id) {
       // Filter out duplicate users
       // Store deduped list in outusers
       outusers.push(users[i]);
-    } else if (i === 0 ){
+    } else if (i === 0) {
       outusers.push(users[i]);
     }
   }
   return outusers;
+};
+
+var bingomove = function(movedata) {
+  game.updatecard(movedata);
 };
 
 var bingojoin = function(data, socket, io) {
@@ -53,9 +57,15 @@ var bingojoin = function(data, socket, io) {
   });
 };
 
+var bingostart = function(data, socket, io) {
+  console.log('STARTTHEGAME', data);
+  io.to(data.game).emit('gamestart', {
+    message: 'Play bingo!'
+  });
+};
+
 var sockets = function(app) {
   var io = require('socket.io')(app);
-
   io.on('connection', function(socket) {
 
     socket.onclose = function(reason) {
@@ -79,6 +89,8 @@ var sockets = function(app) {
         bingojoin(data.data, socket, io);
       } else if (data.type === 'move') {
         bingomove(data.data);
+      } else if (data.type === 'start') {
+        bingostart(data.data, socket, io);
       } else {
         console.log('Undefined game type');
       }

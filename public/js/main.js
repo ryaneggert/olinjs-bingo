@@ -7,6 +7,7 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngMaterial'
     scks.forward('test'); // makes all 'test' socket events avaliable as
     //$scope.$on('socket:test', function(ev,data) {...};)
     scks.forward('joinroom');
+    scks.forward('gamestart');
     scks.forward('leaveroom');
     scks.forward('winner'); // forward win event
     return scks;
@@ -149,7 +150,7 @@ bingo.controller('addGameController', function($scope, $http, $location) {
       confirm("Not enough information to create a new game.");
       return;
     }
-
+    console.log($scope.formData)
     $http.post('/api/new/game', $scope.formData)
       .success(function(data) {
         $scope.formData = {};
@@ -296,8 +297,20 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
   $scope.start_func = function(event) {
     $scope.start_var = true;
     $scope.hide_var = false;
-    //need to use socket to tell everyone that game has started and change the "isopen" value to true
+
+    bingosockets.emit('game', {
+      'type': 'start',
+      'data': {
+        'game': $routeParams.gameid,
+      }
+    });
   };
+
+  $scope.$on('socket:gamestart', function(ev, data) {
+    $scope.start_var = true;
+    $scope.hide_var = false;
+    // Consider a notification dialog
+  });
 
   $scope.$on('socket:joinroom', function(ev, data) {
     console.log(data);
