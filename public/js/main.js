@@ -206,7 +206,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   };
 });
 
-bingo.controller('bingoController', function($scope, $document, $http, $routeParams, bingosockets) {
+bingo.controller('bingoController', function($scope, $document, $http, $routeParams, $mdToast, $animate, bingosockets) {
 
   // Make sure that we warn the user before they leave the gameroom
   $scope.$on('$locationChangeStart', function(event, next, current) {
@@ -306,7 +306,16 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
   $scope.$on('socket:gamestart', function(ev, data) {
     $scope.start_var = true;
     $scope.showstartbutton = false;
-    // Consider a notification dialog
+
+    $scope.showSimpleToast = function() {
+      $mdToast.show(
+        $mdToast.simple()
+        .content('The game has started!')
+        .position('bottom right')
+        .hideDelay(3000)
+      );
+    };
+    $scope.showSimpleToast();
   });
 
   $scope.$on('socket:joinroom', function(ev, data) {
