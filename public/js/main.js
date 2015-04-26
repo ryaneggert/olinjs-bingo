@@ -321,15 +321,11 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
   });
 
   $scope.$on('socket:joinroom', function(ev, data) {
-    console.log(data);
     $scope.players = data.players;
-    console.log('PLAYERS', $scope.players);
   });
 
   $scope.$on('socket:leaveroom', function(ev, data) {
-    console.log(data);
     $scope.players = data.players;
-    console.log('PLAYERS', $scope.players);
   });
 
   // var toggleselect = $('div')
