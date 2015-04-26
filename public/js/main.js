@@ -297,9 +297,6 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
 
   //Start button
   $scope.start_func = function(event) {
-    $scope.start_var = true;
-    $scope.showstartbutton = false;
-
     bingosockets.emit('game', {
       'type': 'start',
       'data': {
