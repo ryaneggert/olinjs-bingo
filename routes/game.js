@@ -106,13 +106,15 @@ routes.getUserCardsets = function(req, res) {
   CardSet.find({creator: currentUser}, function(err, cardsets) {});*/
 
   // Remove this once we have user login working
-  CardSet.find({}, function(err, cardsets) {
+  CardSet
+  .find({})
+  .populate('creator')
+  .exec(function(err, cardsets) {
     if (err) {
-      console.error("Couldn't find card sets", err);
-      res.status(500).send("couldn't find any card sets!");
+      console.error("Error retrieving cardsets!", err);
+      res.status(500).send("Error retrieving cardsets!");
     }
-    console.log(cardsets);
-    res.send(cardsets);
+    res.send(cardsets); // an object, to allow the easy addition of more homepage data
   });
 };
 
