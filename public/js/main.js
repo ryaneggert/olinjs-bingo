@@ -135,7 +135,7 @@ bingo.controller('addGameController', function($scope, $http, $location) {
       confirm("Not enough information to create a new game.");
       return;
     }
-    console.log($scope.formData);
+
     $http.post('/api/new/game', $scope.formData)
       .success(function(data) {
         $scope.formData = {};
