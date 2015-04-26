@@ -177,7 +177,6 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   };
 
   $scope.new_card_set = function() {
-    console.log('lalalalalalllll');
     if ($scope.currentUser.guest){
       confirm("Only registered user can create a new card set");
       return;
