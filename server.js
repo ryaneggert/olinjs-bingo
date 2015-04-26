@@ -1,5 +1,4 @@
 var game = require("./routes/game");
-var guest = require("./routes/guest.js");
 var home = require("./routes/home");
 var mainr = require("./routes/index");
 var auths = require("./routes/auths");
@@ -36,8 +35,6 @@ app.use(session({
 app.use('/auth', auths);
 
 app.get('/api/home', home.home);
-
-app.post('/guest', guest.login);
 
 app.post('/api/new/cardset', game.newCardSet);
 

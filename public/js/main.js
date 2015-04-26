@@ -40,10 +40,6 @@ bingo.config(function($routeProvider) {
     .when('/game/:gameid', {
       templateUrl: '../pages/bingocard.html',
       controller: 'bingoController'
-    })
-    .when('/gameroom', {
-      templateUrl: '../pages/gameroom.html',
-      controller: 'gameroomController'
     });
 });
 
@@ -119,17 +115,6 @@ bingo.controller('guest_form', function($scope, $http, $location) {
   };
 });
 
-bingo.controller('gameroomController', function($scope, $http, $location) {
-  $scope.formData = {};
-  $scope.msg = "";
-
-  $scope.formData.host = $location.search().host;
-  $scope.formData.roomname = $location.search().roomname;
-
-  $scope.host_name = $scope.formData.host.name;
-  $scope.roomname = $scope.formData.roomname;
-});
-
 bingo.controller('addGameController', function($scope, $http, $location) {
   $scope.formData = {};
   $scope.formData.card_set = "default";
@@ -150,7 +135,7 @@ bingo.controller('addGameController', function($scope, $http, $location) {
       confirm("Not enough information to create a new game.");
       return;
     }
-    console.log($scope.formData)
+    console.log($scope.formData);
     $http.post('/api/new/game', $scope.formData)
       .success(function(data) {
         $scope.formData = {};
@@ -169,6 +154,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
       console.log(data);
       $scope.currentgames = data.games;
       $scope.cardsets = data.cardsets;
+      $scope.currentUser = data.currUser;
     })
     .error(function(data) {
       console.log("Error: " + data);
@@ -178,6 +164,25 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
     console.log('Test Recieved');
     bingosockets.emit('response', 'this is a response');
   });
+
+  $scope.new_game = function() {
+    if ($scope.currentUser.guest){
+      confirm("Only registered user can create a new game");
+      return;
+    }
+
+    $location.path('/new/game');
+  };
+
+  $scope.new_card_set = function() {
+    if ($scope.currentUser.guest){
+      confirm("Only registered user can create a new card set");
+      return;
+    }
+
+    $location.path('/new/cardset');
+  };
+
   // TODO: redirect to game screen after user successfully joins game
   $scope.joinGame = function(bgameid) {
     console.log('bgameid =', bgameid);
