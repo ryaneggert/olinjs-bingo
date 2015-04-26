@@ -32,6 +32,7 @@ routes.home = function(req, res) {
           res.send({
             games: games,
             cardsets: cardsets,
+            currUser: req.session.user
           }); // an object, to allow the easy addition of more homepage data
         });
     });
