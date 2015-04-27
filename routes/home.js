@@ -32,9 +32,11 @@ routes.joinGame = function (req, res) {
 	var gameId = req.body.game_id;
 
 	// TODO: set the user to the current user
+	var currUser = req.session.user;
+	console.log(currUser);
 
-	// Find the game the user intends to join 
-	Game.findOne({_id: gameId}, function(err, game) {
+	// Find the game the user intends to join and add user to player list
+	Game.findOneAndUpdate({_id: gameId}, {$push : {"players": currUser}}, function(err, game) {
 		if (err) {
 			console.error("Couldn't find the specified game! ", err);
 			res.status(500).send("Couldn't find the specified game");
@@ -79,7 +81,7 @@ routes.joinGame = function (req, res) {
 
 			// Create a new bingo card
 			var newBingoCard = new Card({game: game._id, score: initScore, squares: squares});
-			
+
 			// Save the new card 
 			newBingoCard.save(function(err, card) {
 				if (err) {
