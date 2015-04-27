@@ -41,6 +41,38 @@ routes.newCardSet = function(req, res) {
   });
 };
 
+routes.deleteCardset = function(req, res) {
+  var card_set_id = req.body.cardset_id;
+  var restrict = false;
+
+  CardSet.findOne({
+    _id: card_set_id
+  }, function(err, cardset) {
+    if (err) {
+      console.error("Couldn't find specified cardset", err);
+      res.status(500).send("Couldn't find specified cardset");
+    }
+
+    if (cardset.creator._id !== req.session.user._id) {
+      restrict = true;
+      res.send({
+        restrict: restrict
+      });
+    }
+  });
+
+  if (!restrict) {
+    CardSet.findOneAndRemove({
+      _id: card_set_id
+    }, function(err, cardset) {
+      res.send({
+        restrict: restrict
+      });
+    })
+  }
+
+}
+
 routes.newGame = function(req, res) {
   /* Create and save a new game with set start time and pre-made card set */
 

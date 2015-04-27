@@ -44,6 +44,8 @@ app.post('/api/game/initialize', game.init);
 
 app.get('/api/user/cardsets', game.getUserCardsets);
 
+app.post('/api/delete/cardset', game.deleteCardset);
+
 app.post('/api/join/game', home.joinGame);
 
 app.get('/*', auths.isAuth_pg, mainr.main);

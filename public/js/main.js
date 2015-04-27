@@ -208,7 +208,17 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   };
 
   $scope.deleteCardSet = function(cardsetid) {
-    //$http.post(...)
+    $http.post('/api/delete/cardset', {
+      cardset_id: cardsetid
+    })
+    .success(function(data) {
+      if (data.restrict) {
+        confirm('Sorry but you are not permitted to do that');
+      }
+    })
+    .error(function(data) {
+      console.log("Error: " + data)
+    });
     console.log('Go write a "delete card set" controller');
   };
 });
