@@ -14,9 +14,7 @@ routes.newCardSet = function(req, res) {
   // Get data submitted by user from form
   // TODO: DEFINITELY make this less stupid
 
-  console.log(req.body)
-
-  var square_set = req.body.cards
+  var square_set = req.body.cards;
   var name = req.body.name;
 
   // Assign current logged in user as creator
@@ -203,8 +201,6 @@ routes.init = function(req, res) {
         res.send({
           user: req.session.user,
           game: data,
-          currentUser: req.session.user,
-          host: data.host,
           card: card
         });
       });
@@ -235,6 +231,20 @@ routes.updatecard = function(movedata) {
       var newscore = oldscore;
       newscore[row][col] = !oldscore[row][col];
       updatescore_db(newscore, movedata.card_id);
+    });
+};
+
+routes.startdb = function(gameid) {
+  Game
+    .findOneAndUpdate({
+      _id: gameid
+    }, {
+      isOpen: true
+    })
+    .exec(function(err, data) {
+      if (err) {
+        console.log('Error starting game in db', err);
+      }
     });
 };
 module.exports = routes;

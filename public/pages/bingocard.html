@@ -8,9 +8,9 @@
       </li>
     </ul>
     <p>Host: {{host_name}}</p>
-    <button ng-show="hide_var" ng-model="start" ng-click="start_func($event)">START</button>
+    <button ng-show="showstartbutton" ng-model="start" ng-click="start_func($event)">START</button>
   </div>
-  <div class="col-xs-9 col-md-8 col-lg-6">
+  <div class="col-xs-9 col-md-8 col-lg-6" id="bingocardcol">
     <span ng-if="bingo_popup" class="animate-if">
       {{winnertext}}
     </span>
