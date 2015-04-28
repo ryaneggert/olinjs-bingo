@@ -1,38 +1,15 @@
 <div class = "addCardSet">
-	<h2>Add a New Card Set</h2>
-	<form>
-		<div class = "cardSetName">
-			Name: <input type = "text" name = "name" placeholder = "Name" ng-model = formData.name>
-		</div>
-		<br>
-		<!--TODO: make this less stupid-->
-		Add Card Options: <br>
-		<input type = "text" name = "card1" ng-model = formData.card1><br> 
-		<input type = "text" name = "card2" ng-model = formData.card2><br>
-		<input type = "text" name = "card3" ng-model = formData.card3><br>
-		<input type = "text" name = "card4" ng-model = formData.card4><br>
-		<input type = "text" name = "card5" ng-model = formData.card5><br>
-		<input type = "text" name = "card6" ng-model = formData.card6><br> 
-		<input type = "text" name = "card7" ng-model = formData.card7><br>
-		<input type = "text" name = "card8" ng-model = formData.card8><br>
-		<input type = "text" name = "card9" ng-model = formData.card9><br>
-		<input type = "text" name = "card10" ng-model = formData.card10><br>
-		<input type = "text" name = "card11" ng-model = formData.card11><br> 
-		<input type = "text" name = "card12" ng-model = formData.card12><br>
-		<input type = "text" name = "card13" ng-model = formData.card13><br>
-		<input type = "text" name = "card14" ng-model = formData.card14><br>
-		<input type = "text" name = "card15" ng-model = formData.card15><br>
-		<input type = "text" name = "card16" ng-model = formData.card16><br> 
-		<input type = "text" name = "card17" ng-model = formData.card17><br>
-		<input type = "text" name = "card18" ng-model = formData.card18><br>
-		<input type = "text" name = "card19" ng-model = formData.card19><br>
-		<input type = "text" name = "card20" ng-model = formData.card20><br>
-		<input type = "text" name = "card21" ng-model = formData.card21><br> 
-		<input type = "text" name = "card22" ng-model = formData.card22><br>
-		<input type = "text" name = "card23" ng-model = formData.card23><br>
-		<input type = "text" name = "card24" ng-model = formData.card24><br>
-		<input type = "text" name = "card25" ng-model = formData.card25><br>
-		<button type = "submit" ng-click = "addCardSet()">Add!</button>
-	</form>
-	<div>{{msg}}</div>
-</div>
+<h2>Add a New Card Set</h2>
+<form>
+  <input type = "text" name = "name" placeholder = "Name" ng-model = formData.name >
+  <br>
+  <div class="form-group" data-ng-repeat="choice in choices">
+    <label for="choice" ng-show="showChoiceLabel(choice)">Choices</label>
+    <input type="text" ng-model="choice.name" name="" placeholder="bingocard square entry">
+    <button ng-show="showAddChoice(choice)" ng-click="addNewChoice()">Add another card</button>
+  </div>
+  <button type = "submit" ng-click = "addCardSet()">Add!</button>
+</form>
+<div>{{formData.name}}</div>
+<div>{{choices}}</div>
+<div>{{msg}}</div>

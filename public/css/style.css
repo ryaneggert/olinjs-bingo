@@ -2,17 +2,40 @@
   These are the styles meant to apply to all of the pages
 
   Color shades (blue)
-    lighter: 7DADE6
-    light: 5391DB
-    medium: 317AD1
-    dark: 0F63C8
-    darker: 094995 
+    lighter: 83C2FF
+    light: 4BA7FF
+    medium: 128BFF
+    dark: 0182FF
+    darker: 0058AE
 */
 
 html,
 body {
   font-family: 'Lato', sans-serif;
   opacity: .99;
+}
+
+.col-xs-5th,
+.col-sm-5th,
+.col-md-5th,
+.col-lg-5th {
+  position: relative;
+  min-height: 1px;
+  /*padding-right: 10px;
+  padding-left: 10px;*/
+}
+
+.col-xs-5th {
+  width: 20%;
+  float: left;
+}
+
+@media (min-width: 768px) {
+  .col-sm-5th {
+    width: 20%;
+    float: left;
+  }
+>>>>>>> 8777d2f30cf7b860c43cfb21b8ead54c4149b017
 }
 
 .navbar {
@@ -23,4 +46,42 @@ body {
 }
 
 
+md-list-item#gamelist {
+  cursor: pointer;
+}
+
+div.md-list-item-text {
+  padding-left: 15px;
+}
+
+div.md-list-item-text#gamelisttext:hover {
+  background-color: rgb(205, 205, 205);
+}
+
+div.md-list-item-text h3 {
+  padding-top: 10px;
+  margin: 0 0 6px 0;
+  line-height: 0.75em;
+}
+
+div.md-list-item-text h4 {
+  padding: 10px 0px;
+  margin: 0 0 0 0;
+  line-height: 0.75em;
+}
+
+div.md-list-item-text p {
+  padding-bottom: 10px;
+  margin: 0 0 0 0;
+  line-height: 0.75em;
+}
+
+/*
+  Allow angular.js to be loaded in body, hiding cloaked elements until
+  templates compile.  The !important is important given that there may be
+  other selectors that are more specific or come later and might alter display.
+ */
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
 

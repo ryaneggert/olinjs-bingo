@@ -1,84 +1,53 @@
-
 <div class = "game">
-<div class = "gameContainer">
-    <div class = "col-md-7 col-lg-6">
-      <div class = "bingoheader">
-    <h2>State of the Union Address</h2>
-  </div>
-      <div class = "bingoCard">
-      <div bsquare class="bingorow" ng-repeat="cardrow in gamecard" ng-init="rowindex = $index">
-        <div bsquare class="bingosquare" ng-repeat="square in cardrow" ng-init="colindex = $index" ng-click="sqclick($event)" id="[{{rowindex}},{{colindex}}]">
-          <div class="bingosquaretext">{{square}}</div>
-        </div>
+  <div class = "gameContainer">
+      <div class = "col-md-7 col-lg-6">
+        <div class = "bingoheader">
+      <h2>{{roomname}}</h2>
+    </div>
+        <div class = "bingoCard">
+        <div bsquare class="bingorow" ng-repeat="cardrow in gamecard" ng-init="rowindex = $index">
+          <div bsquare class="bingosquare" ng-repeat="square in cardrow" ng-init="colindex = $index" ng-click="sqclick($event)" id="[{{rowindex}},{{colindex}}]">
+            <!--Making this just a number for now for styling sake-->
+            <div class="bingosquaretext">{{rowindex * 5 + colindex + 1}}</div>
+          </div>
+      </div>
+    </div>
+    <div class = "haveBingo">
+      <span ng-if="bingo" class="animate-if">
+          Congratulations! You have a bingo!
+      </span>
+      <span ng-if="bingo_popup" class="animate-if">
+        {{winnertext}}
+      </span>
+    </div>
+    </div>
+    <div class = "col-md-3 col-lg-3">
+      <div class = "squaresTitle"> <h2>Squares</h2></div>
+      <div class = "squares">
+      <ol>
+      <div ng-repeat="cardrow in gamecard">
+      <div ng-repeat = "square in cardrow">
+        <li>{{square}}</li>
     </div>
   </div>
-  <div class = "haveBingo">
-    <span ng-if="bingo" class="animate-if">
-        Congratulations! You have a bingo!
-    </span>
-  </div>
-  </div>
-  <div class = "col-md-3 col-lg-3">
-    <div class = "squaresTitle"> <h2>Squares</h2></div>
-    <div class = "squares">
-    <ol>
-      <li>THing one</li>
-      <li>Thing 2 </li>
-      <li>Thing three</li>
-      <li>Thing 4</li>
-      <li>THing one</li>
-      <li>Thing 2 </li>
-      <li>Thing three</li>
-      <li>Thing 4</li>
-      <li>THing one</li>
-      <li>Thing 2 </li>
-      <li>Thing three</li>
-      <li>Thing 4</li>
-      <li>THing one</li>
-      <li>Thing 2 </li>
-      <li>Thing three</li>
-      <li>Thing 4</li>
-      <li>THing one</li>
-      <li>Thing 2 </li>
-      <li>Thing three</li>
-      <li>Thing 4</li>
-      <li>THing one</li>
-      <li>Thing 2 </li>
-      <li>Thing three</li>
-      <li>Thing 4</li>
-    </ol>
+</ol>
   </div>
 </div>
-  <div class = "col-md-2 col-lg-3">
-    <div class = "squaresTitle"><h2>Players</h2></div>
-    <div class = "squares">
-    <ol>
-      <li>THing one</li>
-      <li>Thing 2 </li>
-      <li>Thing three</li>
-      <li>Thing 4</li>
-      <li>THing one</li>
-      <li>Thing 2 </li>
-      <li>Thing three</li>
-      <li>Thing 4</li>
-      <li>THing one</li>
-      <li>Thing 2 </li>
-      <li>Thing three</li>
-      <li>Thing 4</li>
-      <li>THing one</li>
-      <li>Thing 2 </li>
-      <li>Thing three</li>
-      <li>Thing 4</li>
-      <li>THing one</li>
-      <li>Thing 2 </li>
-      <li>Thing three</li>
-      <li>Thing 4</li>
-      <li>THing one</li>
-      <li>Thing 2 </li>
-      <li>Thing three</li>
-      <li>Thing 4</li>
-    </ol>
+    <div class = "col-md-2 col-lg-3">
+
+      <div class = "squaresTitle"><h2>Players</h2></div>
+      <div class = "squares">
+      <ol>
+        <li><strong><p>Host: {{host_name}}</p></strong></li>
+        <li ng-repeat="x in players">
+          {{x.name}}
+        </li>
+
+      </ol>
+    </div>
   </div>
-</div>
+  <br>
+  <button ng-show="showstartbutton" ng-model="start" ng-click="start_func($event)">START</button>
+  </div>
 </div>
 
