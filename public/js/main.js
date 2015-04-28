@@ -249,6 +249,19 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
         $scope.cardid = data.card._id;
         $scope.displayNumber = 1;
 
+        var startTime = data.game.start_time;
+        //Convert to datetime object
+        var d = new Date(startTime);
+        console.log(d);
+        var d_ms = d.getTime();
+
+        var currTime = new Date();
+        var currTime_ms = currTime.getTime();
+
+        // The number of milliseconds
+        var diff_ms = d_ms - currTime_ms;
+        $scope.countdown = diff_ms;
+
         $scope.roomname = data.game.room;
         $scope.currentUser = data.user;
         $scope.host = data.game.host;
