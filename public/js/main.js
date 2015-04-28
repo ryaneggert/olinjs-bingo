@@ -45,7 +45,7 @@ bingo.config(function($routeProvider) {
 
 bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
   $scope.formData = {};
-  $scope.msg = "";
+  $scope.formData.name = ""
 
   $scope.choices = [{
     id: 'choice1'
@@ -76,8 +76,10 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
         }
       }
     }
-    if (cards.length < 25) {
-      $scope.msg = "not enough unique cards (25), please add more";
+    if ($scope.formData.name == ""){
+      confirm("card set has no name, please add one.")
+    } else if (cards.length < 25) {
+      confirm("not enough unique cards (25), please add more.")
     } else {
       postdata = {
         "name": $scope.formData.name,
@@ -85,8 +87,8 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
       };
       $http.post('/api/new/cardset', postdata)
         .success(function(data) {
-          // $scope.formData = {};
-          $scope.msg = "Congratulations! You have successfully added your card set!";
+          // clear form? redirect?
+          confirm("Congratulations! You have successfully added your card set!")
         })
         .error(function(data) {
           console.log("Error: " + data);
