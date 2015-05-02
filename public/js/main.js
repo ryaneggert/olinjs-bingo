@@ -45,7 +45,7 @@ bingo.config(function($routeProvider) {
 
 bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
   $scope.formData = {};
-  $scope.formData.name = ""
+  $scope.formData.name = "";
 
   $scope.choices = [{
     id: 'choice1'
@@ -227,6 +227,14 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     }
   });
 
+  $scope.showSimpleToast = function(msg) {
+      $mdToast.show(
+        $mdToast.simple()
+        .content(msg)
+        .position('bottom right')
+        .hideDelay(3000)
+      );
+    };
 
   /*var resizecard = function() {
     // I shouldn't have to use jQuery.
@@ -325,16 +333,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
   $scope.$on('socket:gamestart', function(ev, data) {
     $scope.start_var = true;
     $scope.showstartbutton = false;
-
-    $scope.showSimpleToast = function() {
-      $mdToast.show(
-        $mdToast.simple()
-        .content('The game has started!')
-        .position('bottom right')
-        .hideDelay(3000)
-      );
-    };
-    $scope.showSimpleToast();
+    $scope.showSimpleToast('The game has started!');
   });
 
   $scope.$on('socket:joinroom', function(ev, data) {
@@ -348,9 +347,12 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
   // var toggleselect = $('div')
 $scope.sqclick = function(event) {
     if (!$scope.start_var) {
+      $scope.showSimpleToast('The game has not started yet. Please wait.');
       return;
     }
 
+
+    // Look into replacing below with ng-class in html.
     console.log(event.target.id);
     console.log(typeof(event.target.id));
     coords = event.target.id.split(/,|\[|\]/).slice(1, 3);
