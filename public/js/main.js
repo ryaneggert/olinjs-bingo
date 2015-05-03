@@ -334,10 +334,11 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
   });
 
   $scope.$on('socket:winner', function(ev, data) {
-    $scope.winnertext = data.winner.name + " has gotten a bingo!";
-    $scope.bingo_popup = true;
-    $scope.gameopen = false;
-    $scope.showSimpleToast('WIN! ' + data.winner.name + ' has won.')
+    // $scope.bingo_popup = true;
+    if (data.winner) {
+      $scope.showSimpleToast('WIN! ' + data.winner.name + ' has won.');
+    }
+
 
     console.log('Winner!');
   });

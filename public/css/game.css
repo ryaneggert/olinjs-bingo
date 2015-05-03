@@ -37,6 +37,9 @@ div.squaretoggle {
   background-color: #4BA7FF;
 }
 
+div.listholder {
+  padding: 0px 20px;
+}
 .noselect {
   -webkit-touch-callout: none;
   -webkit-user-select: none;

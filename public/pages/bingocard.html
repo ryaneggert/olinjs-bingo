@@ -39,11 +39,19 @@
       <div class="squaresTitle">
         <h2>Players</h2></div>
       <div class="squares">
-        <ol>
-          <li><strong><p>Host: {{host_name}}</p></strong></li>
-          <li ng-repeat="x in players">
-            {{x.name}}
-          </li>
+        <strong><p>Host: {{host_name}}</p></strong>
+        <div class="listholder">
+          <md-list>
+            <md-list-item ng-repeat="x in players">
+              <div layout="row" layout-align="space-between center">
+                <p>
+                  {{x.name}}
+                </p>
+                <i class="fa fa-trophy"></i>
+              </div>
+            </md-list-item>
+          </md-list>
+        </div>
         </ol>
       </div>
     </div>

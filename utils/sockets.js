@@ -3,10 +3,7 @@ var models = require('../models/models');
 var tools = require('../utils/utils');
 
 var Card = models.card;
-
-var bingomove = function(movedata) {
-  game.updatecard(movedata);
-};
+var Game = models.game;
 
 var comparefxn = function(a, b) {
   if (a._id < b._id)
@@ -47,22 +44,46 @@ var bingomove = function(movedata, socket, io) {
     .findOne({
       _id: movedata.card_id,
     })
-    .exec(function(err, data) {
-      oldscore = data.score;
+    .exec(function(err, card) {
+      oldscore = card.score;
       var row = movedata.square[0];
       var col = movedata.square[1];
       var newscore = oldscore;
+      var this_user = socket.olinjsdata.user;
       newscore[row][col] = !oldscore[row][col];
       game.updatescore_db(newscore, movedata.card_id);
       var bingowin = tools.hasBingo(newscore);
-      console.log(newscore);
       if (bingowin) {
-        // If this move has resulted in a bingo,
-        io.to(movedata.gameid).emit('winner', {
-          winner: socket.olinjsdata.user,
-          wincard: data.squares
-        });
+        Game.
+        findOne({
+            _id: movedata.gameid
+          })
+          .exec(function(err, game) {
+            var winners = game.winners;
+            // Prevent continued congratulation of previous winners
+            var new_winner = null;
+            if (winners.indexOf(this_user._id) === -1) {
+              // Player not yet a winner. Append to winner list.
+              winners.push(this_user._id);
+              new_winner = this_user;
+            }
+            game.winners = winners;
+            game.save(function(err2, updgame) {
+              updgame.populate('winners', function(err3, popdgame) {
+                if (err || err2 || err3) {
+                  console.log('Error recognizing winner.', err, err2);
+                }
+                // If this move has resulted in a bingo,
+                io.to(movedata.gameid).emit('winner', {
+                  winner: new_winner,
+                  wincard: card.squares,
+                  winnerlist: popdgame.winners,
+                });
+              });
+            });
+          });
       }
+      // Regardless of win, send updated card score.
       io.to(socket.olinjsdata.user._id).emit('moveconf', {
         newscore: newscore,
       });
