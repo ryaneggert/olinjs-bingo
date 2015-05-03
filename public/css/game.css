@@ -9,13 +9,24 @@ div.bingosquare {
   margin: .25rem;
   border: none;
   background-color: white;
-  border-radius:.5rem;
+  border-radius: .5rem;
   display: inline-block;
   position: relative;
-  box-sizing:border-box;
-  -webkit-box-shadow:  .1rem .1rem .1rem #555;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
-  -moz-box-shadow:    .1rem .1rem .1rem #555;  /* Firefox 3.5 - 3.6 */
-  box-shadow:         .1rem .1rem .1rem #555;
+  box-sizing: border-box;
+  -webkit-box-shadow: .1rem .1rem .1rem #555;
+  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+
+  -moz-box-shadow: .1rem .1rem .1rem #555;
+  /* Firefox 3.5 - 3.6 */
+
+  box-shadow: .1rem .1rem .1rem #555;
+}
+
+div.bingosquarenumber {
+  padding-left: 5px;
+  font-size: 12px;
+  font-style: italic;
+  text-align: left;
 }
 
 div.bingosquaretext {
@@ -26,37 +37,69 @@ div.squaretoggle {
   background-color: #4BA7FF;
 }
 
-@media (max-width:500px) {
+div.listholder {
+  padding: 0px 20px;
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.noclick {
+  cursor: not-allowed;
+}
+
+.firstplace {
+  color: rgb(198, 147, 7);
+  text-shadow: 0px 0px 10px rgb(198, 147, 7)
+}
+
+.secondplace {
+  color: rgb(179, 179, 179);
+  text-shadow: 0px 0px 5px rgb(200, 200, 200)
+}
+
+.thirdplace {
+  color: rgb(191, 111, 33);
+}
+
+@media (max-width: 500px) {
   .bingoCard {
-    margin:0 auto;
+    margin: 0 auto;
     text-align: center;
     width: 28.5rem;
     background-color: #ddd;
-    padding:.5rem;
+    padding: .5rem;
     position: relative;
   }
-
   .bingoheader {
     position: relative;
   }
-
   div.bingosquare {
-  width: 5rem;
-  height: 5rem;
-  margin: .25rem;
-  border: none;
-  background-color: white;
-  border-radius:.5rem;
-  display: inline-block;
-  box-sizing:border-box;
-  -webkit-box-shadow:  .1rem .1rem .1rem #555;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
-  -moz-box-shadow:    .1rem .1rem .1rem #555;  /* Firefox 3.5 - 3.6 */
-  box-shadow:         .1rem .1rem .1rem #555;
+    width: 5rem;
+    height: 5rem;
+    margin: .25rem;
+    border: none;
+    background-color: white;
+    border-radius: .5rem;
+    display: inline-block;
+    box-sizing: border-box;
+    -webkit-box-shadow: .1rem .1rem .1rem #555;
+    /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+
+    -moz-box-shadow: .1rem .1rem .1rem #555;
+    /* Firefox 3.5 - 3.6 */
+
+    box-shadow: .1rem .1rem .1rem #555;
   }
   div.squaretoggle {
-  background-color: #4BA7FF;
+    background-color: #4BA7FF;
   }
-
   div.gameContainer {
     padding: 2rem 0;
   }
@@ -66,114 +109,129 @@ div.squaretoggle {
   .bingoCard {
     width: 44rem;
     background-color: #ddd;
-    padding:.5rem;
+    padding: .5rem;
     border-radius: 3px;
   }
-
   div.bingosquare {
-  width: 8rem;
-  height: 8rem;
-  margin: .25rem;
-  border: none;
-  border-radius:3px;
-  display: inline-block;
-  position: relative;
-  box-sizing:border-box;
-  -webkit-box-shadow:  .1rem .1rem .1rem #555;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
-  -moz-box-shadow:    .1rem .1rem .1rem #555;  /* Firefox 3.5 - 3.6 */
-  box-shadow:         .1rem .1rem .1rem #555;
-  }
+    width: 8rem;
+    height: 8rem;
+    margin: .25rem;
+    border: none;
+    border-radius: 3px;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    -webkit-box-shadow: .1rem .1rem .1rem #555;
+    /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
 
+    -moz-box-shadow: .1rem .1rem .1rem #555;
+    /* Firefox 3.5 - 3.6 */
+
+    box-shadow: .1rem .1rem .1rem #555;
+  }
   .haveBingo {
     padding: 1rem;
-    font-weight:700;
+    font-weight: 700;
   }
-
 }
 
 .gameContainer {
   border-radius: 3px;
   position: absolute;
-  top:10vh;
+  top: 10vh;
   background-color: #fff;
   width: 84%;
   height: 58rem;
   margin-right: 8%;
   margin-left: 8%;
   padding: 3rem;
-  -webkit-box-shadow:  .1rem .1rem .5rem #333;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
-  -moz-box-shadow:    .1rem .1rem .5rem #333;  /* Firefox 3.5 - 3.6 */
-  box-shadow:         .1rem .1rem .5rem #333;
+  -webkit-box-shadow: .1rem .1rem .5rem #333;
+  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+
+  -moz-box-shadow: .1rem .1rem .5rem #333;
+  /* Firefox 3.5 - 3.6 */
+
+  box-shadow: .1rem .1rem .5rem #333;
 }
 
 .game {
-  background-color:#0058AE;
-  height: 100vh; 
+  background-color: #0058AE;
+  height: 100vh;
   position: absolute;
-  top:10px;
+  top: 10px;
   width: 100%;
 }
 
 .bingoheader h2 {
   padding: 1rem;
   font-size: 3rem;
-  margin-top:0 !important;
-  margin-bottom:0 !important ;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 .squares {
   overflow: scroll;
   height: 42.5rem;
   /*background-color: #ddd;*/
+
   padding-left: .5rem;
-  padding-right:2rem;
+  padding-right: 2rem;
   border-radius: 3px;
   padding-top: .5rem;
+  z-index: 1;
+  margin-top: 5px;
 }
 
 .squaresTitle {
-  color:white;
+  color: white;
   background-color: #222;
-    -webkit-box-shadow:  .25rem .25rem .2rem #333;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
-  -moz-box-shadow:    .25rem .25rem .2rem #333;  /* Firefox 3.5 - 3.6 */
-  box-shadow:         .25rem .25rem .2rem #333;
+  -webkit-box-shadow: .25rem .25rem .2rem #333;
+  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+
+  -moz-box-shadow: .25rem .25rem .2rem #333;
+  /* Firefox 3.5 - 3.6 */
+
+  box-shadow: .25rem .25rem .2rem #333;
+  z-index: 5;
 }
 
 .squaresTitle h2 {
   padding: 1rem;
   margin-bottom: 0 !important;
-  margin-top:2rem;
+  margin-top: 2rem;
 }
 
-@media (max-width:1000px) {
+@media (max-width: 1000px) {
   .gameContainer {
-    width:100%;
+    width: 100%;
     position: absolute;
-    top:4vh;
-    margin:0 auto;
+    top: 4vh;
+    margin: 0 auto;
     box-shadow: none;
   }
-
   .bingoheader h2 {
     font-size: 2rem;
   }
-
   .bingoheader {
     width: 100%;
   }
   .game {
     background-color: white
   }
-
   .squares {
-  overflow: scroll;
-  height: 20vh;
-  background-color: #ddd;
-  padding-left: 2rem;
-  padding-right:2rem;
-  border-radius: 3px;
-  box-shadow: none; 
-  margin:2rem;
+    overflow: scroll;
+    height: 20vh;
+    background-color: #ddd;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    border-radius: 3px;
+    box-shadow: none;
+    margin: 2rem;
+  }
 }
 
+@media (min-width: 1000px) and (min-height: 675px) {
+  body {
+    overflow-y: hidden;
+  }
 }

@@ -41,11 +41,12 @@ var gameSchema = mongoose.Schema({
   }],
   closed: Boolean, // use to determine write permission to .players
   room: String,
-  isOpen: Boolean, // Use to determine if the game is open for play
-  winner: {
+  isOpen: Boolean, // Use to determine if the game is open for play.
+  isFinished: Boolean, // Use to determine whether game has ended.
+  winners: [{
     type: mongoose.Schema.ObjectId,
     ref: 'User'
-  },
+  }],
 });
 
 gameSchema.methods.timeToStart = function() {

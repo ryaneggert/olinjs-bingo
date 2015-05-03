@@ -8,9 +8,23 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngMaterial'
     //$scope.$on('socket:test', function(ev,data) {...};)
     scks.forward('joinroom');
     scks.forward('gamestart');
+    scks.forward('moveconf');
     scks.forward('leaveroom');
     scks.forward('winner'); // forward win event
+    scks.forward('gameclose');
     return scks;
+  })
+  .config(function($mdThemingProvider) {
+    $mdThemingProvider.theme('default')
+      .primaryPalette('purple', {
+        'default': '800',
+      })
+      .accentPalette('green', {
+        'default': '800',
+      })
+      .warnPalette('red', {
+        'default': '600'
+      });
   });
 
 bingo.directive('bsquare', function() {
@@ -45,7 +59,7 @@ bingo.config(function($routeProvider) {
 
 bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
   $scope.formData = {};
-  $scope.formData.name = ""
+  $scope.formData.name = "";
 
   $scope.choices = [{
     id: 'choice1'
@@ -76,7 +90,7 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
         }
       }
     }
-    if ($scope.formData.name == ""){
+    if ($scope.formData.name == "") {
       confirm("card set has no name, please add one.")
     } else if (cards.length < 25) {
       confirm("not enough unique cards (25), please add more.")
@@ -168,7 +182,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   });
 
   $scope.new_game = function() {
-    if ($scope.currentUser.guest){
+    if ($scope.currentUser.guest) {
       confirm("Only registered user can create a new game");
       return;
     }
@@ -177,7 +191,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   };
 
   $scope.new_card_set = function() {
-    if ($scope.currentUser.guest){
+    if ($scope.currentUser.guest) {
       confirm("Only registered user can create a new card set");
       return;
     }
@@ -213,31 +227,30 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   };
 });
 
-bingo.controller('bingoController', function($scope, $document, $http, $routeParams, $mdToast, $animate, bingosockets) {
+bingo.controller('bingoController', function($scope, $document, $http, $location, $routeParams, $mdDialog, $mdToast, $animate, bingosockets) {
 
   // Make sure that we warn the user before they leave the gameroom
   $scope.$on('$locationChangeStart', function(event, next, current) {
-    var answer = confirm('Are you sure you want to leave the game room');
-    if (!answer) {
-      event.preventDefault();
-    } else {
-      bingosockets.emit('leave', {
-        game: $routeParams.gameid
-      });
+    if ($scope.gameopen) {
+      var answer = confirm('Are you sure you want to leave the game room');
+      if (!answer) {
+        event.preventDefault();
+      } else {
+        bingosockets.emit('leave', {
+          game: $routeParams.gameid
+        });
+      }
     }
   });
 
-
-  /*var resizecard = function() {
-    // I shouldn't have to use jQuery.
-    // Future work: find how to modify directive to $scope.$apply() or something
-    // like that.
-    var sqwidth = $('div.bingosquare').width();
-    $('div.bingorow').height(sqwidth);
-    $('div.bingosquare').height(sqwidth);
-    $('.bingosquare').css({"margin": ".25rem"});
-    console.log('Cards have been resized');
-  };*/
+  $scope.showSimpleToast = function(msg) {
+    $mdToast.show(
+      $mdToast.simple()
+      .content(msg)
+      .position('bottom right')
+      .hideDelay(3000)
+    );
+  };
 
   //Initialize room information
   var initializegame = function() {
@@ -250,6 +263,9 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
         $scope.gamecard = data.card.squares;
         $scope.cardid = data.card._id;
         $scope.displayNumber = 1;
+        $scope.gamescore = data.card.score;
+        $scope.gameopen = data.game.isOpen;
+        $scope.winners = data.game.winners;
 
         var startTime = data.game.start_time;
         //Convert to datetime object
@@ -271,12 +287,10 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
 
         $scope.players = []; // This value is populated using sockets.
 
-        var ishost = $scope.currentUser._id == $scope.host._id;
+        $scope.ishost = $scope.currentUser._id == $scope.host._id;
 
-        $scope.start_var = data.game.isOpen;
-        $scope.showstartbutton = !data.game.isOpen && ishost;
-
-
+        $scope.showstartbutton = !data.game.isOpen && $scope.ishost;
+        $scope.showstopbutton = $scope.winners.length > 0 && $scope.ishost;
 
         bingosockets.emit('game', {
           'type': 'join',
@@ -304,13 +318,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
 
   //TODO: add winner detection on backend, so as to prompt sending of winner message
   //TODO: send and show winning bingo card?
-  $scope.$on('socket:winner', function(ev, data) {
-    if (!hasBingo($scope.gamescore)) {
-      $scope.winnertext = data.username + " has gotten a bingo!";
-      $scope.bingo_popup = true;
-      console.log('Winner!');
-    }
-  });
+
 
   //Start button
   $scope.start_func = function(event) {
@@ -322,56 +330,66 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     });
   };
 
-  $scope.$on('socket:gamestart', function(ev, data) {
-    $scope.start_var = true;
-    $scope.showstartbutton = false;
+  //End button
+  $scope.endgame = function(event) {
+    console.log('END', $routeParams.gameid);
+    bingosockets.emit('game', {
+      'type': 'end',
+      'data': {
+        'game': $routeParams.gameid,
+      }
+    });
+  };
 
-    $scope.showSimpleToast = function() {
-      $mdToast.show(
-        $mdToast.simple()
-        .content('The game has started!')
-        .position('bottom right')
-        .hideDelay(3000)
-      );
-    };
-    $scope.showSimpleToast();
+  $scope.$on('socket:gamestart', function(ev, data) {
+    $scope.showstartbutton = false;
+    $scope.gameopen = true;
+    $scope.showSimpleToast('The game has started!');
   });
 
   $scope.$on('socket:joinroom', function(ev, data) {
     $scope.players = data.players;
   });
 
+  $scope.$on('socket:moveconf', function(ev, data) {
+    $scope.gamescore = data.newscore;
+  });
+
   $scope.$on('socket:leaveroom', function(ev, data) {
     $scope.players = data.players;
   });
 
+  $scope.$on('socket:winner', function(ev, data) {
+    // $scope.bingo_popup = true;
+    $scope.winners = data.winnerlist;
+    $scope.showstopbutton = $scope.winners.length > 0 && $scope.ishost;
+    if (data.winner) {
+      $scope.showSimpleToast('WIN! ' + data.winner.name + ' has won.');
+    }
+  });
+
+  $scope.$on('socket:gameclose', function(ev, data) {
+    $mdDialog.show(
+        $mdDialog.alert()
+        .title('Game Over')
+        .content('The host has ended this game. Thanks for playing!')
+        .ariaLabel('Game over')
+        .ok('Home Page')
+        .targetEvent(ev)
+      )
+      .finally(function() {
+        $scope.gameopen = false;
+        $location.path('/');
+      });
+  });
   // var toggleselect = $('div')
-$scope.sqclick = function(event) {
-    if (!$scope.start_var) {
+  $scope.sqclick = function(event) {
+    if (!$scope.gameopen) {
+      $scope.showSimpleToast('The game has not started yet. Please wait.');
       return;
     }
 
-    console.log(event.target.id);
-    console.log(typeof(event.target.id));
     coords = event.target.id.split(/,|\[|\]/).slice(1, 3);
-    for (var i = 0; i < coords.length; i++) {
-      coords[i] = parseInt(coords[i], 10);
-    }
-    console.log($scope.gamescore[coords[0]][coords[1]]);
-    $scope.gamescore[coords[0]][coords[1]] = !$scope.gamescore[coords[0]][coords[1]];
-    if ($scope.gamescore[coords[0]][coords[1]]) {
-      event.target.className += " squaretoggle";
-    } else {
-      event.target.className = event.target.className.replace(" squaretoggle", "");
-    }
-
-    if (hasBingo($scope.gamescore)) {
-      $scope.winnertext = "You have a bingo!";
-      $scope.bingo_popup = true;
-    } else { // Remove bingo win condition if card no longer has bingo
-      // $scope.winnertext = null;
-      $scope.bingo_popup = false;
-    }
 
     bingosockets.emit('game', {
       'type': 'move',
@@ -379,82 +397,34 @@ $scope.sqclick = function(event) {
         'card_id': $scope.cardid,
         'square': coords,
         'selected': $scope.gamescore[coords[0]][coords[1]],
+        'gameid': $routeParams.gameid,
       }
     });
   };
 
   $scope.winnertext = "Bingo!";
 
-  $scope.gamescore = [
-    [false, false, false, false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false]
-  ]; // will connect to db soon.
-
-  /*$(window).resize(function() {
-    resizecard();
-  });*/
-
-  //Helper functions for bingo
-
-  function hasBingo(arr) {
-    return (check_rows(arr) ||
-      check_cols(arr) ||
-      check_diag_forw(arr) ||
-      check_diag_back(arr));
-  }
-
-  function all_true(arr) {
-    for (var elem in arr) {
-      if (arr[elem] === false) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  function check_rows(arr) {
-    for (var row in arr) {
-      if (all_true(arr[row])) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function check_cols(arr) {
-    for (var i in arr) {
-      var col = [];
-      for (var j in arr) {
-        col.push(arr[j][i]);
-      }
-      if (all_true(col)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function check_diag_forw(arr) {
-    var diag = [];
-    for (var i in arr) {
-      diag.push(arr[i][i]);
-    }
-    return all_true(diag);
-  }
-
-  function check_diag_back(arr) {
-    var diag = [];
-    for (var i in arr) {
-      diag.push(arr[i][arr.length - i - 1]);
-    }
-    return all_true(diag);
-  }
-
-  // $scope.$on('socket:test', function(ev, data) {
-  //   console.log('Test Recieved');
-  //   bingosockets.emit('response', 'this is a response');
-  // });
 });
+
+// Saving dialog code for later.
+// $mdDialog.show({
+//         controller: WinDialogController,
+//         templateUrl: './pages/templates/windialog.tmpl.html',
+//         locals: {
+//           winner: data.winner.name
+//         }
+//       })
+//       .then(function(answer) {
+//         // This function is called after the user presses a button in the dialog
+//         $location.path('/');
+//       }, function() {
+//         // This function is called if the user presses 'ESCAPE' or clicks
+//         // outside of the dialog
+//       });
+
+// function WinDialogController($scope, $mdDialog, winner) {
+//   $scope.winner = winner;
+//   $scope.win_interact = function(answer) {
+//     $mdDialog.hide(answer);
+//   };
+// }

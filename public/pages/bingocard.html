@@ -1,53 +1,71 @@
-<div class = "game">
-  <div class = "gameContainer">
-      <div class = "col-md-7 col-lg-6">
-        <div class = "bingoheader">
-      <h2>{{roomname}}</h2>
-    </div>
-        <div class = "bingoCard">
-        <div bsquare class="bingorow" ng-repeat="cardrow in gamecard" ng-init="rowindex = $index">
-          <div bsquare class="bingosquare" ng-repeat="square in cardrow" ng-init="colindex = $index" ng-click="sqclick($event)" id="[{{rowindex}},{{colindex}}]">
-            <!--Making this just a number for now for styling sake-->
-            <div class="bingosquaretext">{{rowindex * 5 + colindex + 1}}</div>
-          </div>
+<div class="game">
+  <div class="gameContainer">
+    <div class="col-md-7 col-lg-6">
+      <div class="bingoheader" layout="row" layout-align="space-between center">
+        <h2>{{roomname}}</h2>
+        <div>
+          <md-button class="md-raised md-accent" ng-show="showstartbutton" ng-model="start" ng-click="start_func($event)">START GAME</md-button>
+          <md-button class="md-raised md-warn" ng-show="showstopbutton" ng-model="start" ng-click="endgame($event)">END GAME</md-button>
+        </div>
       </div>
-    </div>
-    <div class = "haveBingo">
-      <span ng-if="bingo" class="animate-if">
+      <div class="row">
+        <div class="bingoCard noselect" ng-class="{'noclick': !gameopen}">
+          <div bsquare class="bingorow" ng-repeat="cardrow in gamecard" ng-init="rowindex = $index">
+            <div bsquare class="bingosquare" ng-repeat="square in cardrow" ng-init="colindex = $index" ng-click="sqclick($event)" ng-class="{'squaretoggle': gamescore[rowindex][colindex], 'noclick': !gameopen}" id="[{{rowindex}},{{colindex}}]">
+              <div class="bingosquarenumber" id="[{{rowindex}},{{colindex}}]">{{rowindex * 5 + colindex + 1}}.</div>
+              <div class="bingosquaretext" id="[{{rowindex}},{{colindex}}]">{{gamecard[rowindex][colindex]}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="haveBingo">
+        <span ng-if="bingo" class="animate-if">
           Congratulations! You have a bingo!
       </span>
-      <span ng-if="bingo_popup" class="animate-if">
+        <span ng-if="bingo_popup" class="animate-if">
         {{winnertext}}
       </span>
+      </div>
     </div>
+    <div class="col-md-3 col-lg-3">
+      <div class="row">
+        <div class="squaresTitle">
+          <h2>Squares</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="squares">
+          <ol>
+            <div ng-repeat="cardrow in gamecard">
+              <div ng-repeat="square in cardrow">
+                <li>{{square}}</li>
+              </div>
+            </div>
+          </ol>
+        </div>
+      </div>
     </div>
-    <div class = "col-md-3 col-lg-3">
-      <div class = "squaresTitle"> <h2>Squares</h2></div>
-      <div class = "squares">
-      <ol>
-      <div ng-repeat="cardrow in gamecard">
-      <div ng-repeat = "square in cardrow">
-        <li>{{square}}</li>
+    <div class="col-md-2 col-lg-3">
+      <div class="squaresTitle">
+        <h2>Players</h2></div>
+      <div class="squares">
+        <strong><p>Host: {{host_name}}</p></strong>
+        <div class="listholder">
+          <md-list>
+            <md-list-item ng-repeat="x in players">
+              <div layout="row" layout-align="space-between center">
+                <p>
+                  {{x.name}} {{windex}}
+                </p>
+                <i ng-if="winners.indexOf(x._id) > -1" ng-class="{'firstplace': winners.indexOf(x._id) === 0, 'secondplace': winners.indexOf(x._id) === 1, 'thirdplace': winners.indexOf(x._id) === 2}" class="fa fa-trophy fa-2x"></i>
+              </div>
+            </md-list-item>
+          </md-list>
+        </div>
+        </ol>
+      </div>
     </div>
-  </div>
-</ol>
+    <br>
+    <p>Time to start: {{countdown}}</p>
   </div>
 </div>
-    <div class = "col-md-2 col-lg-3">
-
-      <div class = "squaresTitle"><h2>Players</h2></div>
-      <div class = "squares">
-      <ol>
-        <li><strong><p>Host: {{host_name}}</p></strong></li>
-        <li ng-repeat="x in players">
-          {{x.name}}
-        </li>
-
-      </ol>
-    </div>
-  </div>
-  <br><p>Time to start: {{countdown}}</p>
-  <button ng-show="showstartbutton" ng-model="start" ng-click="start_func($event)">START</button>
-  </div>
-</div>
-

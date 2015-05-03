@@ -11,7 +11,9 @@ var routes = {};
 routes.home = function(req, res) {
   /* Displays all of the available games on the landing page */
   Game
-    .find({})
+    .find({
+      isFinished: false
+    })
     .populate('host')
     .exec(function(err, games) {
       if (err) {

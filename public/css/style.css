@@ -1,4 +1,4 @@
-/* 
+/*
   These are the styles meant to apply to all of the pages
 
   Color shades (blue)
@@ -13,6 +13,7 @@ html,
 body {
   font-family: 'Lato', sans-serif;
   opacity: .99;
+  background: rgb(225, 225, 225);
 }
 
 .col-xs-5th,
@@ -35,16 +36,19 @@ body {
     width: 20%;
     float: left;
   }
->>>>>>> 8777d2f30cf7b860c43cfb21b8ead54c4149b017
 }
 
 .navbar {
-  -webkit-box-shadow: 0 0 1rem #333;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
-  -moz-box-shadow:    0 0 1rem #333;  /* Firefox 3.5 - 3.6 */
-  box-shadow:         0 0 1rem #333;
-  border: none !important; /* Fuck you, bootstrap */
-}
+  -webkit-box-shadow: 0 0 1rem #333;
+  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
 
+  -moz-box-shadow: 0 0 1rem #333;
+  /* Firefox 3.5 - 3.6 */
+
+  box-shadow: 0 0 1rem #333;
+  border: none !important;
+  /* Fuck you, bootstrap */
+}
 
 md-list-item#gamelist {
   cursor: pointer;
@@ -75,13 +79,14 @@ div.md-list-item-text p {
   margin: 0 0 0 0;
   line-height: 0.75em;
 }
-
 /*
   Allow angular.js to be loaded in body, hiding cloaked elements until
   templates compile.  The !important is important given that there may be
   other selectors that are more specific or come later and might alter display.
  */
-[ng\:cloak], [ng-cloak], .ng-cloak {
+
+[ng\:cloak],
+[ng-cloak],
+.ng-cloak {
   display: none !important;
 }
-
