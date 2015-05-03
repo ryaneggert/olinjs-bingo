@@ -43,7 +43,6 @@ var getroomusers = function(io, roomid) {
 };
 
 var bingomove = function(movedata, socket, io) {
-  console.log(movedata)
   Card
     .findOne({
       _id: movedata.card_id,
@@ -56,7 +55,7 @@ var bingomove = function(movedata, socket, io) {
       newscore[row][col] = !oldscore[row][col];
       game.updatescore_db(newscore, movedata.card_id);
       var bingowin = tools.hasBingo(newscore);
-      console.log(newscore)
+      console.log(newscore);
       if (bingowin) {
         // If this move has resulted in a bingo,
         io.to(movedata.gameid).emit('winner', {
@@ -64,6 +63,9 @@ var bingomove = function(movedata, socket, io) {
           wincard: data.squares
         });
       }
+      io.to(socket.olinjsdata.user._id).emit('moveconf', {
+        newscore: newscore,
+      });
     });
 
 };
@@ -75,6 +77,9 @@ var bingojoin = function(data, socket, io) {
   var username = data.user.name;
   // Join this socket to the game's room
   socket.join(gameid);
+  // Join this socket to the user's room.
+  // This is used to synchronize scores across multiple open tabs in one session
+  socket.join(data.user._id);
   socket.olinjsdata.user = data.user;
   var users = getroomusers(io, gameid);
   // Send a connection event with current players to room.

@@ -8,6 +8,7 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngMaterial'
     //$scope.$on('socket:test', function(ev,data) {...};)
     scks.forward('joinroom');
     scks.forward('gamestart');
+    scks.forward('moveconf');
     scks.forward('leaveroom');
     scks.forward('winner'); // forward win event
     return scks;
@@ -258,6 +259,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
         $scope.gamecard = data.card.squares;
         $scope.cardid = data.card._id;
         $scope.displayNumber = 1;
+        $scope.gamescore = data.card.score
 
         var startTime = data.game.start_time;
         //Convert to datetime object
@@ -334,6 +336,10 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
     $scope.players = data.players;
   });
 
+  $scope.$on('socket:moveconf', function(ev, data) {
+    $scope.gamescore = data.newscore;
+  });
+
   $scope.$on('socket:leaveroom', function(ev, data) {
     $scope.players = data.players;
   });
@@ -350,18 +356,18 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
       return;
     }
 
-    // Look into replacing below with ng-class in html.
+    // // Look into replacing below with ng-class in html.
     coords = event.target.id.split(/,|\[|\]/).slice(1, 3);
-    for (var i = 0; i < coords.length; i++) {
-      coords[i] = parseInt(coords[i], 10);
-    }
+    // for (var i = 0; i < coords.length; i++) {
+    //   coords[i] = parseInt(coords[i], 10);
+    // }
 
-    $scope.gamescore[coords[0]][coords[1]] = !$scope.gamescore[coords[0]][coords[1]];
-    if ($scope.gamescore[coords[0]][coords[1]]) {
-      event.target.className += " squaretoggle";
-    } else {
-      event.target.className = event.target.className.replace(" squaretoggle", "");
-    }
+    // $scope.gamescore[coords[0]][coords[1]] = !$scope.gamescore[coords[0]][coords[1]];
+    // if ($scope.gamescore[coords[0]][coords[1]]) {
+    //   event.target.className += " squaretoggle";
+    // } else {
+    //   event.target.className = event.target.className.replace(" squaretoggle", "");
+    // }
 
     // if (hasBingo($scope.gamescore)) {
     //   $scope.winnertext = "You have a bingo!";
@@ -384,13 +390,13 @@ bingo.controller('bingoController', function($scope, $document, $http, $routePar
 
   $scope.winnertext = "Bingo!";
 
-  $scope.gamescore = [
-    [false, false, false, false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false]
-  ]; // will connect to db soon.
+  // $scope.gamescore = [
+  //   [false, false, false, false, false],
+  //   [false, false, false, false, false],
+  //   [false, false, false, false, false],
+  //   [false, false, false, false, false],
+  //   [false, false, false, false, false]
+  // ]; // will connect to db soon.
 
   /*$(window).resize(function() {
     resizecard();
