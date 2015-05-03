@@ -9,9 +9,9 @@
         </div>
       </div>
       <div class="row">
-        <div class="bingoCard noselect">
+        <div class="bingoCard noselect" ng-class="{'noclick': !gameopen}">
           <div bsquare class="bingorow" ng-repeat="cardrow in gamecard" ng-init="rowindex = $index">
-            <div bsquare class="bingosquare" ng-repeat="square in cardrow" ng-init="colindex = $index" ng-click="sqclick($event)" ng-class="{squaretoggle: gamescore[rowindex][colindex]}" id="[{{rowindex}},{{colindex}}]">
+            <div bsquare class="bingosquare" ng-repeat="square in cardrow" ng-init="colindex = $index" ng-click="sqclick($event)" ng-class="{'squaretoggle': gamescore[rowindex][colindex], 'noclick': !gameopen}" id="[{{rowindex}},{{colindex}}]">
               <div class="bingosquarenumber" id="[{{rowindex}},{{colindex}}]">{{rowindex * 5 + colindex + 1}}.</div>
               <div class="bingosquaretext" id="[{{rowindex}},{{colindex}}]">{{gamecard[rowindex][colindex]}}</div>
             </div>
