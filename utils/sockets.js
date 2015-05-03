@@ -1,4 +1,8 @@
 var game = require('../routes/game.js');
+var models = require('../models/models');
+var tools = require('../utils/utils');
+
+var Card = models.card;
 
 var bingomove = function(movedata) {
   game.updatecard(movedata);
@@ -38,8 +42,30 @@ var getroomusers = function(io, roomid) {
   return outusers;
 };
 
-var bingomove = function(movedata) {
-  game.updatecard(movedata);
+var bingomove = function(movedata, socket, io) {
+  console.log(movedata)
+  Card
+    .findOne({
+      _id: movedata.card_id,
+    })
+    .exec(function(err, data) {
+      oldscore = data.score;
+      var row = movedata.square[0];
+      var col = movedata.square[1];
+      var newscore = oldscore;
+      newscore[row][col] = !oldscore[row][col];
+      game.updatescore_db(newscore, movedata.card_id);
+      var bingowin = tools.hasBingo(newscore);
+      console.log(newscore)
+      if (bingowin) {
+        // If this move has resulted in a bingo,
+        io.to(movedata.gameid).emit('winner', {
+          winner: socket.olinjsdata.user,
+          wincard: data.squares
+        });
+      }
+    });
+
 };
 
 var bingojoin = function(data, socket, io) {
@@ -89,7 +115,7 @@ var sockets = function(app) {
       if (data.type === 'join') {
         bingojoin(data.data, socket, io);
       } else if (data.type === 'move') {
-        bingomove(data.data);
+        bingomove(data.data, socket, io);
       } else if (data.type === 'start') {
         bingostart(data.data, socket, io);
       } else {

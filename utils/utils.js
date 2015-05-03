@@ -62,3 +62,14 @@ var check_diag_back = function(arr) {
 
 
 module.exports = tools;
+
+
+// var testcase = [
+//   [true, true, true, true, false],
+//   [true, true, false, true, true],
+//   [true, true, false, true, true],
+//   [true, false, false, false, false],
+//   [true, true, true, false, true]
+// ];
+
+// console.log(tools.hasBingo(testcase))
