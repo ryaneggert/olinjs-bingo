@@ -78,6 +78,7 @@ routes.newGame = function(req, res) {
         card_set: cardset,
         start_time: start_time,
         isOpen: isOpen,
+        isFinished: false,
         winners: [],
       });
 

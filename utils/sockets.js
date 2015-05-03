@@ -89,7 +89,6 @@ var bingomove = function(movedata, socket, io) {
         newscore: newscore,
       });
     });
-
 };
 
 var bingojoin = function(data, socket, io) {
@@ -116,6 +115,24 @@ var bingostart = function(data, socket, io) {
     message: 'Play bingo!'
   });
   game.startdb(data.game);
+};
+
+var bingoend = function(data, socket, io) {
+  Game
+    .findOneAndUpdate({
+      _id: data.game
+    }, {
+      isFinished: true
+    })
+    .exec(function(err, updatedata) {
+      if (err) {
+        console.log('Error ending game', err);
+      }
+      console.log(data.game);
+      io.to(data.game).emit('gameclose', {
+        'message': 'Game over',
+      });
+    });
 };
 
 var sockets = function(app) {
@@ -145,6 +162,8 @@ var sockets = function(app) {
         bingomove(data.data, socket, io);
       } else if (data.type === 'start') {
         bingostart(data.data, socket, io);
+      } else if (data.type === 'end') {
+        bingoend(data.data, socket, io);
       } else {
         console.log('Undefined game type');
       }

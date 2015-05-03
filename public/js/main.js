@@ -11,6 +11,7 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngMaterial'
     scks.forward('moveconf');
     scks.forward('leaveroom');
     scks.forward('winner'); // forward win event
+    scks.forward('gameclose');
     return scks;
   })
   .config(function($mdThemingProvider) {
@@ -226,7 +227,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   };
 });
 
-bingo.controller('bingoController', function($scope, $document, $http, $location, $routeParams, $mdToast, $animate, bingosockets) {
+bingo.controller('bingoController', function($scope, $document, $http, $location, $routeParams, $mdDialog, $mdToast, $animate, bingosockets) {
 
   // Make sure that we warn the user before they leave the gameroom
   $scope.$on('$locationChangeStart', function(event, next, current) {
@@ -287,9 +288,10 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
 
         $scope.players = []; // This value is populated using sockets.
 
-        var ishost = $scope.currentUser._id == $scope.host._id;
+        $scope.ishost = $scope.currentUser._id == $scope.host._id;
 
-        $scope.showstartbutton = !data.game.isOpen && ishost;
+        $scope.showstartbutton = !data.game.isOpen && $scope.ishost;
+        $scope.showstopbutton = $scope.winners.length > 0 && $scope.ishost;
 
         bingosockets.emit('game', {
           'type': 'join',
@@ -329,6 +331,17 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
     });
   };
 
+  //End button
+  $scope.endgame = function(event) {
+    console.log('END', $routeParams.gameid);
+    bingosockets.emit('game', {
+      'type': 'end',
+      'data': {
+        'game': $routeParams.gameid,
+      }
+    });
+  };
+
   $scope.$on('socket:gamestart', function(ev, data) {
     $scope.showstartbutton = false;
     $scope.gameopen = true;
@@ -350,13 +363,26 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
   $scope.$on('socket:winner', function(ev, data) {
     // $scope.bingo_popup = true;
     $scope.winners = data.winnerlist;
-
+    $scope.showstopbutton = $scope.winners.length > 0 && $scope.ishost;
     if (data.winner) {
       $scope.showSimpleToast('WIN! ' + data.winner.name + ' has won.');
     }
+  });
 
-
-    console.log('Winner!');
+  $scope.$on('socket:gameclose', function(ev, data) {
+    console.log('GAMECLOSE');
+    $mdDialog.show(
+        $mdDialog.alert()
+        .title('Game Over')
+        .content('The host has ended this game. Thanks for playing!')
+        .ariaLabel('Game over')
+        .ok('Home Page')
+        .targetEvent(ev)
+      )
+      .finally(function() {
+        $scope.gameopen = false;
+        $location.path('/');
+      });
   });
   // var toggleselect = $('div')
   $scope.sqclick = function(event) {

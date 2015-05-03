@@ -5,7 +5,7 @@
         <h2>{{roomname}}</h2>
         <div>
           <md-button class="md-raised md-accent" ng-show="showstartbutton" ng-model="start" ng-click="start_func($event)">START GAME</md-button>
-          <md-button class="md-raised md-warn" ng-show="!showstartbutton" ng-model="start" ng-click="endgame($event)">END GAME</md-button>
+          <md-button class="md-raised md-warn" ng-show="showstopbutton" ng-model="start" ng-click="endgame($event)">END GAME</md-button>
         </div>
       </div>
       <div class="row">
