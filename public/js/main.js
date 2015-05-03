@@ -278,7 +278,13 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
 
         // The number of milliseconds
         var diff_ms = d_ms - currTime_ms;
-        $scope.countdown = diff_ms;
+        if (diff_ms >= 0) {
+          $scope.countdown = diff_ms;
+        };
+        // If a user creates a game with a start time that has already passed
+        if (diff_ms < 0) {
+          $scope.countdown = "This game has already started!";
+        };
 
         $scope.roomname = data.game.room;
         $scope.currentUser = data.user;
