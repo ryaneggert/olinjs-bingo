@@ -1,0 +1,16 @@
+<md-dialog aria-label="Winner!">
+  <md-dialog-content class="sticky-container">
+    <md-subheader class="md-sticky-no-effect">Game over!</md-subheader>
+    <div>
+      <p>
+        {{winner}} has won. Thanks for playing!
+      </p>
+    </div>
+  </md-dialog-content>
+  <div class="md-actions" layout="row">
+    <span flex></span>
+    <md-button ng-click="win_interact('home')" class="md-primary">
+     Home Page
+    </md-button>
+  </div>
+</md-dialog>

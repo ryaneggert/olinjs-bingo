@@ -8,7 +8,8 @@
         <div bsquare class="bingorow" ng-repeat="cardrow in gamecard" ng-init="rowindex = $index">
           <div bsquare class="bingosquare" ng-repeat="square in cardrow" ng-init="colindex = $index" ng-click="sqclick($event)" ng-class="{squaretoggle: gamescore[rowindex][colindex]}" id="[{{rowindex}},{{colindex}}]">
             <!--Making this just a number for now for styling sake-->
-            <div class="bingosquaretext" id="[{{rowindex}},{{colindex}}]">{{rowindex * 5 + colindex + 1}}</div>
+            <div class="bingosquarenumber" id="[{{rowindex}},{{colindex}}]">{{rowindex * 5 + colindex + 1}}.</div>
+            <div class="bingosquaretext" id="[{{rowindex}},{{colindex}}]">{{gamecard[rowindex][colindex]}}</div>
           </div>
         </div>
       </div>
