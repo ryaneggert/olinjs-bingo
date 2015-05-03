@@ -214,7 +214,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   };
 });
 
-bingo.controller('bingoController', function($scope, $document, $http, $location, $routeParams, $mdDialog, $mdToast, $animate, bingosockets) {
+bingo.controller('bingoController', function($scope, $document, $http, $location, $routeParams, $mdToast, $animate, bingosockets) {
 
   // Make sure that we warn the user before they leave the gameroom
   $scope.$on('$locationChangeStart', function(event, next, current) {
@@ -238,17 +238,6 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
       .hideDelay(3000)
     );
   };
-
-  /*var resizecard = function() {
-    // I shouldn't have to use jQuery.
-    // Future work: find how to modify directive to $scope.$apply() or something
-    // like that.
-    var sqwidth = $('div.bingosquare').width();
-    $('div.bingorow').height(sqwidth);
-    $('div.bingosquare').height(sqwidth);
-    $('.bingosquare').css({"margin": ".25rem"});
-    console.log('Cards have been resized');
-  };*/
 
   //Initialize room information
   var initializegame = function() {
@@ -287,8 +276,6 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
         var ishost = $scope.currentUser._id == $scope.host._id;
 
         $scope.showstartbutton = !data.game.isOpen && ishost;
-
-
 
         bingosockets.emit('game', {
           'type': 'join',
@@ -350,20 +337,8 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
     $scope.winnertext = data.winner.name + " has gotten a bingo!";
     $scope.bingo_popup = true;
     $scope.gameopen = false;
-    $mdDialog.show({
-        controller: WinDialogController,
-        templateUrl: './pages/templates/windialog.tmpl.html',
-        locals: {
-          winner: data.winner.name
-        }
-      })
-      .then(function(answer) {
-        // This function is called after the user presses a button in the dialog
-        $location.path('/');
-      }, function() {
-        // This function is called if the user presses 'ESCAPE' or clicks
-        // outside of the dialog
-      });
+    $scope.showSimpleToast('WIN! ' + data.winner.name + ' has won.')
+
     console.log('Winner!');
   });
   // var toggleselect = $('div')
@@ -390,9 +365,25 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
 
 });
 
-function WinDialogController($scope, $mdDialog, winner) {
-  $scope.winner = winner;
-  $scope.win_interact = function(answer) {
-    $mdDialog.hide(answer);
-  };
-}
+// Saving dialog code for later.
+// $mdDialog.show({
+//         controller: WinDialogController,
+//         templateUrl: './pages/templates/windialog.tmpl.html',
+//         locals: {
+//           winner: data.winner.name
+//         }
+//       })
+//       .then(function(answer) {
+//         // This function is called after the user presses a button in the dialog
+//         $location.path('/');
+//       }, function() {
+//         // This function is called if the user presses 'ESCAPE' or clicks
+//         // outside of the dialog
+//       });
+
+// function WinDialogController($scope, $mdDialog, winner) {
+//   $scope.winner = winner;
+//   $scope.win_interact = function(answer) {
+//     $mdDialog.hide(answer);
+//   };
+// }
