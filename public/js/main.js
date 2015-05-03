@@ -285,6 +285,16 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
         if (diff_ms < 0) {
           $scope.countdown = "This game has already started!";
         };
+        // Set the game to start at specified time
+        setTimeout(function(){ 
+          /* ... Start the game now... ... */ 
+          bingosockets.emit('game', {
+            'type': 'start',
+            'data': {
+              'game': data.game._id,
+            }
+          });
+        }, diff_ms);
 
         $scope.roomname = data.game.room;
         $scope.currentUser = data.user;
@@ -335,6 +345,11 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
       }
     });
   };
+
+  var dateItHappens = new Date() //
+  // ... set the dateItHappens variable up ...
+  var millisTillOccurence = dateItHappens.getTime() - new Date().getTime();
+  setTimeout(function(){ /* ... function you want to call ... */ }, millisTillOccurence);
 
   //End button
   $scope.endgame = function(event) {
