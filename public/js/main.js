@@ -286,7 +286,6 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
 
         var ishost = $scope.currentUser._id == $scope.host._id;
 
-        $scope.start_var = data.game.isOpen;
         $scope.showstartbutton = !data.game.isOpen && ishost;
 
 
@@ -330,7 +329,6 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
   };
 
   $scope.$on('socket:gamestart', function(ev, data) {
-    $scope.start_var = true;
     $scope.showstartbutton = false;
     $scope.gameopen = true;
     $scope.showSimpleToast('The game has started!');
@@ -353,22 +351,24 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
     $scope.bingo_popup = true;
     $scope.gameopen = false;
     $mdDialog.show({
-        controller: DialogController,
+        controller: WinDialogController,
         templateUrl: './pages/templates/windialog.tmpl.html',
         locals: {
           winner: data.winner.name
         }
       })
       .then(function(answer) {
+        // This function is called after the user presses a button in the dialog
         $location.path('/');
       }, function() {
-        $scope.winnertext = 'You cancelled the dialog.';
+        // This function is called if the user presses 'ESCAPE' or clicks
+        // outside of the dialog
       });
     console.log('Winner!');
   });
   // var toggleselect = $('div')
   $scope.sqclick = function(event) {
-    if (!$scope.start_var) {
+    if (!$scope.gameopen) {
       $scope.showSimpleToast('The game has not started yet. Please wait.');
       return;
     }
@@ -390,7 +390,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
 
 });
 
-function DialogController($scope, $mdDialog, winner) {
+function WinDialogController($scope, $mdDialog, winner) {
   $scope.winner = winner;
   $scope.win_interact = function(answer) {
     $mdDialog.hide(answer);
