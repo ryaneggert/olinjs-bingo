@@ -40,6 +40,7 @@ div.squaretoggle {
 div.listholder {
   padding: 0px 20px;
 }
+
 .noselect {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -47,6 +48,20 @@ div.listholder {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.firstplace {
+  color: rgb(198, 147, 7);
+  text-shadow: 0px 0px 10px rgb(198, 147, 7)
+}
+
+.secondplace {
+  color: rgb(179, 179, 179);
+  text-shadow: 0px 0px 5px rgb(200, 200, 200)
+}
+
+.thirdplace {
+  color: rgb(191, 111, 33);
 }
 
 @media (max-width: 500px) {
@@ -159,6 +174,8 @@ div.listholder {
   padding-right: 2rem;
   border-radius: 3px;
   padding-top: .5rem;
+  z-index: 1;
+  margin-top: 5px;
 }
 
 .squaresTitle {
@@ -171,6 +188,7 @@ div.listholder {
   /* Firefox 3.5 - 3.6 */
 
   box-shadow: .25rem .25rem .2rem #333;
+  z-index: 5;
 }
 
 .squaresTitle h2 {

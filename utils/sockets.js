@@ -69,7 +69,8 @@ var bingomove = function(movedata, socket, io) {
             }
             game.winners = winners;
             game.save(function(err2, updgame) {
-              updgame.populate('winners', function(err3, popdgame) {
+              // Switch '' to 'winners' to populate winners list.
+              updgame.populate('', function(err3, popdgame) {
                 if (err || err2 || err3) {
                   console.log('Error recognizing winner.', err, err2);
                 }

@@ -252,6 +252,8 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
         $scope.displayNumber = 1;
         $scope.gamescore = data.card.score;
         $scope.gameopen = data.game.isOpen;
+        $scope.winners = data.game.winners;
+        console.log($scope.winners)
 
         var startTime = data.game.start_time;
         //Convert to datetime object
@@ -335,6 +337,9 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
 
   $scope.$on('socket:winner', function(ev, data) {
     // $scope.bingo_popup = true;
+    $scope.winners = data.winnerlist;
+    console.log($scope.winners)
+
     if (data.winner) {
       $scope.showSimpleToast('WIN! ' + data.winner.name + ' has won.');
     }

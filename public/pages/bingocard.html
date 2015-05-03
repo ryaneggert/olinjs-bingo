@@ -23,16 +23,21 @@
       </div>
     </div>
     <div class="col-md-3 col-lg-3">
-      <div class="squaresTitle">
-        <h2>Squares</h2></div>
-      <div class="squares">
-        <ol>
-          <div ng-repeat="cardrow in gamecard">
-            <div ng-repeat="square in cardrow">
-              <li>{{square}}</li>
+      <div class="row">
+        <div class="squaresTitle">
+          <h2>Squares</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="squares">
+          <ol>
+            <div ng-repeat="cardrow in gamecard">
+              <div ng-repeat="square in cardrow">
+                <li>{{square}}</li>
+              </div>
             </div>
-          </div>
-        </ol>
+          </ol>
+        </div>
       </div>
     </div>
     <div class="col-md-2 col-lg-3">
@@ -45,9 +50,9 @@
             <md-list-item ng-repeat="x in players">
               <div layout="row" layout-align="space-between center">
                 <p>
-                  {{x.name}}
+                  {{x.name}} {{windex}}
                 </p>
-                <i class="fa fa-trophy"></i>
+                <i ng-if="winners.indexOf(x._id) > -1" ng-class="{'firstplace': winners.indexOf(x._id) === 0, 'secondplace': winners.indexOf(x._id) === 1, 'thirdplace': winners.indexOf(x._id) === 2}" class="fa fa-trophy fa-2x"></i>
               </div>
             </md-list-item>
           </md-list>

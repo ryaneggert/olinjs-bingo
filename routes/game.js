@@ -77,7 +77,8 @@ routes.newGame = function(req, res) {
         room: room,
         card_set: cardset,
         start_time: start_time,
-        isOpen: isOpen
+        isOpen: isOpen,
+        winners: [],
       });
 
       // Save the new game to the database
