@@ -266,7 +266,6 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
         $scope.gamescore = data.card.score;
         $scope.gameopen = data.game.isOpen;
         $scope.winners = data.game.winners;
-        console.log($scope.winners)
 
         var startTime = data.game.start_time;
         //Convert to datetime object
@@ -370,7 +369,6 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
   });
 
   $scope.$on('socket:gameclose', function(ev, data) {
-    console.log('GAMECLOSE');
     $mdDialog.show(
         $mdDialog.alert()
         .title('Game Over')
