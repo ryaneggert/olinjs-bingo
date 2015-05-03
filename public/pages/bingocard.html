@@ -1,15 +1,20 @@
 <div class="game">
   <div class="gameContainer">
     <div class="col-md-7 col-lg-6">
-      <div class="bingoheader">
+      <div class="bingoheader" layout="row" layout-align="space-between center">
         <h2>{{roomname}}</h2>
+        <div>
+          <md-button class="md-raised md-accent" ng-show="showstartbutton" ng-model="start" ng-click="start_func($event)">START GAME</md-button>
+          <md-button class="md-raised md-warn" ng-show="!showstartbutton" ng-model="start" ng-click="endgame($event)">END GAME</md-button>
+        </div>
       </div>
-      <div class="bingoCard noselect">
-        <div bsquare class="bingorow" ng-repeat="cardrow in gamecard" ng-init="rowindex = $index">
-          <div bsquare class="bingosquare" ng-repeat="square in cardrow" ng-init="colindex = $index" ng-click="sqclick($event)" ng-class="{squaretoggle: gamescore[rowindex][colindex]}" id="[{{rowindex}},{{colindex}}]">
-            <!--Making this just a number for now for styling sake-->
-            <div class="bingosquarenumber" id="[{{rowindex}},{{colindex}}]">{{rowindex * 5 + colindex + 1}}.</div>
-            <div class="bingosquaretext" id="[{{rowindex}},{{colindex}}]">{{gamecard[rowindex][colindex]}}</div>
+      <div class="row">
+        <div class="bingoCard noselect">
+          <div bsquare class="bingorow" ng-repeat="cardrow in gamecard" ng-init="rowindex = $index">
+            <div bsquare class="bingosquare" ng-repeat="square in cardrow" ng-init="colindex = $index" ng-click="sqclick($event)" ng-class="{squaretoggle: gamescore[rowindex][colindex]}" id="[{{rowindex}},{{colindex}}]">
+              <div class="bingosquarenumber" id="[{{rowindex}},{{colindex}}]">{{rowindex * 5 + colindex + 1}}.</div>
+              <div class="bingosquaretext" id="[{{rowindex}},{{colindex}}]">{{gamecard[rowindex][colindex]}}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -62,6 +67,5 @@
     </div>
     <br>
     <p>Time to start: {{countdown}}</p>
-    <button ng-show="showstartbutton" ng-model="start" ng-click="start_func($event)">START</button>
   </div>
 </div>

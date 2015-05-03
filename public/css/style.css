@@ -1,4 +1,4 @@
-/* 
+/*
   These are the styles meant to apply to all of the pages
 
   Color shades (blue)
@@ -13,6 +13,7 @@ html,
 body {
   font-family: 'Lato', sans-serif;
   opacity: .99;
+  background: rgb(225,225,225);
 }
 
 .col-xs-5th,

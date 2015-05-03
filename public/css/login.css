@@ -3,3 +3,7 @@ div.authbox {
   padding: 5px;
   padding-top: 20px;
 }
+
+body {
+  background-color: rgb(225, 225, 225)
+}

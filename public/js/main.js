@@ -12,6 +12,18 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngMaterial'
     scks.forward('leaveroom');
     scks.forward('winner'); // forward win event
     return scks;
+  })
+  .config(function($mdThemingProvider) {
+    $mdThemingProvider.theme('default')
+      .primaryPalette('purple', {
+        'default': '800',
+      })
+      .accentPalette('green', {
+        'default': '800',
+      })
+      .warnPalette('red', {
+        'default': '600'
+      });
   });
 
 bingo.directive('bsquare', function() {
@@ -338,7 +350,6 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
   $scope.$on('socket:winner', function(ev, data) {
     // $scope.bingo_popup = true;
     $scope.winners = data.winnerlist;
-    console.log($scope.winners)
 
     if (data.winner) {
       $scope.showSimpleToast('WIN! ' + data.winner.name + ' has won.');

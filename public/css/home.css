@@ -44,3 +44,7 @@
   max-height: 80vh;
   overflow-y: auto;
 }
+
+.home section {
+	background: white;
+}
