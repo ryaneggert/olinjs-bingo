@@ -1,6 +1,6 @@
 var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngMaterial'])
   .factory('bingosockets', function(socketFactory) {
-    var myIoSocket = io.connect('http://localhost:3000');
+    var myIoSocket = io.connect('https://bingojs.herokuapp.com');
     var scks = socketFactory({
       ioSocket: myIoSocket
     });
