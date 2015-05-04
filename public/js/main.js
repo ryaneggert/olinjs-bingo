@@ -227,8 +227,28 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   };
 });
 
-bingo.controller('bingoController', function($scope, $document, $http, $location, $routeParams, $mdDialog, $mdToast, $animate, bingosockets) {
+bingo.controller('bingoController', function($scope, $document, $http, $timeout, $location, $routeParams, $mdDialog, $mdToast, $animate, bingosockets) {
+  moment().format();
 
+  $scope.intervalFunction = function(){
+    $timeout(function() {
+      update_countdown();
+      $scope.intervalFunction();
+    }, 1000)
+  };
+
+  function update_countdown() {
+    var d_ms = $scope.startDate.getTime();
+
+    var currTime = new Date();
+    var currTime_ms = currTime.getTime();
+
+    // The number of milliseconds
+    var diff_ms = d_ms - currTime_ms;
+    var diff_dur = moment.duration(diff_ms, 'milliseconds');
+    $scope.countdown_text = diff_dur.days() + 'd:' + diff_dur.hours()+ 'h:' + diff_dur.minutes()+ 'm:' + diff_dur.seconds() + 's';
+  }
+  
   // Make sure that we warn the user before they leave the gameroom
   $scope.$on('$locationChangeStart', function(event, next, current) {
     if ($scope.gameopen) {
@@ -267,18 +287,9 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
         $scope.gameopen = data.game.isOpen;
         $scope.winners = data.game.winners;
 
-        var startTime = data.game.start_time;
-        //Convert to datetime object
-        var d = new Date(startTime);
-        console.log(d);
-        var d_ms = d.getTime();
-
-        var currTime = new Date();
-        var currTime_ms = currTime.getTime();
-
-        // The number of milliseconds
-        var diff_ms = d_ms - currTime_ms;
-        $scope.countdown = diff_ms;
+        $scope.startTime = data.game.start_time;
+        $scope.startDate = new Date($scope.startTime);
+        update_countdown();
 
         $scope.roomname = data.game.room;
         $scope.currentUser = data.user;
@@ -315,6 +326,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
 
 
   initializegame();
+  $scope.intervalFunction();
 
   //TODO: add winner detection on backend, so as to prompt sending of winner message
   //TODO: send and show winning bingo card?
