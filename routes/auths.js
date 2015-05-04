@@ -15,7 +15,7 @@ router.get('/login', function(req, res) {
 
 router.get('/login/olin', function(req, res) {
   var callbackurl = process.env.OAREDIR || 'http://localhost:3000/auth/login/olin/cb';
-  res.redirect('http://www.olinapps.com/external?callback=' + 'http://localhost:3000/auth/login/olin/cb');
+  res.redirect('http://www.olinapps.com/external?callback=' + callbackurl);
 });
 
 router.get('/logout', function(req, res) {
