@@ -1,8 +1,9 @@
 var game = require('../routes/game.js');
+var models = require('../models/models');
+var tools = require('../utils/utils');
 
-var bingomove = function(movedata) {
-  game.updatecard(movedata);
-};
+var Card = models.card;
+var Game = models.game;
 
 var comparefxn = function(a, b) {
   if (a._id < b._id)
@@ -38,8 +39,56 @@ var getroomusers = function(io, roomid) {
   return outusers;
 };
 
-var bingomove = function(movedata) {
-  game.updatecard(movedata);
+var bingomove = function(movedata, socket, io) {
+  Card
+    .findOne({
+      _id: movedata.card_id,
+    })
+    .exec(function(err, card) {
+      oldscore = card.score;
+      var row = movedata.square[0];
+      var col = movedata.square[1];
+      var newscore = oldscore;
+      var this_user = socket.olinjsdata.user;
+      newscore[row][col] = !oldscore[row][col];
+      game.updatescore_db(newscore, movedata.card_id);
+      var bingowin = tools.hasBingo(newscore);
+      if (bingowin) {
+        Game.
+        findOne({
+            _id: movedata.gameid
+          })
+          .exec(function(err, game) {
+            var winners = game.winners;
+            // Prevent continued congratulation of previous winners
+            var new_winner = null;
+            if (winners.indexOf(this_user._id) === -1) {
+              // Player not yet a winner. Append to winner list.
+              winners.push(this_user._id);
+              new_winner = this_user;
+            }
+            game.winners = winners;
+            game.save(function(err2, updgame) {
+              // Switch '' to 'winners' to populate winners list.
+              updgame.populate('', function(err3, popdgame) {
+                if (err || err2 || err3) {
+                  console.log('Error recognizing winner.', err, err2);
+                }
+                // If this move has resulted in a bingo,
+                io.to(movedata.gameid).emit('winner', {
+                  winner: new_winner,
+                  wincard: card.squares,
+                  winnerlist: popdgame.winners,
+                });
+              });
+            });
+          });
+      }
+      // Regardless of win, send updated card score.
+      io.to(socket.olinjsdata.user._id).emit('moveconf', {
+        newscore: newscore,
+      });
+    });
 };
 
 var bingojoin = function(data, socket, io) {
@@ -49,6 +98,9 @@ var bingojoin = function(data, socket, io) {
   var username = data.user.name;
   // Join this socket to the game's room
   socket.join(gameid);
+  // Join this socket to the user's room.
+  // This is used to synchronize scores across multiple open tabs in one session
+  socket.join(data.user._id);
   socket.olinjsdata.user = data.user;
   var users = getroomusers(io, gameid);
   // Send a connection event with current players to room.
@@ -63,6 +115,24 @@ var bingostart = function(data, socket, io) {
     message: 'Play bingo!'
   });
   game.startdb(data.game);
+};
+
+var bingoend = function(data, socket, io) {
+  Game
+    .findOneAndUpdate({
+      _id: data.game
+    }, {
+      isFinished: true
+    })
+    .exec(function(err, updatedata) {
+      if (err) {
+        console.log('Error ending game', err);
+      }
+      console.log(data.game);
+      io.to(data.game).emit('gameclose', {
+        'message': 'Game over',
+      });
+    });
 };
 
 var sockets = function(app) {
@@ -89,9 +159,11 @@ var sockets = function(app) {
       if (data.type === 'join') {
         bingojoin(data.data, socket, io);
       } else if (data.type === 'move') {
-        bingomove(data.data);
+        bingomove(data.data, socket, io);
       } else if (data.type === 'start') {
         bingostart(data.data, socket, io);
+      } else if (data.type === 'end') {
+        bingoend(data.data, socket, io);
       } else {
         console.log('Undefined game type');
       }

@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var models = require('../models/models');
+var tools = require('../utils/utils');
 
 var Game = models.game;
 var Card = models.card;
@@ -76,7 +77,9 @@ routes.newGame = function(req, res) {
         room: room,
         card_set: cardset,
         start_time: start_time,
-        isOpen: isOpen
+        isOpen: isOpen,
+        isFinished: false,
+        winners: [],
       });
 
       // Save the new game to the database
@@ -105,20 +108,17 @@ routes.getUserCardsets = function(req, res) {
 
   // Remove this once we have user login working
   CardSet
-  .find({})
-  .populate('creator')
-  .exec(function(err, cardsets) {
-    if (err) {
-      console.error("Error retrieving cardsets!", err);
-      res.status(500).send("Error retrieving cardsets!");
-    }
-    res.send(cardsets); // an object, to allow the easy addition of more homepage data
-  });
+    .find({})
+    .populate('creator')
+    .exec(function(err, cardsets) {
+      if (err) {
+        console.error("Error retrieving cardsets!", err);
+        res.status(500).send("Error retrieving cardsets!");
+      }
+      res.send(cardsets); // an object, to allow the easy addition of more homepage data
+    });
 };
 
-routes.login = function(req, res) {
-  // Allow users to log in as a guest or login with facebook
-};
 
 var generatecard = function(square_set, gameid) {
   // Order the square set randomly
@@ -207,7 +207,7 @@ routes.init = function(req, res) {
     });
 };
 
-var updatescore_db = function(score, card_id) {
+routes.updatescore_db = function(score, card_id) {
   Card.update({
     _id: card_id
   }, {
@@ -217,21 +217,6 @@ var updatescore_db = function(score, card_id) {
       console.log('Error updating score', err);
     }
   });
-};
-
-routes.updatecard = function(movedata) {
-  Card
-    .findOne({
-      _id: movedata.card_id,
-    })
-    .exec(function(err, data) {
-      oldscore = data.score;
-      var row = movedata.square[0];
-      var col = movedata.square[1];
-      var newscore = oldscore;
-      newscore[row][col] = !oldscore[row][col];
-      updatescore_db(newscore, movedata.card_id);
-    });
 };
 
 routes.startdb = function(gameid) {
