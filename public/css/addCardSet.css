@@ -1,0 +1,14 @@
+.addCardSet input {
+	border-radius: 3px;
+	padding:.5rem;
+}
+
+.addCardSet h2 {
+	text-align: center;
+	padding: 2rem;
+	font-size: 3.5rem;
+}
+
+.addCardSet .cardSetName {
+	text-align: center;
+}

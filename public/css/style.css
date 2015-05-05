@@ -1,6 +1,19 @@
+/*
+  These are the styles meant to apply to all of the pages
+
+  Color shades (blue)
+    lighter: 83C2FF
+    light: 4BA7FF
+    medium: 128BFF
+    dark: 0182FF
+    darker: 0058AE
+*/
+
 html,
 body {
   font-family: 'Lato', sans-serif;
+  opacity: .99;
+  background: rgb(225, 225, 225);
 }
 
 .col-xs-5th,
@@ -25,44 +38,16 @@ body {
   }
 }
 
-@media (min-width: 992px) {
-  .col-md-5th {
-    width: 20%;
-    float: left;
-  }
-}
+.navbar {
+  -webkit-box-shadow: 0 0 1rem #333;
+  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
 
-@media (min-width: 1200px) {
-  .col-lg-5th {
-    width: 20%;
-    float: left;
-  }
-}
+  -moz-box-shadow: 0 0 1rem #333;
+  /* Firefox 3.5 - 3.6 */
 
-div.bingorow {
-  height: 10vh;
-  max-width: 75vh;
-}
-
-div.bingosquare {
-  border: 1px solid black;
-  padding: 0;
-  max-width: 15vh;
-  cursor: pointer;
-  /*  position: relative;
-  width: 20%;
-  height: 0;
-  max-height: 10vh;
-  padding-bottom: 20%;*/
-}
-
-div.bingosquaretext {
-  text-align: center;
-  vertical-align: middle;
-}
-
-div.squaretoggle {
-  background-color: yellow;
+  box-shadow: 0 0 1rem #333;
+  border: none !important;
+  /* Fuck you, bootstrap */
 }
 
 md-list-item#gamelist {
@@ -94,12 +79,14 @@ div.md-list-item-text p {
   margin: 0 0 0 0;
   line-height: 0.75em;
 }
-
 /*
   Allow angular.js to be loaded in body, hiding cloaked elements until
   templates compile.  The !important is important given that there may be
   other selectors that are more specific or come later and might alter display.
  */
-[ng\:cloak], [ng-cloak], .ng-cloak {
+
+[ng\:cloak],
+[ng-cloak],
+.ng-cloak {
   display: none !important;
 }
