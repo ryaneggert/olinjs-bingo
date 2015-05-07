@@ -52,7 +52,6 @@ routes.deleteCardset = function(req, res) {
     }
 
     if (cardset.creator == req.session.user._id) {
-      console.log('llalallalalalala');
       CardSet.findOneAndRemove({
         _id: card_set_id
       }, function(err, cardset) {
