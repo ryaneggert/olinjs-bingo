@@ -42,7 +42,6 @@ routes.newCardSet = function(req, res) {
 
 routes.deleteCardset = function(req, res) {
   var card_set_id = req.body.cardset_id;
-  var restrict = false;
 
   CardSet.findOne({
     _id: card_set_id
@@ -52,24 +51,21 @@ routes.deleteCardset = function(req, res) {
       res.status(500).send("Couldn't find specified cardset");
     }
 
-    if (cardset.creator._id !== req.session.user._id) {
-      restrict = true;
+    if (cardset.creator == req.session.user._id) {
+      console.log('llalallalalalala');
+      CardSet.findOneAndRemove({
+        _id: card_set_id
+      }, function(err, cardset) {
+        res.send({
+          restrict: false
+        });
+      })
+    } else {
       res.send({
-        restrict: restrict
-      });
+        restrict: true
+    });
     }
   });
-
-  if (!restrict) {
-    CardSet.findOneAndRemove({
-      _id: card_set_id
-    }, function(err, cardset) {
-      res.send({
-        restrict: restrict
-      });
-    })
-  }
-
 }
 
 routes.newGame = function(req, res) {
