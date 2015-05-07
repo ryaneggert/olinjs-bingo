@@ -41,15 +41,24 @@ routes.newCardSet = function(req, res) {
 };
 
 routes.editCardSet = function(req, res) {
-  if (cardsetid == req.session.user._id) {
-    res.send({
-      restrict: false
-    });
-  } else {
-    res.send({
-      restrict: true
-    });
-  }
+  CardSet.findOne({
+    _id: req.body.cardsetid
+  }, function(err, cardset) {
+    if (err) {
+      console.error("Couldn't find specified cardset", err);
+      res.status(500).send("Couldn't find specified cardset");
+    }
+
+    if (cardset.creator == req.session.user._id) {
+      res.send({
+        restrict: false
+      });
+    } else {
+      res.send({
+        restrict: true
+      });
+    }
+  });
 }
 
 routes.newGame = function(req, res) {

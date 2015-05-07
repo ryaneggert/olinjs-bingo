@@ -46,7 +46,7 @@ app.get('/api/user/cardsets', game.getUserCardsets);
 
 app.post('/api/join/game', home.joinGame);
 
-app.post('api/edit/cardsets', game.editCardSet);
+app.post('/api/edit/cardset', game.editCardSet);
 
 app.get('/*', auths.isAuth_pg, mainr.main);
 

@@ -224,7 +224,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   };
   $scope.editCardSet = function(cardsetid) {
     //$location.path('/cardset/edit') //Make API more "RESTful" (e.g. /<object>/<action>)
-    $http.post('/api/edit/cardsets', {
+    $http.post('/api/edit/cardset', {
       cardsetid: cardsetid
     })
     .success(function(data) {
