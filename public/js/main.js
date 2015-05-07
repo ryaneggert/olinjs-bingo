@@ -54,8 +54,14 @@ bingo.config(function($routeProvider) {
     .when('/game/:gameid', {
       templateUrl: '../pages/bingocard.html',
       controller: 'bingoController'
+    })
+    .when('/cardset/edit', {
+      templateUrl: '../pages/cardseteditor.html',
+      controller: 'editCardSetController'
     });
 });
+
+//write a editCardSetController
 
 bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
   $scope.formData = {};
@@ -218,7 +224,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   };
   $scope.editCardSet = function(cardsetid) {
     //$location.path('/cardset/edit') //Make API more "RESTful" (e.g. /<object>/<action>)
-    console.log('Go write an "edit card set" controller');
+    $location.path('/cardset/edit');
   };
 
   $scope.deleteCardSet = function(cardsetid) {
