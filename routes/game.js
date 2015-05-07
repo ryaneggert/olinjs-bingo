@@ -40,6 +40,18 @@ routes.newCardSet = function(req, res) {
   });
 };
 
+routes.editCardSet = function(req, res) {
+  if (cardsetid == req.session.user._id) {
+    res.send({
+      restrict: false
+    });
+  } else {
+    res.send({
+      restrict: true
+    });
+  }
+}
+
 routes.newGame = function(req, res) {
   /* Create and save a new game with set start time and pre-made card set */
 

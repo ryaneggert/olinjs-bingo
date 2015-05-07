@@ -224,7 +224,19 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   };
   $scope.editCardSet = function(cardsetid) {
     //$location.path('/cardset/edit') //Make API more "RESTful" (e.g. /<object>/<action>)
-    $location.path('/cardset/edit');
+    $http.post('/api/edit/cardsets', {
+      cardsetid: cardsetid
+    })
+    .success(function(data) {
+      if (!data.restrict) {
+        $location.path('/cardset/edit');
+      } else {
+        confirm("Sorry, you don't have permisson to edit that cardset");
+      }
+    })
+    .error(function(data) {
+      console.log("Error: " + data);
+    });
   };
 
   $scope.deleteCardSet = function(cardsetid) {
