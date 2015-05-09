@@ -60,21 +60,25 @@ bingo.config(function($routeProvider) {
 bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
   $scope.formData = {};
   $scope.formData.name = "";
+  $scope.choices = [];
+  console.log($scope.choices.length);
 
-  $scope.choices = [{
-    id: 'choice1'
-  }, {
-    id: 'choice2'
-  }, {
-    id: 'choice3'
-  }];
-
-  $scope.addNewChoice = function() {
+  $scope.addNewChoice = function(event) {
+    if (event) {
+      event.preventDefault();
+    }
     var newItemNo = $scope.choices.length + 1;
     $scope.choices.push({
       'id': 'choice' + newItemNo
     });
   };
+
+  generatenewchoices = function(blanks) {
+    for (var i = 0; i <= blanks; i++) {
+      $scope.addNewChoice();
+    }
+  };
+  generatenewchoices(25);
 
   $scope.showAddChoice = function(choice) {
     return choice.id === $scope.choices[$scope.choices.length - 1].id;
@@ -82,18 +86,21 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
 
   $scope.addCardSet = function() {
     cards = [];
+    var dupenames = [];
     // quadratic performance, ok for small cardset, optimize if necessary
     for (var i in $scope.choices) {
       if (cards.indexOf($scope.choices[i].name) === -1) {
         if ($scope.choices[i].name != null) {
           cards.push($scope.choices[i].name);
         }
+      } else {
+        dupenames.push($scope.choices[i].name);
       }
     }
     if ($scope.formData.name == "") {
       confirm("card set has no name, please add one.")
     } else if (cards.length < 25) {
-      confirm("not enough unique cards (25), please add more.")
+      confirm("There are not at least 25 unique squares.")
     } else {
       postdata = {
         "name": $scope.formData.name,

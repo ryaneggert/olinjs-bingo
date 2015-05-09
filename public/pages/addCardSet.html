@@ -1,32 +1,32 @@
 <div class="addCardSet">
   <div class="container">
-    <h2>Add a New Card Set</h2>
-    <form name="projectForm">
-      <md-input-container>
-        <label>Description</label>
-        <input md-maxlength="30" required name="description" ng-model="project.description">
-        <div ng-messages="projectForm.description.$error">
-          <div ng-message="required">This is required.</div>
-          <div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>
-        </div>
-      </md-input-container>
-      <md-input-container>
-        <label>Client Name</label>
-        <input required name="clientName" ng-model="project.clientName">
-        <div ng-messages="projectForm.clientName.$error">
-          <div ng-message="required">This is required.</div>
-        </div>
-      </md-input-container>
-      <md-input-container>
-        <label>Hourly Rate (USD)</label>
-        <input required type="number" step="any" name="rate" ng-model="project.rate" min="800" max="4999">
-        <div ng-messages="projectForm.rate.$error">
-          <div ng-message="required">You've got to charge something! You can't just <b>give away</b> a Missile Defense System.</div>
-          <div ng-message="min">You should charge at least $800 an hour. This job is a big deal... if you mess up, everyone dies!</div>
-          <div ng-message="max">$5,000 an hour? That's a little ridiculous. I doubt event Bill Clinton could afford that.</div>
-        </div>
-      </md-input-container>
-    </form>
+    <md-card layout='column' layout-margin layout-align="space-between center">
+      <h2 flex-order="1">Add a New Card Set</h2>
+      <md-card-content flex-order="2">
+        <form name="newCardSetForm">
+          <md-input-container>
+            <label>"Name"</label>
+            <input md-maxlength="30" required name="CardSetName" ng-model="formData.CardSetName">
+            <div ng-messages="newCardSetForm.CardSetName.$error">
+              <div ng-message="required">This is required.</div>
+              <div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>
+            </div>
+          </md-input-container>
+          <md-input-container ng-repeat="newcard in choices" layout='column'>
+            <label flex-order="1">Square {{$index +1}}</label>
+            <input flex-order="2" required name="squarename" ng-model="choices[$index].name">
+            <div flex-order="3"ng-messages="newCardSetForm.squarename.$error">
+            </div>
+            <md-button flex-order="4" ng-if="$last" class="md-fab md-primary addcs" ng-click="addNewChoice()" aria-label="Add new square">
+              <md-icon md-font-icon="fa-plus" style="color: white;"></md-icon>
+            </md-button>
+          </md-input-container>
+        </form>
+      </md-card-content>
+      <div class="md-actions" flex-order="3" layout="row" layout-align="end center">
+        <md-button class="md-raised md-accent">Add Card Set</md-button>
+      </div>
+    </md-card>
   </div>
 </div>
 <!-- <form>
