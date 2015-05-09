@@ -14,6 +14,19 @@ var bingo = angular.module('bingo', ['ngRoute', 'ngTouch', 'btford.socket-io', '
     scks.forward('gameclose');
     return scks;
   })
+  .factory('focus', function($timeout) {
+     return function(id) {
+       // timeout makes sure that it is invoked after any other event has been triggered.
+       // e.g. click events that need to run before the focus or
+       // inputs elements that are in a disabled state but are enabled when those events
+       // are triggered.
+       $timeout(function() {
+         var element = document.getElementById(id);
+         if(element)
+           element.focus();
+       });
+     };
+   })
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('purple', {
@@ -32,6 +45,20 @@ bingo.directive('bsquare', function() {
     /*element.height($('div.bingosquare').width());*/
   };
 });
+
+bingo.directive('eventFocus', function(focus) {
+    return function(scope, elem, attr) {
+      elem.on(attr.eventFocus, function() {
+        focus(attr.eventFocusId);
+      });
+
+      // Removes bound events in the element itself
+      // when the scope is destroyed
+      scope.$on('$destroy', function() {
+        elem.off(attr.eventFocus);
+      });
+    };
+  });
 
 bingo.config(function($routeProvider) {
   $routeProvider
@@ -57,20 +84,19 @@ bingo.config(function($routeProvider) {
     });
 });
 
-bingo.controller('addCardSetController', function($scope, $http, $location, $mdDialog, bingosockets) {
+bingo.controller('addCardSetController', function($scope, $http, $location, $mdDialog, bingosockets, focus) {
   $scope.formData = {};
   $scope.formData.CardSetName = "";
   $scope.choices = [];
-  console.log($scope.choices.length);
 
-  $scope.addNewChoice = function(event) {
-    if (event) {
-      event.preventDefault();
-    }
+  $scope.addNewChoice = function(refocus) {
     var newItemNo = $scope.choices.length + 1;
     $scope.choices.push({
       'id': 'choice' + newItemNo
     });
+    if (refocus) {
+      focus('sqin_' + newItemNo);
+    }
   };
 
   generatenewchoices = function(blanks) {
@@ -98,9 +124,9 @@ bingo.controller('addCardSetController', function($scope, $http, $location, $mdD
       }
     }
     if ($scope.formData.CardSetName == "") {
-      confirm("card set has no name, please add one.")
+      confirm("Please add a card set name.");
     } else if (cards.length < 25) {
-      confirm("There are not at least 25 unique squares.")
+      confirm("There are not at least 25 unique squares.");
     } else {
       postdata = {
         "name": $scope.formData.CardSetName,
@@ -110,15 +136,15 @@ bingo.controller('addCardSetController', function($scope, $http, $location, $mdD
         .success(function(data) {
           // clear form? redirect?
           $mdDialog.show(
-                  $mdDialog.alert()
-                  .title('New Card Set')
-                  .content('You\'ve successfully added a new card set!')
-                  .ariaLabel('New card set confirmation')
-                  .ok('Home Page')
-                )
-                .finally(function() {
-                  $location.path('/');
-                });
+              $mdDialog.alert()
+              .title('New Card Set')
+              .content('You\'ve successfully added a new card set!')
+              .ariaLabel('New card set confirmation')
+              .ok('Home Page')
+            )
+            .finally(function() {
+              $location.path('/');
+            });
         })
         .error(function(data) {
           console.log("Error: " + data);

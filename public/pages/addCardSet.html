@@ -13,11 +13,12 @@
             </div>
           </md-input-container>
           <md-input-container ng-repeat="newcard in choices" layout='column'>
-            <label flex-order="1">Square {{$index +1}}</label>
-            <input flex-order="2" required name="squarename" ng-model="choices[$index].name">
-            <div flex-order="3"ng-messages="newCardSetForm.squarename.$error">
+            <label flex-order="1">Square {{$index + 1}}</label>
+            <input flex-order="2" id="sqin_{{$index + 1}}" md-maxlength="15" required name="squarename" ng-model="choices[$index].name">
+            <div flex-order="3" ng-messages="newCardSetForm.squarename.$error">
+              <div ng-message="md-maxlength">This must be less than 15 characters long.</div>
             </div>
-            <md-button flex-order="4" ng-if="$last" class="md-fab md-primary addcs" ng-click="addNewChoice()" aria-label="Add new square">
+            <md-button flex-order="4" ng-if="$last" class="md-fab md-primary addcs" ng-click="addNewChoice(true)" aria-label="Add new square">
               <md-icon md-font-icon="fa-plus" style="color: white;"></md-icon>
             </md-button>
           </md-input-container>
