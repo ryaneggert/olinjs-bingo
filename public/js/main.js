@@ -55,13 +55,59 @@ bingo.config(function($routeProvider) {
       templateUrl: '../pages/bingocard.html',
       controller: 'bingoController'
     })
-    .when('/cardset/edit', {
+    .when('/cardset/edit/:cardsetid', {
       templateUrl: '../pages/cardseteditor.html',
       controller: 'editCardSetController'
     });
 });
 
 //write a editCardSetController
+
+bingo.controller('editCardSetController', function($scope, $routeParams, $http, bingosockets) {
+  $scope.formData = {};
+  $scope.formData.cardsetid = $routeParams.cardsetid;
+
+  $http.post('/api/cardset/getinfo', {
+    cardsetid: $scope.formData.cardsetid    
+  })
+  .success(function(data) {
+    $scope.formData.name = data.name;
+    $scope.choices = data.choices;
+  })
+  .error(function(data) {
+    console.log("Error: " + data);
+  });
+
+  $scope.editCardSet = function() {
+    cards = [];
+    // quadratic performance, ok for small cardset, optimize if necessary
+    for (var i in $scope.choices) {
+      if (cards.indexOf($scope.choices[i].name) === -1) {
+        if ($scope.choices[i].name != null) {
+          cards.push($scope.choices[i].name);
+        }
+      }
+    }
+    if ($scope.formData.name == "") {
+      confirm("card set has no name, please add one.")
+    } else if (cards.length < 25) {
+      confirm("not enough unique cards (25), please add more.")
+    } else {
+      postdata = {
+        "name": $scope.formData.name,
+        "cards": cards
+      };
+      $http.post('/api/new/cardset', postdata)
+        .success(function(data) {
+          // clear form? redirect?
+          confirm("Congratulations! You have successfully added your card set!")
+        })
+        .error(function(data) {
+          console.log("Error: " + data);
+        });
+    }
+  };
+});
 
 bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
   $scope.formData = {};
@@ -229,7 +275,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
     })
     .success(function(data) {
       if (!data.restrict) {
-        $location.path('/cardset/edit');
+        $location.path('/cardset/edit/' + cardsetid);
       } else {
         confirm("Sorry, you don't have permisson to edit that cardset");
       }

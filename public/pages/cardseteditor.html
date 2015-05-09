@@ -1,12 +1,11 @@
 <div class = "addCardSet">
 <h2>Add a New Card Set</h2>
 <form>
-  <input type = "text" name = "name" placeholder = "Bingo card set name" ng-model = formData.name >
+  <input type = "text" name = "name" ng-model = formData.name >
   <br>
   <div class="form-group" data-ng-repeat="choice in choices">
     <label for="choice" ng-show="showChoiceLabel(choice)">Choices</label>
-    <input type="text" ng-model="choice.name" name="" placeholder="Bingo card square entry">
-    <button ng-show="showAddChoice(choice)" ng-click="addNewChoice()">Add another card</button>
+    <input type="text" ng-model="choice">
   </div>
-  <button type = "submit" ng-click = "addCardSet()">Add!</button>
+  <button type = "submit" ng-click = "editCardSet()">Edit!</button>
 </form>

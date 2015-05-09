@@ -40,6 +40,23 @@ routes.newCardSet = function(req, res) {
   });
 };
 
+routes.getinfoCardSet = function(req, res) {
+  CardSet.findOne({
+    _id: req.body.cardsetid
+  }, function(err, cardset) {
+    if (err) {
+      console.error("Couldn't find specified cardset", err);
+      res.status(500).send("Couldn't find specified cardset");
+    }
+
+    res.send({
+      name: cardset.name,
+      choices: cardset.square_set
+    });
+
+  });
+}
+
 routes.editCardSet = function(req, res) {
   CardSet.findOne({
     _id: req.body.cardsetid

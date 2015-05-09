@@ -48,6 +48,9 @@ app.post('/api/join/game', home.joinGame);
 
 app.post('/api/edit/cardset', game.editCardSet);
 
+app.post('/api/cardset/getinfo', game.getinfoCardSet);
+
+
 app.get('/*', auths.isAuth_pg, mainr.main);
 
 mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/bingo');
