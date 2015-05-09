@@ -3,7 +3,7 @@
     <md-card layout='column' layout-margin layout-align="space-between center">
       <h2 flex-order="1">Add a New Card Set</h2>
       <md-card-content flex-order="2">
-        <form name="newCardSetForm">
+        <form novalidate name="newCardSetForm">
           <md-input-container>
             <label>"Name"</label>
             <input md-maxlength="30" required name="CardSetName" ng-model="formData.CardSetName">
@@ -24,7 +24,7 @@
         </form>
       </md-card-content>
       <div class="md-actions" flex-order="3" layout="row" layout-align="end center">
-        <md-button class="md-raised md-accent">Add Card Set</md-button>
+        <md-button class="md-raised md-accent" type="submit" ng-click="addCardSet()">Add Card Set</md-button>
       </div>
     </md-card>
   </div>

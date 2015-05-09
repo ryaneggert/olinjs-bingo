@@ -57,9 +57,9 @@ bingo.config(function($routeProvider) {
     });
 });
 
-bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
+bingo.controller('addCardSetController', function($scope, $http, $location, $mdDialog, bingosockets) {
   $scope.formData = {};
-  $scope.formData.name = "";
+  $scope.formData.CardSetName = "";
   $scope.choices = [];
   console.log($scope.choices.length);
 
@@ -97,19 +97,28 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
         dupenames.push($scope.choices[i].name);
       }
     }
-    if ($scope.formData.name == "") {
+    if ($scope.formData.CardSetName == "") {
       confirm("card set has no name, please add one.")
     } else if (cards.length < 25) {
       confirm("There are not at least 25 unique squares.")
     } else {
       postdata = {
-        "name": $scope.formData.name,
+        "name": $scope.formData.CardSetName,
         "cards": cards
       };
       $http.post('/api/new/cardset', postdata)
         .success(function(data) {
           // clear form? redirect?
-          confirm("Congratulations! You have successfully added your card set!")
+          $mdDialog.show(
+                  $mdDialog.alert()
+                  .title('New Card Set')
+                  .content('You\'ve successfully added a new card set!')
+                  .ariaLabel('New card set confirmation')
+                  .ok('Home Page')
+                )
+                .finally(function() {
+                  $location.path('/');
+                });
         })
         .error(function(data) {
           console.log("Error: " + data);
