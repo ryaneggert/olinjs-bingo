@@ -34,19 +34,19 @@ app.use(session({
 
 app.use('/auth', auths);
 
-app.get('/api/home', home.home);
+app.get('/api/home', auths.isAuth_api, home.home);
 
-app.post('/api/new/cardset', game.newCardSet);
+app.post('/api/new/cardset', auths.isAuth_api, game.newCardSet);
 
-app.post('/api/new/game', game.newGame);
+app.post('/api/new/game', auths.isAuth_api, game.newGame);
 
-app.post('/api/game/initialize', game.init);
+app.post('/api/game/initialize', auths.isAuth_api, game.init);
 
-app.get('/api/user/cardsets', game.getUserCardsets);
+app.get('/api/user/cardsets', auths.isAuth_api, game.getUserCardsets);
 
 app.post('/api/delete/cardset', game.deleteCardset);
 
-app.post('/api/join/game', home.joinGame);
+app.post('/api/join/game', auths.isAuth_api, home.joinGame);
 
 app.post('/api/edit/cardset', game.editCardSet);
 
