@@ -14,7 +14,7 @@
         <div class="options">
           <div ng-repeat="cardset in formText">
             {{cardset.name}}
-            <input type="radio" name="cardset.id" value="{{cardset._id}}" ng-model=f ormData.card_set_id>
+            <input type="radio" name="cardset.id" value="{{cardset._id}}" ng-model="formData.card_set_id">
           </div>
         </div>
         <button type="submit" ng-click="addGame()">Create!</button>
