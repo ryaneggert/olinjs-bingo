@@ -2,12 +2,9 @@
 <h2>Add a New Card Set</h2>
 <form>
   <input type = "text" name = "name" ng-model = formData.name >
-  {{formData.name}}
   <br>
   <div class="form-group" data-ng-repeat="choice in choices">
-    <label for="choice" ng-show="showChoiceLabel(choice)">Choices</label>
-      {{choice}}
-    <input type="text" ng-model="choice">
+    <input type="text" ng-model="choice.name">
   </div>
   <button type = "submit" ng-click = "editCardSet()">Edit!</button>
 </form>

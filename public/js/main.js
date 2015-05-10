@@ -1,6 +1,6 @@
-var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngMaterial'])
+var bingo = angular.module('bingo', ['ngRoute', 'ngTouch', 'btford.socket-io', 'ngMaterial', 'ngMessages'])
   .factory('bingosockets', function(socketFactory) {
-    var myIoSocket = io.connect('http://localhost:3000');
+    var myIoSocket = io.connect();
     var scks = socketFactory({
       ioSocket: myIoSocket
     });
@@ -13,6 +13,19 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngMaterial'
     scks.forward('winner'); // forward win event
     scks.forward('gameclose');
     return scks;
+  })
+  .factory('focus', function($timeout) {
+    return function(id) {
+      // timeout makes sure that it is invoked after any other event has been triggered.
+      // e.g. click events that need to run before the focus or
+      // inputs elements that are in a disabled state but are enabled when those events
+      // are triggered.
+      $timeout(function() {
+        var element = document.getElementById(id);
+        if (element)
+          element.focus();
+      });
+    };
   })
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
@@ -30,6 +43,20 @@ var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngMaterial'
 bingo.directive('bsquare', function() {
   return function(scope, element, attrs) {
     /*element.height($('div.bingosquare').width());*/
+  };
+});
+
+bingo.directive('eventFocus', function(focus) {
+  return function(scope, elem, attr) {
+    elem.on(attr.eventFocus, function() {
+      focus(attr.eventFocusId);
+    });
+
+    // Removes bound events in the element itself
+    // when the scope is destroyed
+    scope.$on('$destroy', function() {
+      elem.off(attr.eventFocus);
+    });
   };
 });
 
@@ -61,10 +88,9 @@ bingo.config(function($routeProvider) {
     });
 });
 
-//write a editCardSetController
-
 bingo.controller('editCardSetController', function($scope, $routeParams, $http, bingosockets) {
   $scope.formData = {};
+  $scope.choices = [];
   $scope.formData.cardsetid = $routeParams.cardsetid;
 
   $http.post('/api/cardset/getinfo', {
@@ -72,8 +98,12 @@ bingo.controller('editCardSetController', function($scope, $routeParams, $http, 
   })
   .success(function(data) {
     $scope.formData.name = data.name;
-    $scope.choices = data.choices;
-    console.log($scope.choices);
+
+    data.choices.forEach(function (element, index, array) {
+      var obj = {};
+      obj.name = element;
+      $scope.choices.push(obj); 
+    });
   })
   .error(function(data) {
     console.log("Error: " + data);
@@ -83,17 +113,23 @@ bingo.controller('editCardSetController', function($scope, $routeParams, $http, 
     cards = [];
     // quadratic performance, ok for small cardset, optimize if necessary
 
-
-    $scope.choices.forEach(function (element, index, array) {
-      if (element !== null) {
-        cards.push(element);
+    cards = [];
+    var dupenames = [];
+    // quadratic performance, ok for small cardset, optimize if necessary
+    for (var i in $scope.choices) {
+      if (cards.indexOf($scope.choices[i].name) === -1) {
+        if ($scope.choices[i].name) {
+          cards.push($scope.choices[i].name);
+        }
+      } else {
+        dupenames.push($scope.choices[i].name);
       }
-    });
+    }
 
-    if ($scope.formData.name == "") {
-      confirm("card set has no name, please add one.")
+    if ($scope.formData.CardSetName == "") {
+      confirm("Please add a card set name.");
     } else if (cards.length < 25) {
-      confirm("not enough unique cards (25), please add more.")
+      confirm("There are not at least 25 unique squares.");
     } else {
       postdata = {
         "name": $scope.formData.name,
@@ -111,24 +147,27 @@ bingo.controller('editCardSetController', function($scope, $routeParams, $http, 
   };
 });
 
-bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
+bingo.controller('addCardSetController', function($scope, $http, $location, $mdDialog, bingosockets, focus) {
   $scope.formData = {};
-  $scope.formData.name = "";
+  $scope.formData.CardSetName = "";
+  $scope.choices = [];
 
-  $scope.choices = [{
-    id: 'choice1'
-  }, {
-    id: 'choice2'
-  }, {
-    id: 'choice3'
-  }];
-
-  $scope.addNewChoice = function() {
+  $scope.addNewChoice = function(refocus) {
     var newItemNo = $scope.choices.length + 1;
     $scope.choices.push({
       'id': 'choice' + newItemNo
     });
+    if (refocus) {
+      focus('sqin_' + newItemNo);
+    }
   };
+
+  generatenewchoices = function(blanks) {
+    for (var i = 0; i <= blanks; i++) {
+      $scope.addNewChoice();
+    }
+  };
+  generatenewchoices(25);
 
   $scope.showAddChoice = function(choice) {
     return choice.id === $scope.choices[$scope.choices.length - 1].id;
@@ -136,27 +175,39 @@ bingo.controller('addCardSetController', function($scope, $http, bingosockets) {
 
   $scope.addCardSet = function() {
     cards = [];
+    var dupenames = [];
     // quadratic performance, ok for small cardset, optimize if necessary
     for (var i in $scope.choices) {
       if (cards.indexOf($scope.choices[i].name) === -1) {
         if ($scope.choices[i].name != null) {
           cards.push($scope.choices[i].name);
         }
+      } else {
+        dupenames.push($scope.choices[i].name);
       }
     }
-    if ($scope.formData.name == "") {
-      confirm("card set has no name, please add one.")
+    if ($scope.formData.CardSetName == "") {
+      confirm("Please add a card set name.");
     } else if (cards.length < 25) {
-      confirm("not enough unique cards (25), please add more.")
+      confirm("There are not at least 25 unique squares.");
     } else {
       postdata = {
-        "name": $scope.formData.name,
+        "name": $scope.formData.CardSetName,
         "cards": cards
       };
       $http.post('/api/new/cardset', postdata)
         .success(function(data) {
           // clear form? redirect?
-          confirm("Congratulations! You have successfully added your card set!")
+          $mdDialog.show(
+              $mdDialog.alert()
+              .title('New Card Set')
+              .content('You\'ve successfully added a new card set!')
+              .ariaLabel('New card set confirmation')
+              .ok('Home Page')
+            )
+            .finally(function() {
+              $location.path('/');
+            });
         })
         .error(function(data) {
           console.log("Error: " + data);
@@ -311,7 +362,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
   // Make sure that we warn the user before they leave the gameroom
   $scope.$on('$locationChangeStart', function(event, next, current) {
     if ($scope.gameopen) {
-      var answer = confirm('Are you sure you want to leave the game room');
+      var answer = confirm('Are you sure you want to leave the game room?');
       if (!answer) {
         event.preventDefault();
       } else {

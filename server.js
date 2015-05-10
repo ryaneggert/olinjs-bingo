@@ -65,4 +65,4 @@ app = app.listen(process.env.PORT || PORT);
 
 // socket.io
 
-sockets(app, CookieParser, sessionStore);
+sockets(app);

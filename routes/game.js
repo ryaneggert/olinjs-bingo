@@ -50,14 +50,23 @@ routes.editedCardSet = function(req, res) {
   var name = req.body.name;
   var id = req.body.id;
 
-  CardSet.update({
+  console.log(square_set);
+  console.log(name);
+  console.log(id);
+
+  CardSet.findOneAndUpdate({
     _id: id
   }, {
     name: name,
     square_set: square_set
-  });
+  }).exec(function(err, cardset) {
+    if (err) {
+      console.error("Couldn't find specified cardset", err);
+      res.status(500).send("Couldn't find specified cardset");
+    }
 
-  res.end();
+    res.send(cardset);
+  });
 };
 
 routes.getinfoCardSet = function(req, res) {
