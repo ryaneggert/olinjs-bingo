@@ -12,9 +12,9 @@
 
 html,
 body {
-  font-family: 'Lato', sans-serif;
+  font-family: 'Raleway', sans-serif;
   opacity: .99;
-  background: rgb(225, 225, 225);
+  background-color: #0366fc;
 }
 
 .col-xs-5th,
@@ -51,7 +51,23 @@ body {
   /* Fuck you, bootstrap */
 }
 
-md-list-item#gamelist {
+div.decorator {
+  position: absolute;
+  bottom: 2rem;
+  left:2rem;
+}
+
+div.decorator img {
+  max-width: 60vw;
+}
+
+div.decorator2 {
+  position: absolute;
+  right: 2rem;
+  top:7rem;
+}
+
+.md-list-item#gamelist {
   cursor: pointer;
 }
 
