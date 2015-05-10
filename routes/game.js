@@ -40,6 +40,26 @@ routes.newCardSet = function(req, res) {
   });
 };
 
+routes.editedCardSet = function(req, res) {
+  /* Create and save new card set based on user input */
+
+  // Get data submitted by user from form
+  // TODO: DEFINITELY make this less stupid
+
+  var square_set = req.body.cards;
+  var name = req.body.name;
+  var id = req.body.id;
+
+  CardSet.update({
+    _id: id
+  }, {
+    name: name,
+    square_set: square_set
+  });
+
+  res.end();
+};
+
 routes.getinfoCardSet = function(req, res) {
   CardSet.findOne({
     _id: req.body.cardsetid
@@ -75,7 +95,7 @@ routes.editCardSet = function(req, res) {
         restrict: true
       });
     }
-})
+  })
 }
 
 routes.deleteCardset = function(req, res) {
@@ -100,7 +120,7 @@ routes.deleteCardset = function(req, res) {
     } else {
       res.send({
         restrict: true
-    });
+      });
     }
   });
 }

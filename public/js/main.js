@@ -73,6 +73,7 @@ bingo.controller('editCardSetController', function($scope, $routeParams, $http, 
   .success(function(data) {
     $scope.formData.name = data.name;
     $scope.choices = data.choices;
+    console.log($scope.choices);
   })
   .error(function(data) {
     console.log("Error: " + data);
@@ -81,13 +82,14 @@ bingo.controller('editCardSetController', function($scope, $routeParams, $http, 
   $scope.editCardSet = function() {
     cards = [];
     // quadratic performance, ok for small cardset, optimize if necessary
-    for (var i in $scope.choices) {
-      if (cards.indexOf($scope.choices[i].name) === -1) {
-        if ($scope.choices[i].name != null) {
-          cards.push($scope.choices[i].name);
-        }
+
+
+    $scope.choices.forEach(function (element, index, array) {
+      if (element !== null) {
+        cards.push(element);
       }
-    }
+    });
+
     if ($scope.formData.name == "") {
       confirm("card set has no name, please add one.")
     } else if (cards.length < 25) {
@@ -95,12 +97,12 @@ bingo.controller('editCardSetController', function($scope, $routeParams, $http, 
     } else {
       postdata = {
         "name": $scope.formData.name,
-        "cards": cards
+        "cards": cards,
+        "id": $scope.formData.cardsetid
       };
-      $http.post('/api/new/cardset', postdata)
+      $http.post('/api/cardset/editSubmit', postdata)
         .success(function(data) {
-          // clear form? redirect?
-          confirm("Congratulations! You have successfully added your card set!")
+          confirm("Congratulations! You have successfully edited your card set!");
         })
         .error(function(data) {
           console.log("Error: " + data);

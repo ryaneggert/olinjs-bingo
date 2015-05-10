@@ -52,6 +52,9 @@ app.post('/api/edit/cardset', game.editCardSet);
 
 app.post('/api/cardset/getinfo', game.getinfoCardSet);
 
+app.post('/api/cardset/editSubmit', game.editedCardSet);
+
+
 
 app.get('/*', auths.isAuth_pg, mainr.main);
 
