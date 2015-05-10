@@ -1,12 +1,44 @@
-<div class = "addCardSet">
-<h2>Add a New Card Set</h2>
-<form>
-  <input type = "text" name = "name" placeholder = "Bingo card set name" ng-model = formData.name >
+<div class="addCardSet">
+  <div class="container">
+    <md-card layout='column' layout-margin layout-align="space-between center">
+      <h2 flex-order="1">Add a New Card Set</h2>
+      <md-card-content flex-order="2">
+        <form novalidate name="newCardSetForm">
+          <md-input-container>
+            <label>"Name"</label>
+            <input md-maxlength="30" required name="CardSetName" ng-model="formData.CardSetName">
+            <div ng-messages="newCardSetForm.CardSetName.$error">
+              <div ng-message="required">This is required.</div>
+              <div ng-message="md-maxlength">We suggest limiting the name to fewer than 30 characters.</div>
+            </div>
+          </md-input-container>
+          <div ng-repeat="newcard in choices">
+            <md-input-container layout='column'>
+              <label flex-order="1">Square {{$index + 1}}</label>
+              <input flex-order="2" id="sqin_{{$index + 1}}" md-maxlength="15" required name="squarename{{$index}}" ng-model="choices[$index].name">
+              <div flex-order="3" ng-messages="newCardSetForm.squarename{{$index}}.$error">
+                <div ng-message="md-maxlength">We recommend this using fewer than 15 characters.</div>
+              </div>
+            </md-input-container>
+            <md-button ng-if="$last" class="md-fab md-primary addcs" ng-click="addNewChoice(true)" aria-label="Add new square">
+              <md-icon md-font-icon="fa fa-plus" style="color: white;"></md-icon>
+            </md-button>
+          </div>
+        </form>
+      </md-card-content>
+      <div class="md-actions" flex-order="3" layout="row" layout-align="end center">
+        <md-button class="md-raised md-accent" type="submit" ng-click="addCardSet()">Add Card Set</md-button>
+      </div>
+    </md-card>
+  </div>
+</div>
+<!-- <form>
+  <input type="text" name="name" placeholder="Bingo card set name" ng-model="formData.name">
   <br>
   <div class="form-group" data-ng-repeat="choice in choices">
     <label for="choice" ng-show="showChoiceLabel(choice)">Choices</label>
     <input type="text" ng-model="choice.name" name="" placeholder="Bingo card square entry">
     <button ng-show="showAddChoice(choice)" ng-click="addNewChoice()">Add another card</button>
   </div>
-  <button type = "submit" ng-click = "addCardSet()">Add!</button>
-</form>
+  <button type="submit" ng-click="addCardSet()">Add!</button>
+</form> -->
