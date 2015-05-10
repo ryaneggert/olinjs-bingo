@@ -15,18 +15,18 @@ var bingo = angular.module('bingo', ['ngRoute', 'ngTouch', 'btford.socket-io', '
     return scks;
   })
   .factory('focus', function($timeout) {
-     return function(id) {
-       // timeout makes sure that it is invoked after any other event has been triggered.
-       // e.g. click events that need to run before the focus or
-       // inputs elements that are in a disabled state but are enabled when those events
-       // are triggered.
-       $timeout(function() {
-         var element = document.getElementById(id);
-         if(element)
-           element.focus();
-       });
-     };
-   })
+    return function(id) {
+      // timeout makes sure that it is invoked after any other event has been triggered.
+      // e.g. click events that need to run before the focus or
+      // inputs elements that are in a disabled state but are enabled when those events
+      // are triggered.
+      $timeout(function() {
+        var element = document.getElementById(id);
+        if (element)
+          element.focus();
+      });
+    };
+  })
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('purple', {
@@ -47,18 +47,18 @@ bingo.directive('bsquare', function() {
 });
 
 bingo.directive('eventFocus', function(focus) {
-    return function(scope, elem, attr) {
-      elem.on(attr.eventFocus, function() {
-        focus(attr.eventFocusId);
-      });
+  return function(scope, elem, attr) {
+    elem.on(attr.eventFocus, function() {
+      focus(attr.eventFocusId);
+    });
 
-      // Removes bound events in the element itself
-      // when the scope is destroyed
-      scope.$on('$destroy', function() {
-        elem.off(attr.eventFocus);
-      });
-    };
-  });
+    // Removes bound events in the element itself
+    // when the scope is destroyed
+    scope.$on('$destroy', function() {
+      elem.off(attr.eventFocus);
+    });
+  };
+});
 
 bingo.config(function($routeProvider) {
   $routeProvider
