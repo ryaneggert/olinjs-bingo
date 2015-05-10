@@ -27,6 +27,17 @@ var bingo = angular.module('bingo', ['ngRoute', 'ngTouch', 'btford.socket-io', '
       });
     };
   })
+  .service('AuthInterceptor', function($window) {
+    var service = this;
+
+    service.response = function(response) {
+      if (response.data === 'redir') {
+        console.log('DEAUTHD');
+        $window.location.reload();
+      }
+      return response;
+    };
+  })
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('purple', {
@@ -61,7 +72,7 @@ bingo.directive('eventFocus', function(focus) {
 });
 
 bingo.config(function($httpProvider) {
-  $httpProvider.interceptors.push('APIInterceptor');
+  $httpProvider.interceptors.push('AuthInterceptor');
 });
 
 bingo.config(function($routeProvider) {
