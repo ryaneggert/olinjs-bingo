@@ -1,35 +1,38 @@
 .newGame {
-	background-color: #0058AE;
-	width: 100%;
-	text-align: center;
-	position: absolute;
-	top:0;
-	height: 100vh;
+  background-color: #0058AE;
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  height: 100vh;
 }
 
 .newGame .container {
-	border-radius: 3px;
-	background-color: white;
-	margin-left:15%;
-	margin-right: 15%;
-	width: 70%;
-	position: absolute;
-	top:9rem;
-	height: 75vh;
-	  -webkit-box-shadow:  .1rem .1rem .5rem #333;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
-  -moz-box-shadow:    .1rem .1rem .5rem #333;  /* Firefox 3.5 - 3.6 */
-  box-shadow:         .1rem .1rem .5rem #333;
+  border-radius: 3px;
+  background-color: white;
+  margin-left: 15%;
+  margin-right: 15%;
+  width: 70%;
+  position: absolute;
+  top: 9rem;
+  height: 75vh;
+  -webkit-box-shadow: .1rem .1rem .5rem #333;
+  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+
+  -moz-box-shadow: .1rem .1rem .5rem #333;
+  /* Firefox 3.5 - 3.6 */
+
+  box-shadow: .1rem .1rem .5rem #333;
 }
 
 .newGame h2 {
-	font-size: 3.5rem;
-	color: #333;
+  font-size: 3.5rem;
+  color: #333;
 }
 
 .newGame .options {
-	padding:.5rem 5rem;
-	height: 30vh;
-	overflow: scroll;
-	text-align: left;
+  padding: .5rem 5rem;
+  height: 30vh;
+  overflow: scroll;
+  text-align: left;
 }
-
