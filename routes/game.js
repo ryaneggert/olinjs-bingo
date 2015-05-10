@@ -75,6 +75,33 @@ routes.editCardSet = function(req, res) {
         restrict: true
       });
     }
+})
+}
+
+routes.deleteCardset = function(req, res) {
+  var card_set_id = req.body.cardset_id;
+
+  CardSet.findOne({
+    _id: card_set_id
+  }, function(err, cardset) {
+    if (err) {
+      console.error("Couldn't find specified cardset", err);
+      res.status(500).send("Couldn't find specified cardset");
+    }
+
+    if (cardset.creator == req.session.user._id) {
+      CardSet.findOneAndRemove({
+        _id: card_set_id
+      }, function(err, cardset) {
+        res.send({
+          restrict: false
+        });
+      })
+    } else {
+      res.send({
+        restrict: true
+    });
+    }
   });
 }
 

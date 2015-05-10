@@ -215,7 +215,7 @@ bingo.controller('addGameController', function($scope, $http, $location) {
   };
 });
 
-bingo.controller('homeController', function($scope, $http, $location, bingosockets) {
+bingo.controller('homeController', function($scope, $http, $location, $window, bingosockets) {
   $scope.currentgames = []; // variable to hold list of current bingo games
   $http.get('/api/home')
     .success(function(data) {
@@ -286,8 +286,21 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   };
 
   $scope.deleteCardSet = function(cardsetid) {
-    //$http.post(...)
-    console.log('Go write a "delete card set" controller');
+    $http.post('/api/delete/cardset', {
+        cardset_id: cardsetid
+      })
+      .success(function(data) {
+        if (data.restrict) {
+          confirm('Sorry but you are not permitted to do that');
+        } else {
+          $scope.cardsets = $scope.cardsets.filter(function (cardset) {
+            return cardset._id !== cardsetid;
+          });
+        }
+      })
+      .error(function(data) {
+        console.log("Error: " + data)
+      });
   };
 });
 
