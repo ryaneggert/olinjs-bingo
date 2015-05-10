@@ -1,6 +1,6 @@
 var bingo = angular.module('bingo', ['ngRoute', 'btford.socket-io', 'ngMaterial'])
   .factory('bingosockets', function(socketFactory) {
-    var myIoSocket = io.connect('http://localhost:3000');
+    var myIoSocket = io.connect();
     var scks = socketFactory({
       ioSocket: myIoSocket
     });
@@ -232,7 +232,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
   // Make sure that we warn the user before they leave the gameroom
   $scope.$on('$locationChangeStart', function(event, next, current) {
     if ($scope.gameopen) {
-      var answer = confirm('Are you sure you want to leave the game room');
+      var answer = confirm('Are you sure you want to leave the game room?');
       if (!answer) {
         event.preventDefault();
       } else {
