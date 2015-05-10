@@ -1,9 +1,133 @@
+@import url(//fonts.googleapis.com/css?family=Raleway:300,400,500);
+
+body {
+  background-color: #0366fc;
+  font-family: "Raleway", sans-serif;
+  opacity: 0.99;
+}
+
+p {
+	color:#ddd;
+	font-size: 1.5rem;
+}
+
+h1 {
+	font-weight: 400;
+	font-size: 6.5rem;
+	color:#fff;
+}
+
+a {
+	color: #0366fc;
+}
+
+.navbar {
+  -webkit-box-shadow: 0 0 1rem #333;
+  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+
+  -moz-box-shadow: 0 0 1rem #333;
+  /* Firefox 3.5 - 3.6 */
+
+  box-shadow: 0 0 1rem #333;
+  border: none !important;
+  /* Fuck you, bootstrap */
+}
+
+div.login {
+	background-color: #222;
+	width: 74vw;
+	margin-left:13vw;
+	margin-right: 13vw;
+	text-align: center;
+	padding: 1rem;
+	position: absolute;
+	top:15vh;
+	height: 70vh;
+	border-radius: 3px;
+	  -webkit-box-shadow: .25rem .25rem .25rem #333;
+	  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+
+	  -moz-box-shadow: .25rem .25rem .25rem #333;
+	  /* Firefox 3.5 - 3.6 */
+
+	  box-shadow: .25rem .25rem .25rem #333;
+	  border: none !important;
+	  /* Fuck you, bootstrap */
+}
+
 div.authbox {
   min-height: 10vh;
   padding: 5px;
   padding-top: 20px;
 }
 
-body {
-  background-color: rgb(225, 225, 225)
+div.decorator {
+	position: absolute;
+	bottom: 2rem;
+	left:2rem;
+}
+
+div.decorator img {
+	max-width: 60vw;
+}
+
+div.decorator2 {
+	position: absolute;
+	right: 2rem;
+	top:7rem;
+}
+
+div.loginBox {
+	max-width: 35rem;
+	margin: 0 auto;
+	background-color: #fafafa;
+}
+
+div.content {
+	padding: 5rem;
+}
+
+.loginButton {
+	background-color: #0366fc;
+	border-color:#0366fc;
+}
+
+.loginButton:hover {
+	background-color: #063a92;
+}
+
+.tab-content {
+	padding-left:1rem;
+	padding-right: 1rem;
+	padding-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+
+  h1 {
+	font-weight: 400;
+	font-size: 4.5rem;
+  }
+
+  div.login	{
+  	width: 84vw;
+  	margin-left: 8vw;
+  	margin-left: 8vw;
+  	top: 12vh;
+  	min-height: 50rem;
+  }
+
+  div.content {
+  	padding:2rem;
+  }
+
+  div.decorator {
+	position: absolute;
+	bottom: .5rem;
+	left:1rem;
+	}
+  
+  div.decorator2 {
+  	display: none;
+	}
 }

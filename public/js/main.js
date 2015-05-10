@@ -276,15 +276,19 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
         var currTime = new Date();
         var currTime_ms = currTime.getTime();
 
-        // The number of milliseconds
+        // The number of milliseconds in countdown
         var diff_ms = d_ms - currTime_ms;
         if (diff_ms >= 0) {
           $scope.countdown = diff_ms;
         };
         // If a user creates a game with a start time that has already passed
         if (diff_ms < 0) {
-          $scope.countdown = "This game has already started!";
+          $scope.countdown = "This game start time has passed!";
         };
+        if (data.game.isOpen) {
+          $scope.countdown = "The game has begun!";
+        };
+
         // Set the game to start at specified time
         setTimeout(function(){ 
           /* ... Start the game now... ... */ 
@@ -345,11 +349,6 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
       }
     });
   };
-
-  var dateItHappens = new Date() //
-  // ... set the dateItHappens variable up ...
-  var millisTillOccurence = dateItHappens.getTime() - new Date().getTime();
-  setTimeout(function(){ /* ... function you want to call ... */ }, millisTillOccurence);
 
   //End button
   $scope.endgame = function(event) {
