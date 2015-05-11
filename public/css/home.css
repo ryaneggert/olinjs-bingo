@@ -18,6 +18,15 @@
   font-size: 1.5rem;
 }
 
+.decorator img {
+  display: none;
+}
+
+.decorator3 {
+  position: absolute;
+  left: 3rem;
+  bottom: 2rem;
+}
 .home .banner {
   padding-top: 6rem;
 }
