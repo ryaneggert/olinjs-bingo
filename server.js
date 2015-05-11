@@ -44,15 +44,15 @@ app.post('/api/game/initialize', auths.isAuth_api, game.init);
 
 app.get('/api/user/cardsets', auths.isAuth_api, game.getUserCardsets);
 
-app.post('/api/delete/cardset', game.deleteCardset);
+app.post('/api/delete/cardset', auths.isAuth_api, game.deleteCardset);
 
 app.post('/api/join/game', auths.isAuth_api, home.joinGame);
 
-app.post('/api/edit/cardset', game.editCardSet);
+app.post('/api/edit/cardset', auths.isAuth_api, game.editCardSet);
 
-app.post('/api/cardset/getinfo', game.getinfoCardSet);
+app.post('/api/cardset/getinfo', auths.isAuth_api, game.getinfoCardSet);
 
-app.post('/api/cardset/editSubmit', game.editedCardSet);
+app.post('/api/cardset/editSubmit', auths.isAuth_api, game.editedCardSet);
 
 
 
