@@ -1,11 +1,10 @@
 .addCardSet {
-  background-color: #0058AE;
-  /*background: rgb(225, 225, 225);*/
   width: 100%;
   /*text-align: center;*/
   position: absolute;
   top:0;
   height: 100vh;
+  padding:2rem;
 }
 
 .addCardSet input {

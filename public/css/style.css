@@ -8,11 +8,24 @@
     dark: 0182FF
     darker: 0058AE
 */
+@import url(//fonts.googleapis.com/css?family=Lato:300,400,500);
+@import url(//fonts.googleapis.com/css?family=Pacifico:400,500);
+
 
 html,
 body {
   font-family: 'Lato', sans-serif;
   opacity: .99;
+  background-color: #0366fc;
+}
+
+.navbar-brand {
+  font-family: 'Pacifico';
+  font-size: 2.5rem;
+}
+
+.navbar {
+  height:5.75rem !important;
 }
 
 .col-xs-5th,
@@ -47,6 +60,24 @@ body {
   box-shadow: 0 0 1rem #333;
   border: none !important;
   /* Fuck you, bootstrap */
+}
+
+div.decorator {
+  position: absolute;
+  bottom: 2rem;
+  left:2rem;
+  z-index: 0;
+}
+
+div.decorator img {
+  max-width: 60vw;
+}
+
+div.decorator2 {
+  position: absolute;
+  right: 2rem;
+  top:8rem;
+  z-index: 0;
 }
 
 md-list-item#gamelist {
