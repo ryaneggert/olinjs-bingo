@@ -270,6 +270,8 @@ bingo.controller('addGameController', function($scope, $http, $location) {
 
   $scope.addGame = function() {
 
+    console.log($scope.formData);
+
     if (!$scope.formData.room || !$scope.formData.card_set_id) {
       confirm("Not enough information to create a new game.");
       return;
