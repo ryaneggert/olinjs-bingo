@@ -411,7 +411,7 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
         $scope.displayNumber = 1;
         $scope.gamescore = data.card.score;
         $scope.gameopen = data.game.isOpen;
-        $scope.winners = data.game.winners; << << << < HEAD
+        $scope.winners = data.game.winners;
 
         var startTime = data.game.start_time;
         //Convert to datetime object
@@ -453,29 +453,6 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
 
         $scope.players = []; // This value is populated using sockets.
 
-        === === =
-
-        var startTime = data.game.start_time;
-        //Convert to datetime object
-        var d = new Date(startTime);
-        console.log(d);
-        var d_ms = d.getTime();
-
-        var currTime = new Date();
-        var currTime_ms = currTime.getTime();
-
-        // The number of milliseconds
-        var diff_ms = d_ms - currTime_ms;
-        $scope.countdown = diff_ms;
-
-        $scope.roomname = data.game.room;
-        $scope.currentUser = data.user;
-        $scope.host = data.game.host;
-        $scope.host_name = data.game.host.name;
-
-        $scope.players = []; // This value is populated using sockets.
-
-        >>> >>> > 67 a07d2adaaab264b438ff5da3bb2d9805dfc63a
         $scope.ishost = $scope.currentUser._id == $scope.host._id;
 
         $scope.showstartbutton = !data.game.isOpen && $scope.ishost;
