@@ -40,6 +40,52 @@ routes.newCardSet = function(req, res) {
   });
 };
 
+routes.editedCardSet = function(req, res) {
+  /* Create and save new card set based on user input */
+
+  // Get data submitted by user from form
+  // TODO: DEFINITELY make this less stupid
+
+  var square_set = req.body.cards;
+  var name = req.body.name;
+  var id = req.body.id;
+
+  console.log(square_set);
+  console.log(name);
+  console.log(id);
+
+  CardSet.findOneAndUpdate({
+    _id: id
+  }, {
+    name: name,
+    square_set: square_set
+  }).exec(function(err, cardset) {
+    if (err) {
+      console.error("Couldn't find specified cardset", err);
+      res.status(500).send("Couldn't find specified cardset");
+    }
+
+    res.send(cardset);
+  });
+};
+
+routes.getinfoCardSet = function(req, res) {
+  CardSet.findOne({
+    _id: req.body.cardsetid
+  }, function(err, cardset) {
+    if (err) {
+      console.error("Couldn't find specified cardset", err);
+      res.status(500).send("Couldn't find specified cardset");
+    }
+
+    res.send({
+      name: cardset.name,
+      choices: cardset.square_set
+    });
+
+  });
+}
+
 routes.editCardSet = function(req, res) {
   CardSet.findOne({
     _id: req.body.cardsetid
@@ -58,6 +104,52 @@ routes.editCardSet = function(req, res) {
         restrict: true
       });
     }
+  })
+}
+
+routes.deleteCardset = function(req, res) {
+  var card_set_id = req.body.cardset_id;
+  var card_in_use = true;
+
+  CardSet.findOne({
+    _id: card_set_id
+  }, function(err, cardset) {
+    if (err) {
+      console.error("Couldn't find specified cardset", err);
+      res.status(500).send("Couldn't find specified cardset");
+    }
+
+    Game.find({
+      cardset: card_set_id
+    }, function(err, list) {
+      if (err) {
+        console.error("Error finding the game", err);
+        res.status(500).send("Error finding the game");
+      }
+
+      list = list.filter(function (game) {
+        return !game.isFinished;
+      })
+
+      if (!list) {
+        card_in_use = false;
+      }
+
+      if (cardset.creator == req.session.user._id && !card_in_use) {
+        CardSet.findOneAndRemove({
+          _id: card_set_id
+        }, function(err, cardset) {
+          res.send({
+            restrict: false
+          });
+        })
+      } else {
+        res.send({
+          restrict: true
+        });
+      }
+
+    })
   });
 }
 

@@ -1,12 +1,42 @@
 <div class = "addCardSet">
 <h2>Add a New Card Set</h2>
 <form>
-  <input type = "text" name = "name" placeholder = "Bingo card set name" ng-model = formData.name >
+  <input type = "text" name = "name" ng-model = formData.name >
   <br>
   <div class="form-group" data-ng-repeat="choice in choices">
-    <label for="choice" ng-show="showChoiceLabel(choice)">Choices</label>
-    <input type="text" ng-model="choice.name" name="" placeholder="Bingo card square entry">
-    <button ng-show="showAddChoice(choice)" ng-click="addNewChoice()">Add another card</button>
+    <input type="text" ng-model="choice.name">
   </div>
-  <button type = "submit" ng-click = "addCardSet()">Add!</button>
+  <button type = "submit" ng-click = "editCardSet()">Edit!</button>
 </form>
+
+<div class="addCardSet">
+  <div class="container">
+    <md-card layout='column' layout-margin layout-align="space-between center">
+      <h2 flex-order="1">Add a New Card Set</h2>
+      <md-card-content flex-order="2">
+        <form novalidate name="editCardSetForm">
+          <md-input-container>
+            <label>"Name"</label>
+            <input md-maxlength="30" required name="CardSetName" ng-model="formData.name">
+            <div ng-messages="editCardSetForm.CardSetName.$error">
+              <div ng-message="required">This is required.</div>
+              <div ng-message="md-maxlength">We suggest limiting the name to fewer than 30 characters.</div>
+            </div>
+          </md-input-container>
+          <div ng-repeat="choice in choices">
+            <md-input-container layout='column'>
+              <label flex-order="1">Square {{$index + 1}}</label>
+              <input flex-order="2" id="sqin_{{$index + 1}}" md-maxlength="15" required name="squarename{{$index}}" ng-model="choice.name">
+              <div flex-order="3" ng-messages="editCardSetForm.squarename{{$index}}.$error">
+                <div ng-message="md-maxlength">We recommend this using fewer than 15 characters.</div>
+              </div>
+            </md-input-container>
+          </div>
+        </form>
+      </md-card-content>
+      <div class="md-actions" flex-order="3" layout="row" layout-align="end center">
+        <md-button class="md-raised md-accent" type="submit" ng-click="editCardSet()">Edit Card Set</md-button>
+      </div>
+    </md-card>
+  </div>
+</div>
