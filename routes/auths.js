@@ -14,7 +14,8 @@ router.get('/login', function(req, res) {
 });
 
 router.get('/login/olin', function(req, res) {
-  res.redirect('http://www.olinapps.com/external?callback=' + 'http://localhost:3000/auth/login/olin/cb');
+  var callbackurl = process.env.OAREDIR || 'http://localhost:3000/auth/login/olin/cb';
+  res.redirect('http://www.olinapps.com/external?callback=' + callbackurl);
 });
 
 router.get('/logout', function(req, res) {
@@ -79,6 +80,6 @@ module.exports.isAuth_api = function(req, res, next) {
   if (req.session.user) {
     return next();
   } else {
-    res.json(null); // send blank JSON (or add your behavior here)
+    res.send('redir'); // send blank JSON (or add your behavior here)
   }
 };
