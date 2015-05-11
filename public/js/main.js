@@ -109,20 +109,20 @@ bingo.controller('editCardSetController', function($scope, $routeParams, $http, 
   $scope.formData.cardsetid = $routeParams.cardsetid;
 
   $http.post('/api/cardset/getinfo', {
-    cardsetid: $scope.formData.cardsetid
-  })
-  .success(function(data) {
-    $scope.formData.name = data.name;
+      cardsetid: $scope.formData.cardsetid
+    })
+    .success(function(data) {
+      $scope.formData.name = data.name;
 
-    data.choices.forEach(function (element, index, array) {
-      var obj = {};
-      obj.name = element;
-      $scope.choices.push(obj);
+      data.choices.forEach(function(element, index, array) {
+        var obj = {};
+        obj.name = element;
+        $scope.choices.push(obj);
+      });
+    })
+    .error(function(data) {
+      console.log("Error: " + data);
     });
-  })
-  .error(function(data) {
-    console.log("Error: " + data);
-  });
 
   $scope.editCardSet = function() {
     cards = [];
@@ -206,7 +206,7 @@ bingo.controller('addCardSetController', function($scope, $http, $location, $mdD
       confirm("Please add a card set name.");
     } else if (cards.length < 25) {
       confirm("Sorry, there are not at least 25 unique squares. Please make sure there\'s' no repeated content and that all content uses fewer than 15 characters.");
-    // } else if () {
+      // } else if () {
 
     } else {
       postdata = {
@@ -342,18 +342,18 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   $scope.editCardSet = function(cardsetid) {
     //$location.path('/cardset/edit') //Make API more "RESTful" (e.g. /<object>/<action>)
     $http.post('/api/edit/cardset', {
-      cardsetid: cardsetid
-    })
-    .success(function(data) {
-      if (!data.restrict) {
-        $location.path('/cardset/edit/' + cardsetid);
-      } else {
-        confirm("Sorry, you don't have permisson to edit that cardset");
-      }
-    })
-    .error(function(data) {
-      console.log("Error: " + data);
-    });
+        cardsetid: cardsetid
+      })
+      .success(function(data) {
+        if (!data.restrict) {
+          $location.path('/cardset/edit/' + cardsetid);
+        } else {
+          confirm("Sorry, you don't have permisson to edit that cardset");
+        }
+      })
+      .error(function(data) {
+        console.log("Error: " + data);
+      });
   };
 
   $scope.deleteCardSet = function(cardsetid) {
@@ -362,9 +362,9 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
       })
       .success(function(data) {
         if (data.restrict) {
-          confirm('Sorry but you are not permitted to do that');
+          confirm('Sorry but you are not permitted to do that, either because you are not the owner of the cardset or the cardset is currently used by a game.');
         } else {
-          $scope.cardsets = $scope.cardsets.filter(function (cardset) {
+          $scope.cardsets = $scope.cardsets.filter(function(cardset) {
             return cardset._id !== cardsetid;
           });
         }
@@ -438,8 +438,8 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
         };
 
         // Set the game to start at specified time
-        setTimeout(function(){ 
-          /* ... Start the game now... ... */ 
+        setTimeout(function() {
+          /* ... Start the game now... ... */
           bingosockets.emit('game', {
             'type': 'start',
             'data': {
