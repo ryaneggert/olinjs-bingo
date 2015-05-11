@@ -120,18 +120,18 @@ routes.deleteCardset = function(req, res) {
     }
 
     Game.find({
-      cardset: card_set_id
+      card_set: card_set_id
     }, function(err, list) {
       if (err) {
         console.error("Error finding the game", err);
         res.status(500).send("Error finding the game");
       }
 
-      list = list.filter(function (game) {
+      list = list.filter(function(game) {
         return !game.isFinished;
       })
 
-      if (!list) {
+      if (!list.length) {
         card_in_use = false;
       }
 
