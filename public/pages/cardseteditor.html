@@ -1,18 +1,7 @@
-<div class = "addCardSet">
-<h2>Add a New Card Set</h2>
-<form>
-  <input type = "text" name = "name" ng-model = formData.name >
-  <br>
-  <div class="form-group" data-ng-repeat="choice in choices">
-    <input type="text" ng-model="choice.name">
-  </div>
-  <button type = "submit" ng-click = "editCardSet()">Edit!</button>
-</form>
-
 <div class="addCardSet">
   <div class="container">
     <md-card layout='column' layout-margin layout-align="space-between center">
-      <h2 flex-order="1">Add a New Card Set</h2>
+      <h2 flex-order="1">Edit Card Set</h2>
       <md-card-content flex-order="2">
         <form novalidate name="editCardSetForm">
           <md-input-container>
