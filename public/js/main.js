@@ -96,7 +96,70 @@ bingo.config(function($routeProvider) {
     .when('/game/:gameid', {
       templateUrl: '../pages/bingocard.html',
       controller: 'bingoController'
+    })
+    .when('/cardset/edit/:cardsetid', {
+      templateUrl: '../pages/cardseteditor.html',
+      controller: 'editCardSetController'
     });
+});
+
+bingo.controller('editCardSetController', function($scope, $routeParams, $http, bingosockets) {
+  $scope.formData = {};
+  $scope.choices = [];
+  $scope.formData.cardsetid = $routeParams.cardsetid;
+
+  $http.post('/api/cardset/getinfo', {
+    cardsetid: $scope.formData.cardsetid    
+  })
+  .success(function(data) {
+    $scope.formData.name = data.name;
+
+    data.choices.forEach(function (element, index, array) {
+      var obj = {};
+      obj.name = element;
+      $scope.choices.push(obj); 
+    });
+  })
+  .error(function(data) {
+    console.log("Error: " + data);
+  });
+
+  $scope.editCardSet = function() {
+    cards = [];
+    // quadratic performance, ok for small cardset, optimize if necessary
+
+    cards = [];
+    var dupenames = [];
+    // quadratic performance, ok for small cardset, optimize if necessary
+    for (var i in $scope.choices) {
+      if (cards.indexOf($scope.choices[i].name) === -1) {
+        if ($scope.choices[i].name) {
+          cards.push($scope.choices[i].name);
+        }
+      } else {
+        dupenames.push($scope.choices[i].name);
+      }
+    }
+
+    if ($scope.formData.CardSetName == "") {
+      confirm("Please add a card set name.");
+    } else if (cards.length < 25) {
+      confirm("There are not at least 25 unique squares.");
+    } else {
+      postdata = {
+        "name": $scope.formData.name,
+        "cards": cards,
+        "id": $scope.formData.cardsetid
+      };
+      $http.post('/api/cardset/editSubmit', postdata)
+        .success(function(data) {
+          confirm("Congratulations! You have successfully edited your card set!");
+        })
+        .error(function(data) {
+          console.log("Error: " + data);
+        });
+    }
+  };
 });
 
 bingo.controller('addCardSetController', function($scope, $http, $location, $mdDialog, bingosockets, focus) {
@@ -271,12 +334,37 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
   };
   $scope.editCardSet = function(cardsetid) {
     //$location.path('/cardset/edit') //Make API more "RESTful" (e.g. /<object>/<action>)
-    console.log('Go write an "edit card set" controller');
+    $http.post('/api/edit/cardset', {
+      cardsetid: cardsetid
+    })
+    .success(function(data) {
+      if (!data.restrict) {
+        $location.path('/cardset/edit/' + cardsetid);
+      } else {
+        confirm("Sorry, you don't have permisson to edit that cardset");
+      }
+    })
+    .error(function(data) {
+      console.log("Error: " + data);
+    });
   };
 
   $scope.deleteCardSet = function(cardsetid) {
-    //$http.post(...)
-    console.log('Go write a "delete card set" controller');
+    $http.post('/api/delete/cardset', {
+        cardset_id: cardsetid
+      })
+      .success(function(data) {
+        if (data.restrict) {
+          confirm('Sorry but you are not permitted to do that');
+        } else {
+          $scope.cardsets = $scope.cardsets.filter(function (cardset) {
+            return cardset._id !== cardsetid;
+          });
+        }
+      })
+      .error(function(data) {
+        console.log("Error: " + data)
+      });
   };
 });
 
