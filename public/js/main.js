@@ -103,7 +103,7 @@ bingo.config(function($routeProvider) {
     });
 });
 
-bingo.controller('editCardSetController', function($scope, $routeParams, $http, bingosockets) {
+bingo.controller('editCardSetController', function($scope, $routeParams, $http, $location, $mdDialog, bingosockets) {
   $scope.formData = {};
   $scope.choices = [];
   $scope.formData.cardsetid = $routeParams.cardsetid;
@@ -153,7 +153,16 @@ bingo.controller('editCardSetController', function($scope, $routeParams, $http, 
       };
       $http.post('/api/cardset/editSubmit', postdata)
         .success(function(data) {
-          confirm("Congratulations! You have successfully edited your card set!");
+          $mdDialog.show(
+              $mdDialog.alert()
+              .title('Edit Card Set')
+              .content('You\'ve successfully edited the card set!')
+              .ariaLabel('Edit card set confirmation')
+              .ok('Home Page')
+            )
+            .finally(function() {
+              $location.path('/');
+            });
         })
         .error(function(data) {
           console.log("Error: " + data);
