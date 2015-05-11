@@ -144,7 +144,7 @@ bingo.controller('editCardSetController', function($scope, $routeParams, $http, 
     if ($scope.formData.CardSetName == "") {
       confirm("Please add a card set name.");
     } else if (cards.length < 25) {
-      confirm("Sorry, there are not at least 25 unique squares. Please make sure there\'s' no repeated content and all content uses fewer than 20 characters.");
+      confirm("Sorry, there are not at least 25 unique squares. Please make sure there\'s' no repeated content and that all content uses fewer than 15 characters.");
     } else {
       postdata = {
         "name": $scope.formData.name,
@@ -205,7 +205,7 @@ bingo.controller('addCardSetController', function($scope, $http, $location, $mdD
     if ($scope.formData.CardSetName == "") {
       confirm("Please add a card set name.");
     } else if (cards.length < 25) {
-      confirm("Sorry, there are not at least 25 unique squares. Please make sure there\'s' no repeated content and all content uses fewer than 20 characters.");
+      confirm("Sorry, there are not at least 25 unique squares. Please make sure there\'s' no repeated content and that all content uses fewer than 15 characters.");
     // } else if () {
 
     } else {
