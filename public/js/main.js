@@ -272,6 +272,8 @@ bingo.controller('addGameController', function($scope, $http, $location) {
       return;
     }
 
+    console.log($scope.formData.startDate)
+
     $http.post('/api/new/game', $scope.formData)
       .success(function(data) {
         $scope.formData = {};
