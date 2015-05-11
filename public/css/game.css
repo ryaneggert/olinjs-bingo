@@ -3,6 +3,15 @@ div.bingorow {
   text-align: center;
 }
 
+.button {
+  background-color: #0366fc;
+  border-color:#0366fc;
+}
+
+.button:hover {
+  background-color: #063a92;
+}
+
 div.bingosquare {
   width: 8rem;
   height: 8rem;
