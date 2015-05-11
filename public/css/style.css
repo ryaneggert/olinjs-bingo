@@ -78,7 +78,7 @@ div.decorator2 {
   top:8rem;
 }
 
-.md-list-item#gamelist {
+md-list-item#gamelist {
   cursor: pointer;
 }
 
