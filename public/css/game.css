@@ -3,6 +3,15 @@ div.bingorow {
   text-align: center;
 }
 
+.button {
+  background-color: #0366fc;
+  border-color:#0366fc;
+}
+
+.button:hover {
+  background-color: #063a92;
+}
+
 div.bingosquare {
   width: 8rem;
   height: 8rem;
@@ -31,10 +40,12 @@ div.bingosquarenumber {
 
 div.bingosquaretext {
   text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 div.squaretoggle {
-  background-color: #4BA7FF;
+  background-color: #4187FF;
 }
 
 div.listholder {
@@ -68,6 +79,10 @@ div.listholder {
   color: rgb(191, 111, 33);
 }
 
+
+li.squarelist {
+  line-height: 50px;
+}
 @media (max-width: 500px) {
   .bingoCard {
     margin: 0 auto;
@@ -155,7 +170,6 @@ div.listholder {
 }
 
 .game {
-  background-color: #0058AE;
   height: 100vh;
   position: absolute;
   top: 10px;
