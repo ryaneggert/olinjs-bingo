@@ -144,7 +144,7 @@ bingo.controller('editCardSetController', function($scope, $routeParams, $http, 
     if ($scope.formData.CardSetName == "") {
       confirm("Please add a card set name.");
     } else if (cards.length < 25) {
-      confirm("There are not at least 25 unique squares.");
+      confirm("Sorry, there are not at least 25 unique squares. Please make sure there\'s' no repeated content and that all content uses fewer than 15 characters.");
     } else {
       postdata = {
         "name": $scope.formData.name,
@@ -193,6 +193,7 @@ bingo.controller('addCardSetController', function($scope, $http, $location, $mdD
     var dupenames = [];
     // quadratic performance, ok for small cardset, optimize if necessary
     for (var i in $scope.choices) {
+      console.log($scope.choices[i].name)
       if (cards.indexOf($scope.choices[i].name) === -1) {
         if ($scope.choices[i].name != null) {
           cards.push($scope.choices[i].name);
@@ -204,7 +205,9 @@ bingo.controller('addCardSetController', function($scope, $http, $location, $mdD
     if ($scope.formData.CardSetName == "") {
       confirm("Please add a card set name.");
     } else if (cards.length < 25) {
-      confirm("There are not at least 25 unique squares.");
+      confirm("Sorry, there are not at least 25 unique squares. Please make sure there\'s' no repeated content and that all content uses fewer than 15 characters.");
+    // } else if () {
+
     } else {
       postdata = {
         "name": $scope.formData.CardSetName,
@@ -363,7 +366,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
         }
       })
       .error(function(data) {
-        console.log("Error: " + data)
+        console.log("Error: " + data);
       });
   };
 });
@@ -417,9 +420,29 @@ bingo.controller('bingoController', function($scope, $document, $http, $location
         var currTime = new Date();
         var currTime_ms = currTime.getTime();
 
-        // The number of milliseconds
+        // The number of milliseconds in countdown
         var diff_ms = d_ms - currTime_ms;
-        $scope.countdown = diff_ms;
+        if (diff_ms >= 0) {
+          $scope.countdown = diff_ms;
+        };
+        // If a user creates a game with a start time that has already passed
+        if (diff_ms < 0) {
+          $scope.countdown = "This game start time has passed!";
+        };
+        if (data.game.isOpen) {
+          $scope.countdown = "The game has begun!";
+        };
+
+        // Set the game to start at specified time
+        setTimeout(function(){ 
+          /* ... Start the game now... ... */ 
+          bingosockets.emit('game', {
+            'type': 'start',
+            'data': {
+              'game': data.game._id,
+            }
+          });
+        }, diff_ms);
 
         $scope.roomname = data.game.room;
         $scope.currentUser = data.user;
