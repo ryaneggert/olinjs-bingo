@@ -40,6 +40,100 @@ routes.newCardSet = function(req, res) {
   });
 };
 
+routes.editedCardSet = function(req, res) {
+  /* Create and save new card set based on user input */
+
+  // Get data submitted by user from form
+  // TODO: DEFINITELY make this less stupid
+
+  var square_set = req.body.cards;
+  var name = req.body.name;
+  var id = req.body.id;
+
+  console.log(square_set);
+  console.log(name);
+  console.log(id);
+
+  CardSet.findOneAndUpdate({
+    _id: id
+  }, {
+    name: name,
+    square_set: square_set
+  }).exec(function(err, cardset) {
+    if (err) {
+      console.error("Couldn't find specified cardset", err);
+      res.status(500).send("Couldn't find specified cardset");
+    }
+
+    res.send(cardset);
+  });
+};
+
+routes.getinfoCardSet = function(req, res) {
+  CardSet.findOne({
+    _id: req.body.cardsetid
+  }, function(err, cardset) {
+    if (err) {
+      console.error("Couldn't find specified cardset", err);
+      res.status(500).send("Couldn't find specified cardset");
+    }
+
+    res.send({
+      name: cardset.name,
+      choices: cardset.square_set
+    });
+
+  });
+}
+
+routes.editCardSet = function(req, res) {
+  CardSet.findOne({
+    _id: req.body.cardsetid
+  }, function(err, cardset) {
+    if (err) {
+      console.error("Couldn't find specified cardset", err);
+      res.status(500).send("Couldn't find specified cardset");
+    }
+
+    if (cardset.creator == req.session.user._id) {
+      res.send({
+        restrict: false
+      });
+    } else {
+      res.send({
+        restrict: true
+      });
+    }
+  })
+}
+
+routes.deleteCardset = function(req, res) {
+  var card_set_id = req.body.cardset_id;
+
+  CardSet.findOne({
+    _id: card_set_id
+  }, function(err, cardset) {
+    if (err) {
+      console.error("Couldn't find specified cardset", err);
+      res.status(500).send("Couldn't find specified cardset");
+    }
+
+    if (cardset.creator == req.session.user._id) {
+      CardSet.findOneAndRemove({
+        _id: card_set_id
+      }, function(err, cardset) {
+        res.send({
+          restrict: false
+        });
+      })
+    } else {
+      res.send({
+        restrict: true
+      });
+    }
+  });
+}
+
 routes.newGame = function(req, res) {
   /* Create and save a new game with set start time and pre-made card set */
 
