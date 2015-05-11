@@ -283,7 +283,7 @@ bingo.controller('addGameController', function($scope, $http, $location) {
   };
 });
 
-bingo.controller('homeController', function($scope, $http, $location, $window, bingosockets) {
+bingo.controller('homeController', function($scope, $http, $location, bingosockets) {
   $scope.currentgames = []; // variable to hold list of current bingo games
   $http.get('/api/home')
     .success(function(data) {
