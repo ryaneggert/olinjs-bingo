@@ -109,6 +109,7 @@ routes.editCardSet = function(req, res) {
 
 routes.deleteCardset = function(req, res) {
   var card_set_id = req.body.cardset_id;
+  var card_in_use = true;
 
   CardSet.findOne({
     _id: card_set_id
@@ -118,19 +119,37 @@ routes.deleteCardset = function(req, res) {
       res.status(500).send("Couldn't find specified cardset");
     }
 
-    if (cardset.creator == req.session.user._id) {
-      CardSet.findOneAndRemove({
-        _id: card_set_id
-      }, function(err, cardset) {
-        res.send({
-          restrict: false
-        });
+    Game.find({
+      card_set: card_set_id
+    }, function(err, list) {
+      if (err) {
+        console.error("Error finding the game", err);
+        res.status(500).send("Error finding the game");
+      }
+
+      list = list.filter(function(game) {
+        return !game.isFinished;
       })
-    } else {
-      res.send({
-        restrict: true
-      });
-    }
+
+      if (!list.length) {
+        card_in_use = false;
+      }
+
+      if (cardset.creator == req.session.user._id && !card_in_use) {
+        CardSet.findOneAndRemove({
+          _id: card_set_id
+        }, function(err, cardset) {
+          res.send({
+            restrict: false
+          });
+        })
+      } else {
+        res.send({
+          restrict: true
+        });
+      }
+
+    })
   });
 }
 
