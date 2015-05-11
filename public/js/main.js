@@ -109,7 +109,7 @@ bingo.controller('editCardSetController', function($scope, $routeParams, $http, 
   $scope.formData.cardsetid = $routeParams.cardsetid;
 
   $http.post('/api/cardset/getinfo', {
-    cardsetid: $scope.formData.cardsetid    
+    cardsetid: $scope.formData.cardsetid
   })
   .success(function(data) {
     $scope.formData.name = data.name;
@@ -117,7 +117,7 @@ bingo.controller('editCardSetController', function($scope, $routeParams, $http, 
     data.choices.forEach(function (element, index, array) {
       var obj = {};
       obj.name = element;
-      $scope.choices.push(obj); 
+      $scope.choices.push(obj);
     });
   })
   .error(function(data) {
@@ -144,7 +144,7 @@ bingo.controller('editCardSetController', function($scope, $routeParams, $http, 
     if ($scope.formData.CardSetName == "") {
       confirm("Please add a card set name.");
     } else if (cards.length < 25) {
-      confirm("There are not at least 25 unique squares.");
+      confirm("Sorry, there are not at least 25 unique squares. Please make sure there\'s' no repeated content and all content uses fewer than 20 characters.");
     } else {
       postdata = {
         "name": $scope.formData.name,
@@ -193,6 +193,7 @@ bingo.controller('addCardSetController', function($scope, $http, $location, $mdD
     var dupenames = [];
     // quadratic performance, ok for small cardset, optimize if necessary
     for (var i in $scope.choices) {
+      console.log($scope.choices[i].name)
       if (cards.indexOf($scope.choices[i].name) === -1) {
         if ($scope.choices[i].name != null) {
           cards.push($scope.choices[i].name);
@@ -204,7 +205,9 @@ bingo.controller('addCardSetController', function($scope, $http, $location, $mdD
     if ($scope.formData.CardSetName == "") {
       confirm("Please add a card set name.");
     } else if (cards.length < 25) {
-      confirm("There are not at least 25 unique squares.");
+      confirm("Sorry, there are not at least 25 unique squares. Please make sure there\'s' no repeated content and all content uses fewer than 20 characters.");
+    // } else if () {
+
     } else {
       postdata = {
         "name": $scope.formData.CardSetName,
@@ -363,7 +366,7 @@ bingo.controller('homeController', function($scope, $http, $location, bingosocke
         }
       })
       .error(function(data) {
-        console.log("Error: " + data)
+        console.log("Error: " + data);
       });
   };
 });
